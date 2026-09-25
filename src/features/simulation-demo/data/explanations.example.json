@@ -1,0 +1,78 @@
+{
+  "simulationId": "rutherford-scattering",
+  "buttonLabel": "Contexto e fundamentos",
+  "title": "Espalhamento de Rutherford",
+  "sections": [
+    {
+      "id": "historical-context",
+      "heading": "Contexto histórico",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Em 1909, sob orientação de Ernest Rutherford, os físicos Hans Geiger e Ernest Marsden bombardearam uma fina folha de ouro com partículas alfa — núcleos de hélio, com carga positiva. Na época, o modelo atômico aceito era o \"pudim de passas\" de J. J. Thomson: uma esfera de carga positiva difusa, com elétrons espalhados dentro dela, como passas em uma massa. Esse modelo previa que todas as partículas alfa deveriam atravessar a folha sofrendo, no máximo, pequenos desvios."
+        },
+        {
+          "type": "paragraph",
+          "text": "O resultado observado contrariou essa previsão: embora a maioria das partículas atravessasse quase sem desviar, uma pequena fração — cerca de 1 em 8.000 — ricocheteava em ângulos superiores a 90°, algumas quase voltando na direção de onde vieram. Rutherford descreveu esse resultado como \"quase tão incrível quanto atirar uma bala de canhão contra um lenço de papel e ela voltar e acertar você\"."
+        },
+        {
+          "type": "paragraph",
+          "text": "Em 1911, Rutherford publicou sua interpretação: o átomo não é uma esfera de carga difusa, mas possui um núcleo extremamente pequeno e denso, onde se concentram praticamente toda a massa e toda a carga positiva, cercado por um imenso espaço vazio ocupado pelos elétrons. Esse experimento é considerado o marco do nascimento da física nuclear."
+        }
+      ]
+    },
+    {
+      "id": "physics-foundations",
+      "heading": "Fundamentos físicos",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "A simulação reproduz a interação entre a partícula incidente e o núcleo do átomo-alvo por meio da força de repulsão coulombiana: como ambos têm carga positiva, quanto mais a partícula alfa se aproxima do núcleo, maior a força que a repele, descrevendo uma trajetória hiperbólica ao seu redor."
+        },
+        {
+          "type": "paragraph",
+          "text": "O ângulo de espalhamento depende de três fatores, todos ajustáveis no painel de parâmetros:"
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Energia do feixe",
+              "text": "partículas mais energéticas se aproximam mais do núcleo antes de serem repelidas, mas são desviadas em ângulos menores — é preciso mais energia cinética para \"vencer\" a repulsão a curtas distâncias."
+            },
+            {
+              "label": "Material do alvo",
+              "text": "quanto maior o número atômico (Z) do material — o ouro (Z=79) tem uma carga nuclear muito maior que o alumínio (Z=13), por exemplo —, mais intensa é a repulsão e maiores os ângulos de espalhamento observados."
+            },
+            {
+              "label": "Espessura da folha",
+              "text": "folhas mais espessas aumentam a chance de uma partícula passar perto o suficiente de algum núcleo para sofrer espalhamento múltiplo, além de simplesmente conterem mais átomos no caminho do feixe."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "O número de partículas simuladas não altera a física de cada evento individual, mas determina a qualidade estatística do resultado: eventos de grande ângulo são raros, e é preciso simular muitas partículas para observá-los com clareza — exatamente como Geiger e Marsden precisaram de milhares de observações."
+        }
+      ]
+    },
+    {
+      "id": "results-interpretation",
+      "heading": "Interpretação dos resultados",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Na visualização 3D, cada linha azul representa a trajetória de uma partícula alfa atravessando a folha de ouro. Observe que a esmagadora maioria das trajetórias passa quase reta, com desvios mínimos — isso já é uma evidência: se o átomo fosse \"cheio\", como no modelo de Thomson, todas as partículas seriam desviadas de forma parecida, e não é isso que se vê."
+        },
+        {
+          "type": "paragraph",
+          "text": "Preste atenção às trajetórias raras que aparecem em ângulos grandes, incluindo as que voltam na direção do feixe. Cada uma dessas representa uma partícula que passou muito perto do núcleo de um átomo de ouro. A raridade desses eventos é o próprio dado: ela indica que o núcleo ocupa uma fração ínfima do volume do átomo — o restante é, essencialmente, espaço vazio."
+        },
+        {
+          "type": "paragraph",
+          "text": "Experimente aumentar o número de partículas do feixe para tornar os eventos de grande ângulo mais visíveis, ou trocar o material do alvo para comparar o padrão de espalhamento entre elementos com número atômico diferente."
+        }
+      ]
+    }
+  ]
+}

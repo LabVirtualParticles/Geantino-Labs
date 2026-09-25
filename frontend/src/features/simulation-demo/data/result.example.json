@@ -1,0 +1,14 @@
+{
+  "simulationId": "rutherford-scattering",
+  "world": { "size": [400, 400, 400] },
+  "volumes": [
+    { "id": "detectorShell", "shape": "box", "size": [300, 300, 300], "position": [0, 0, 0], "wireframeOnly": true },
+    { "id": "target", "shape": "box", "size": [60, 60, 2], "position": [0, 0, 0] }
+  ],
+  "trajectories": [
+    { "id": "beam", "color": "#2F5DFF", "points": [[0, 0, -180], [0, 0, -2]] },
+    { "id": "scatter-1", "color": "#2F5DFF", "points": [[0, 0, -2], [38, 52, 120]] },
+    { "id": "scatter-2", "color": "#2F5DFF", "points": [[0, 0, -2], [-44, 30, 150]] },
+    { "id": "scatter-3", "color": "#E3B23C", "points": [[0, 0, -2], [12, -60, 140]] }
+  ]
+}

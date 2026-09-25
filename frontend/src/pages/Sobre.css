@@ -1,0 +1,101 @@
+.sobre-page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sobre-page main {
+  flex: 1;
+}
+
+/* --- Equipe (antiga página /contato) ------------------------------ */
+
+.team {
+  background: var(--color-void);
+  color: var(--color-on-void);
+  border-top: 1px solid var(--color-line);
+  padding: var(--space-6) var(--space-3);
+}
+
+.team__inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+.team__title {
+  font-family: var(--font-subtitle);
+  font-weight: 700;
+  font-size: var(--step-2);
+  text-align: center;
+  margin: 0 0 var(--space-5);
+  color: var(--color-on-void);
+}
+
+.team__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .team__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .team__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.team-card__photo {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
+  background: var(--color-void-soft);
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+  transition: border-color 0.2s var(--ease-standard);
+}
+
+.team-card:hover .team-card__photo {
+  border-color: var(--color-beam);
+}
+
+.team-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+}
+
+.team-card__name {
+  color: var(--color-on-void);
+  font-weight: 600;
+}
+
+.team-card__email {
+  color: var(--color-on-void-soft);
+  text-decoration: none;
+  transition: color 0.2s var(--ease-standard);
+}
+
+.team-card__email:hover {
+  color: var(--color-trace);
+}

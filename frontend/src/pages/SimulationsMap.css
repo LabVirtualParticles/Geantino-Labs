@@ -1,0 +1,234 @@
+.sim-map {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3) var(--space-6);
+}
+
+.sim-map__diagram {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Coordinates for these paths are computed in JS (see SimulationsMap.jsx)
+   from the actual on-screen position of each card and the center label,
+   so the lines always touch the cards exactly instead of floating near
+   an approximate spot. No viewBox here on purpose — the SVG's own pixel
+   box is the coordinate space, matching the getBoundingClientRect() math
+   in the component. */
+.sim-map__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sim-map__lines path {
+  fill: none;
+  stroke: var(--color-line);
+  stroke-width: 1.5;
+  stroke-dasharray: 7 6;
+  animation: sim-map-line-flow 7s linear infinite;
+}
+
+@keyframes sim-map-line-flow {
+  to {
+    stroke-dashoffset: -26;
+  }
+}
+
+.sim-map__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--color-void);
+  text-align: center;
+  pointer-events: none;
+}
+
+.sim-map__center-title {
+  margin: 0;
+  font-family: var(--font-subtitle);
+  font-weight: 700;
+  font-size: var(--step-1);
+  color: var(--color-on-void);
+  white-space: nowrap;
+}
+
+.sim-map__center-hint {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-on-void-soft);
+  max-width: 28ch;
+}
+
+@-webkit-keyframes vibrate-1 {
+  0% {
+    -webkit-transform: translate(0);
+            transform: translate(0);
+  }
+  20% {
+    -webkit-transform: translate(-6px, 6px);
+            transform: translate(-6px, 6px);
+  }
+  40% {
+    -webkit-transform: translate(-6px, -6px);
+            transform: translate(-6px, -6px);
+  }
+  60% {
+    -webkit-transform: translate(6px, 6px);
+            transform: translate(6px, 6px);
+  }
+  80% {
+    -webkit-transform: translate(6px, -6px);
+            transform: translate(6px, -6px);
+  }
+  100% {
+    -webkit-transform: translate(0);
+            transform: translate(0);
+  }
+}
+
+@keyframes vibrate-1 {
+  0% {
+    -webkit-transform: translate(0);
+            transform: translate(0);
+  }
+  20% {
+    -webkit-transform: translate(-6px, 6px);
+            transform: translate(-6px, 6px);
+  }
+  40% {
+    -webkit-transform: translate(-6px, -6px);
+            transform: translate(-6px, -6px);
+  }
+  60% {
+    -webkit-transform: translate(6px, 6px);
+            transform: translate(6px, 6px);
+  }
+  80% {
+    -webkit-transform: translate(6px, -6px);
+            transform: translate(6px, -6px);
+  }
+  100% {
+    -webkit-transform: translate(0);
+            transform: translate(0);
+  }
+}
+
+.sim-map__card {
+  position: absolute;
+  width: 32%;
+  min-width: 11rem;
+  max-width: 16rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-void-soft);
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--ease-standard),
+    transform 0.25s var(--ease-standard),
+    box-shadow 0.25s var(--ease-standard);
+  -webkit-animation: vibrate-1 6000ms ease-in infinite both;
+          animation: vibrate-1 6000ms ease-in infinite both;
+}
+
+/* Hovering ANY card freezes the vibration on every card, not just the
+   one under the pointer — the whole group settles at once. The
+   `:not(:hover)` keeps this from fighting the hovered card's own lift
+   below (higher-specificity rule would otherwise win on all of them). */
+.sim-map__diagram:has(.sim-map__card:hover) .sim-map__card:not(:hover) {
+  -webkit-animation: none;
+          animation: none;
+  -webkit-transform: translate(0);
+          transform: translate(0);
+}
+
+.sim-map__card:hover {
+  border-color: var(--color-beam);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
+  -webkit-animation: none;
+          animation: none;
+}
+
+.sim-map__card-rule {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-on-void);
+  opacity: 0.6;
+}
+
+.sim-map__card--0 {
+  top: 8%;
+  left: 5%;
+}
+
+.sim-map__card--1 {
+  top: 8%;
+  right: 5%;
+}
+
+.sim-map__card--2 {
+  bottom: 8%;
+  left: 5%;
+}
+
+.sim-map__card--3 {
+  bottom: 8%;
+  right: 5%;
+}
+
+.sim-map__card-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--step-0);
+  color: var(--color-beam);
+}
+
+.sim-map__card-soon {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-on-void-soft);
+  opacity: 0.6;
+}
+
+@media (max-width: 720px) {
+  .sim-map__diagram {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .sim-map__lines {
+    display: none;
+  }
+
+  .sim-map__center {
+    position: static;
+    transform: none;
+    background: none;
+    padding: 0;
+    text-align: center;
+    margin-bottom: var(--space-2);
+  }
+
+  .sim-map__card {
+    position: static;
+    width: 100%;
+    max-width: none;
+  }
+}

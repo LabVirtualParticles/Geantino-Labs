@@ -1,0 +1,77 @@
+{
+  "simulationId": "rutherford-scattering",
+  "title": "Espalhamento de Rutherford",
+  "fields": [
+    {
+      "id": "particleType",
+      "label": "Partícula incidente",
+      "type": "select",
+      "options": [
+        {
+          "value": "alpha",
+          "label": "Partícula alfa (G4Alpha)"
+        },
+        {
+          "value": "proton",
+          "label": "Próton (G4Proton)"
+        },
+        {
+          "value": "electron",
+          "label": "Elétron (G4Electron)"
+        }
+      ],
+      "default": "alpha"
+    },
+    {
+      "id": "energy",
+      "label": "Energia do feixe",
+      "type": "number",
+      "unit": "MeV",
+      "min": 0.1,
+      "max": 20,
+      "step": 0.1,
+      "default": 5
+    },
+    {
+      "id": "beamCount",
+      "label": "Número de partículas no feixe",
+      "type": "number",
+      "min": 10,
+      "max": 5000,
+      "step": 10,
+      "default": 500
+    },
+    {
+      "id": "targetMaterial",
+      "label": "Material do alvo (em breve)",
+      "type": "select",
+      "options": [
+        {
+          "value": "G4_Au",
+          "label": "Ouro (G4_Au)"
+        },
+        {
+          "value": "G4_Al",
+          "label": "Alumínio (G4_Al)"
+        },
+        {
+          "value": "G4_Cu",
+          "label": "Cobre (G4_Cu)"
+        }
+      ],
+      "default": "G4_Au",
+      "disabled": true
+    },
+    {
+      "id": "targetThickness",
+      "label": "Espessura da folha do alvo (em breve)",
+      "type": "number",
+      "unit": "µm",
+      "min": 0.1,
+      "max": 10,
+      "step": 0.1,
+      "default": 1,
+      "disabled": true
+    }
+  ]
+}
