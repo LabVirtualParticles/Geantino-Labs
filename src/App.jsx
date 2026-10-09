@@ -7,6 +7,7 @@ import SimulationExample from './pages/SimulationExample'
 import Login from './pages/Login'
 import ResetPassword from './pages/ResetPassword'
 import RequireAuth from './components/RequireAuth'
+import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -19,6 +20,16 @@ export default function App() {
       <Route path="/contato" element={<Navigate to="/sobre" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/redefinir-senha" element={<ResetPassword />} />
+      {/* Painel do usuário — histórico de simulações, relatórios, perfil,
+          senha e tema. Exige login, igual à execução de simulação. */}
+      <Route
+        path="/painel"
+        element={(
+          <RequireAuth>
+            <Dashboard />
+          </RequireAuth>
+        )}
+      />
       <Route path="/simulacoes" element={<SimulationsMap />} />
       <Route path="/simulacoes/categoria/:slug" element={<SimulationCatalog />} />
       {/* Só a execução de fato da simulação exige login — navegar pelo

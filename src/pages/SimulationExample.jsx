@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import ParametersPanel from '../features/simulation-demo/ParametersPanel';
 import SimulationViewer from '../features/simulation-demo/SimulationViewer';
 import ExplanationPanel from '../features/simulation-demo/ExplanationPanel';
 import { useSimulationRun } from '../features/simulation-demo/useSimulationRun';
+import {
+  computeScatteringAngles,
+  buildHistogram,
+  renderHistogramToDataURL,
+} from '../features/simulation-demo/angularHistogram';
+import { useAuth } from '../context/AuthContext';
+import { saveReport } from '../lib/reports';
 import schema from '../features/simulation-demo/data/parameters.example.json';
 import explanationSchema from '../features/simulation-demo/data/explanations.example.json';
 import '../features/simulation-demo/simulation-demo.css';
@@ -15,8 +23,53 @@ import '../features/simulation-demo/simulation-demo.css';
 // "Contexto e fundamentos" abre o ExplanationPanel, com o conteúdo
 // pedagógico definido em data/explanations.example.json.
 export default function SimulationExample() {
-  const { values, setField, status, data, error, run, exportData } = useSimulationRun(schema);
+  const { values, setField, status, data, meta, error, run, exportData } = useSimulationRun(schema);
   const [isExplanationOpen, setExplanationOpen] = useState(false);
+  const { user } = useAuth();
+  const viewerRef = useRef(null);
+  // idle | saving | done | error — feedback do botão "Gerar relatório",
+  // separado do `status` da simulação em si.
+  const [reportState, setReportState] = useState('idle');
+  const [reportError, setReportError] = useState('');
+
+  // "print do detector no momento em que for acionado o botão gerar
+  // relatório" (pedido do Lorenzo) — por isso a captura de tela e o
+  // histograma são calculados AQUI, no clique, e não quando a simulação
+  // termina: o usuário pode girar a câmera (OrbitControls) antes de gerar
+  // o relatório, e o print reflete o enquadramento escolhido por ele.
+  async function handleGenerateReport() {
+    if (status !== 'done' || !user) return;
+    setReportState('saving');
+    setReportError('');
+    try {
+      const screenshotDataUrl = viewerRef.current?.captureScreenshot() ?? null;
+
+      // Direção de incidência padrão do Rutherford (ver default_params em
+      // app.py: dir_x=-1, dir_y=0, dir_z=0) — fixo por ora porque é a
+      // única simulação cadastrada; se o catálogo crescer, isso passa a
+      // vir de `meta.paramsUsed`.
+      const angles = computeScatteringAngles(data.trajectories, [-1, 0, 0]);
+      const histogram = buildHistogram(angles);
+      const chartDataUrl = renderHistogramToDataURL(histogram);
+
+      await saveReport({
+        userId: user.id,
+        simulationId: schema.simulationId,
+        label: schema.title,
+        params: meta?.paramsUsed ?? values,
+        seed: meta?.seed ?? null,
+        durationSeconds: meta?.durationSeconds ?? null,
+        trajectoryCount: data.trajectories.length,
+        screenshotDataUrl,
+        chartDataUrl,
+      });
+
+      setReportState('done');
+    } catch (err) {
+      setReportError(err.message ?? String(err));
+      setReportState('error');
+    }
+  }
 
   return (
     <>
@@ -42,7 +95,7 @@ export default function SimulationExample() {
           <ParametersPanel schema={schema} values={values} onChange={setField} />
 
           <div className="sim-page__stage">
-            <SimulationViewer data={data} status={status} />
+            <SimulationViewer ref={viewerRef} data={data} status={status} />
             <div className="sim-page__actions">
               <button
                 type="button"
@@ -60,10 +113,29 @@ export default function SimulationExample() {
               >
                 Exportar dados
               </button>
+              <button
+                type="button"
+                className="sim-page__button"
+                onClick={handleGenerateReport}
+                disabled={status !== 'done' || reportState === 'saving'}
+                title="Salva seed, parâmetros, um print do detector (no enquadramento atual) e o gráfico de distribuição angular no seu painel"
+              >
+                {reportState === 'saving' ? 'Gerando relatório…' : 'Gerar relatório'}
+              </button>
             </div>
             {status === 'error' && error && (
               <p className="sim-page__error" role="alert">
                 {error}
+              </p>
+            )}
+            {reportState === 'done' && (
+              <p className="sim-page__info" role="status">
+                Relatório salvo! Veja em <Link to="/painel">Painel → Relatórios</Link>.
+              </p>
+            )}
+            {reportState === 'error' && reportError && (
+              <p className="sim-page__error" role="alert">
+                Não foi possível salvar o relatório: {reportError}
               </p>
             )}
           </div>

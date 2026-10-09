@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { Suspense, forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Line, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -61,10 +61,25 @@ function Trajectories({ trajectories }) {
  *   - malha genérica: { id, shape: 'mesh', vertices, indices, position }
  * Formato geral: { world: { size }, volumes: [...], trajectories: [{ id, color, points }] }
  */
-export default function SimulationViewer({ data, status }) {
+// `forwardRef` expõe `captureScreenshot()` pro componente pai (ver
+// SimulationExample.jsx, botão "Gerar relatório") — é como o "print do
+// detector no momento em que o botão é acionado" é obtido: lê o canvas
+// WebGL atual como PNG. `preserveDrawingBuffer: true` no <Canvas> é
+// obrigatório pra isso: sem ele, o WebGL limpa o buffer de desenho logo
+// depois de cada frame e toDataURL() devolve uma imagem em branco.
+const SimulationViewer = forwardRef(function SimulationViewer({ data, status }, ref) {
+  const wrapperRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    captureScreenshot() {
+      const canvas = wrapperRef.current?.querySelector('canvas');
+      return canvas ? canvas.toDataURL('image/png') : null;
+    },
+  }));
+
   return (
-    <div className="simulation-viewer">
-      <Canvas camera={{ position: [220, 160, 260], fov: 40 }}>
+    <div className="simulation-viewer" ref={wrapperRef}>
+      <Canvas camera={{ position: [220, 160, 260], fov: 40 }} gl={{ preserveDrawingBuffer: true }}>
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.6} />
         <Suspense fallback={null}>
@@ -100,4 +115,6 @@ export default function SimulationViewer({ data, status }) {
       )}
     </div>
   );
-}
+});
+
+export default SimulationViewer;

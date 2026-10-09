@@ -14,6 +14,12 @@ export function useSimulationRun(schema) {
   const [values, setValues] = useState(() => defaultsFromSchema(schema));
   const [status, setStatus] = useState('idle'); // idle | running | done | error
   const [data, setData] = useState(resultShape);
+  // Metadados crus da última resposta do backend — não usados pra desenhar
+  // a cena (isso é `data`, via adaptSimulationResult), mas necessários pro
+  // relatório do painel: a seed de fato usada pelo Geant4, os parâmetros
+  // validados (podem diferir do que o usuário digitou, ex. defaults) e a
+  // duração real da simulação.
+  const [meta, setMeta] = useState(null);
   const [error, setError] = useState(null);
 
   const setField = useCallback((id, value) => {
@@ -26,6 +32,12 @@ export function useSimulationRun(schema) {
     try {
       const raw = await runSimulation(schema.simulationId, values);
       setData(adaptSimulationResult(raw));
+      setMeta({
+        runId: raw?.run_id ?? null,
+        seed: raw?.seed_used ?? null,
+        paramsUsed: raw?.params_used ?? values,
+        durationSeconds: raw?.duration_seconds ?? null,
+      });
       setStatus('done');
     } catch (err) {
       setError(err.message ?? String(err));
@@ -44,5 +56,5 @@ export function useSimulationRun(schema) {
     URL.revokeObjectURL(url);
   }, [schema.simulationId, values, data]);
 
-  return { values, setField, status, data, error, run, exportData };
+  return { values, setField, status, data, meta, error, run, exportData };
 }

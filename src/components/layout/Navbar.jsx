@@ -30,9 +30,14 @@ export default function Navbar() {
 
           <span className="navbar__link-group">
             {user ? (
-              <button type="button" className="navbar__link" onClick={handleLogout}>
-                Sair
-              </button>
+              <>
+                <Link to="/painel" className="navbar__link">
+                  Painel
+                </Link>
+                <button type="button" className="navbar__link" onClick={handleLogout}>
+                  Sair
+                </button>
+              </>
             ) : (
               <Link to="/login" className="navbar__link">
                 Login
