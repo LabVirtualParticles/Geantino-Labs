@@ -17,7 +17,6 @@ export const SIMULATION_CATEGORIES = [
     slug: 'fisica-nuclear',
     label: 'Física Nuclear',
     items: [],
-    directPath: '/simulacoes/rutherford', // TODO: remover quando a Física Nuclear tiver catálogo próprio
   },
   {
     slug: 'astrofisica',
