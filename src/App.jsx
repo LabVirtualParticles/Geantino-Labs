@@ -7,6 +7,7 @@ import SimulationExample from './pages/SimulationExample'
 import Login from './pages/Login'
 import ResetPassword from './pages/ResetPassword'
 import RequireAuth from './components/RequireAuth'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
@@ -30,6 +31,8 @@ export default function App() {
           </RequireAuth>
         )}
       />
+      {/* Rota coringa — tem que ser sempre a última. */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
