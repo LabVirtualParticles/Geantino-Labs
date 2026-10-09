@@ -36,8 +36,9 @@
 }
 
 .catalog-page__card {
-  display: block;
-  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   background: var(--color-void-soft);
@@ -50,6 +51,20 @@
 
 .catalog-page__card:hover {
   border-color: var(--color-beam);
+}
+
+.catalog-page__card-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  /* A imagem fica por cima do título, dentro do mesmo card — não é um
+     link/página separada, continua sendo uma única área clicável. */
+  border-bottom: 1px solid var(--color-line);
+}
+
+.catalog-page__card-title {
+  display: block;
+  padding: var(--space-3);
 }
 
 .catalog-page__soon {

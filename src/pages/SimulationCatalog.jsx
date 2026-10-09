@@ -30,7 +30,10 @@ export default function SimulationCatalog() {
                 {category.items.map((item) => (
                   <li key={item.path}>
                     <Link to={item.path} className="catalog-page__card">
-                      {item.label}
+                      {item.image && (
+                        <img src={item.image} alt="" className="catalog-page__card-image" />
+                      )}
+                      <span className="catalog-page__card-title">{item.label}</span>
                     </Link>
                   </li>
                 ))}
