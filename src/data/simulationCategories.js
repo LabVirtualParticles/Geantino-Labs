@@ -11,7 +11,13 @@ export const SIMULATION_CATEGORIES = [
   {
     slug: 'fisica-de-particulas',
     label: 'Física de Partículas',
-    items: [{ label: 'Espalhamento de Rutherford', path: '/simulacoes/rutherford' }],
+    items: [
+      {
+        label: 'Espalhamento de Rutherford',
+        path: '/simulacoes/rutherford',
+        image: '/simulations/rutherford-scattering.jpg',
+      },
+    ],
   },
   {
     slug: 'fisica-nuclear',
