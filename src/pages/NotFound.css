@@ -18,102 +18,238 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  /* Mantém a galáxia no mesmo preto/branco/cinza do resto do site —
+     a cor padrão do efeito é azul, aqui é sobrescrita por essa variável. */
+  --bgx-color: #c7c7c7;
 }
 
-.not-found__stars {
+.bgx-spiral-galaxy {
+  --c: var(--bgx-color, #c7c7c7);
+  font-size: 16px;
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.8) 50%, transparent 51%),
-    radial-gradient(1px 1px at 80% 10%, rgba(255, 255, 255, 0.6) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 60% 70%, rgba(255, 255, 255, 0.7) 50%, transparent 51%),
-    radial-gradient(1px 1px at 30% 80%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 90% 60%, rgba(255, 255, 255, 0.6) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 45% 35%, rgba(255, 255, 255, 0.8) 50%, transparent 51%),
-    radial-gradient(1px 1px at 15% 55%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 70% 90%, rgba(255, 255, 255, 0.6) 50%, transparent 51%);
-  background-repeat: repeat;
-  background-size: 100% 100%;
-  animation: not-found-twinkle 6s ease-in-out infinite alternate;
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 80% at 50% 50%, color-mix(in srgb, var(--c) 20%, #070918), #02030a 75%);
 }
 
-.not-found__cloud {
+.bgx-spiral-galaxy::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: 11em 11em;
+  background-image:
+    radial-gradient(circle 0.07em at 4.1% 35.2%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 63.6% 55.9%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 80% 54.2%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 35.3% 22.3%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 25.2% 37.4%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 25% 84.8%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 95.9% 45.8%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 77.2% 60%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 63.9% 54.3%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 24.5% 72.6%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 63% 74%, rgb(255 255 255 / 0.55) 50%, transparent),
+    radial-gradient(circle 0.07em at 79.2% 9.6%, rgb(255 255 255 / 0.55) 50%, transparent);
+}
+
+.bgx-spiral-galaxy-disk {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: rotate(-24deg) scaleY(0.48);
+}
+
+.bgx-spiral-galaxy-disk span {
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
-  mix-blend-mode: screen;
-  opacity: 0.35;
 }
 
-.not-found__cloud--1 {
-  width: 32rem;
-  height: 32rem;
-  top: -8rem;
-  left: 10%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 70%);
-  animation: not-found-drift-1 90s linear infinite;
+.bgx-spiral-galaxy-disk span:nth-child(1) {
+  width: 30em;
+  height: 30em;
+  margin: -15em;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 38%, transparent), color-mix(in srgb, var(--c) 12%, transparent) 50%, transparent);
 }
 
-.not-found__cloud--2 {
-  width: 26rem;
-  height: 26rem;
-  bottom: -6rem;
-  right: 8%;
-  background: radial-gradient(circle, rgba(154, 154, 154, 0.9), transparent 70%);
-  animation: not-found-drift-2 120s linear infinite;
+.bgx-spiral-galaxy-disk span:nth-child(2) {
+  width: 0.14em;
+  height: 0.14em;
+  margin: -0.07em;
+  background: #fff;
+  box-shadow:
+    1.11em 0.11em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    1.24em -0.02em 0 0.03em color-mix(in srgb, var(--c) 35%, #fff),
+    1.24em -0.02em 1.05em 0.3em color-mix(in srgb, var(--c) 36%, transparent),
+    1.4em -0.38em 0 0.04em #fff,
+    1.54em -0.51em 0 0.03em #fff,
+    1.54em -0.51em 1.1em 0.32em color-mix(in srgb, var(--c) 36%, transparent),
+    1.04em -0.97em 0 0.04em #fff,
+    1.15em -1.04em 0 0.07em #fff,
+    1.15em -1.04em 1.09em 0.31em color-mix(in srgb, var(--c) 36%, transparent),
+    0.68em -1.57em 0 0.07em color-mix(in srgb, var(--c) 35%, #fff),
+    0.61em -2.02em 0 0.05em #fff,
+    0.61em -2.02em 1.15em 0.33em color-mix(in srgb, var(--c) 36%, transparent),
+    0.16em -1.9em 0 0.04em #fff,
+    0.35em -2em 0 0.05em color-mix(in srgb, var(--c) 35%, #fff),
+    0.35em -2em 1.14em 0.33em color-mix(in srgb, var(--c) 36%, transparent),
+    0.12em -2.32em 0 0.02em color-mix(in srgb, var(--c) 35%, #fff),
+    -0.68em -2.33em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -0.68em -2.33em 1.19em 0.35em color-mix(in srgb, var(--c) 36%, transparent),
+    -1.02em -1.94em 0 0.06em #fff,
+    -1.35em -1.84em 0 0.03em #fff,
+    -1.35em -1.84em 1.17em 0.34em color-mix(in srgb, var(--c) 36%, transparent),
+    -1.91em -1.49em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -2.49em -1.31em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -2.49em -1.31em 1.24em 0.36em color-mix(in srgb, var(--c) 36%, transparent),
+    -2.89em -1.16em 0 0.02em #fff,
+    -3.33em -1.15em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    -3.33em -1.15em 1.32em 0.39em color-mix(in srgb, var(--c) 36%, transparent),
+    -3.66em 0.39em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    -3.73em 0.18em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    -3.73em 0.18em 1.35em 0.4em color-mix(in srgb, var(--c) 36%, transparent),
+    -3.27em 0.7em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    -3.36em 1.01em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -3.36em 1.01em 1.32em 0.39em color-mix(in srgb, var(--c) 36%, transparent),
+    -3.85em 2.3em 0 0.04em #fff,
+    -3.5em 2.84em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -3.5em 2.84em 1.44em 0.43em color-mix(in srgb, var(--c) 36%, transparent),
+    -2.48em 3.39em 0 0.06em #fff,
+    -3.03em 4.35em 0 0.06em #fff,
+    -3.03em 4.35em 1.54em 0.46em color-mix(in srgb, var(--c) 36%, transparent),
+    -2.05em 4.65em 0 0.07em #fff,
+    0.1em 5.15em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    0.1em 5.15em 1.52em 0.46em color-mix(in srgb, var(--c) 36%, transparent),
+    1.5em 5.98em 0 0.03em #fff,
+    0.81em 5.94em 0 0.06em #fff,
+    0.81em 5.94em 1.62em 0.49em color-mix(in srgb, var(--c) 36%, transparent),
+    2.69em 5.91em 0 0.05em #fff,
+    3.08em 5.91em 0 0.04em #fff,
+    3.08em 5.91em 1.7em 0.52em color-mix(in srgb, var(--c) 36%, transparent),
+    3.57em 5.25em 0 0.05em #fff,
+    4.36em 4.29em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    4.36em 4.29em 1.63em 0.49em color-mix(in srgb, var(--c) 36%, transparent),
+    6.58em 3.31em 0 0.05em color-mix(in srgb, var(--c) 35%, #fff),
+    6.82em 1.38em 0 0.03em #fff,
+    6.82em 1.38em 1.73em 0.53em color-mix(in srgb, var(--c) 36%, transparent),
+    7.23em 1.47em 0 0.05em #fff,
+    8.99em -0.47em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    8.99em -0.47em 1.98em 0.61em color-mix(in srgb, var(--c) 36%, transparent),
+    9.74em -2.03em 0 0.03em #fff,
+    10.2em -3.53em 0 0.05em #fff,
+    10.2em -3.53em 2.19em 0.68em color-mix(in srgb, var(--c) 36%, transparent),
+    9.26em -6.36em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    10.19em -6.2em 0 0.07em #fff,
+    10.19em -6.2em 2.33em 0.73em color-mix(in srgb, var(--c) 36%, transparent),
+    9.45em -8.29em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    4.06em -12.7em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    4.06em -12.7em 2.5em 0.78em color-mix(in srgb, var(--c) 36%, transparent),
+    -1.4em 0.07em 0 0.05em #fff,
+    -1.31em 0.36em 0 0.08em color-mix(in srgb, var(--c) 35%, #fff),
+    -1.31em 0.36em 1.06em 0.3em color-mix(in srgb, var(--c) 36%, transparent),
+    -1.38em 0.66em 0 0.05em color-mix(in srgb, var(--c) 35%, #fff),
+    -1.34em 0.48em 0 0.05em #fff,
+    -1.34em 0.48em 1.07em 0.31em color-mix(in srgb, var(--c) 36%, transparent),
+    -1.34em 1.15em 0 0.07em #fff,
+    -1.11em 1.32em 0 0.02em #fff,
+    -1.11em 1.32em 1.11em 0.32em color-mix(in srgb, var(--c) 36%, transparent),
+    -0.83em 1.39em 0 0.07em color-mix(in srgb, var(--c) 35%, #fff),
+    -0.33em 1.71em 0 0.08em #fff,
+    -0.33em 1.71em 1.11em 0.32em color-mix(in srgb, var(--c) 36%, transparent),
+    -0.54em 2.11em 0 0.07em #fff,
+    0.13em 1.84em 0 0.04em #fff,
+    0.13em 1.84em 1.12em 0.32em color-mix(in srgb, var(--c) 36%, transparent),
+    0.54em 2.12em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    0.4em 2.11em 0 0.03em color-mix(in srgb, var(--c) 35%, #fff),
+    0.4em 2.11em 1.16em 0.34em color-mix(in srgb, var(--c) 36%, transparent),
+    1.03em 2.12em 0 0.05em #fff,
+    1.5em 2.07em 0 0.07em #fff,
+    1.5em 2.07em 1.21em 0.35em color-mix(in srgb, var(--c) 36%, transparent),
+    1.99em 1.29em 0 0.07em color-mix(in srgb, var(--c) 35%, #fff),
+    2.4em 1.12em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    2.4em 1.12em 1.22em 0.36em color-mix(in srgb, var(--c) 36%, transparent),
+    2.88em 0.67em 0 0.07em #fff,
+    2.73em 0.74em 0 0.07em #fff,
+    2.73em 0.74em 1.24em 0.36em color-mix(in srgb, var(--c) 36%, transparent),
+    2.87em 0.31em 0 0.03em color-mix(in srgb, var(--c) 35%, #fff),
+    3.73em 0.06em 0 0.03em color-mix(in srgb, var(--c) 35%, #fff),
+    3.73em 0.06em 1.35em 0.4em color-mix(in srgb, var(--c) 36%, transparent),
+    3.14em -0.61em 0 0.05em #fff,
+    3.47em -1.94em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    3.47em -1.94em 1.38em 0.41em color-mix(in srgb, var(--c) 36%, transparent),
+    3.28em -1.63em 0 0.08em #fff,
+    2.3em -2.86em 0 0.06em #fff,
+    2.3em -2.86em 1.34em 0.4em color-mix(in srgb, var(--c) 36%, transparent),
+    2.59em -3.55em 0 0.06em color-mix(in srgb, var(--c) 35%, #fff),
+    2.08em -4.07em 0 0.03em #fff,
+    2.08em -4.07em 1.45em 0.43em color-mix(in srgb, var(--c) 36%, transparent),
+    2.14em -4.55em 0 0.03em color-mix(in srgb, var(--c) 35%, #fff),
+    1em -4.7em 0 0.06em #fff,
+    1em -4.7em 1.48em 0.44em color-mix(in srgb, var(--c) 36%, transparent),
+    -0.28em -6.21em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -1.66em -6.22em 0 0.04em #fff,
+    -1.66em -6.22em 1.67em 0.51em color-mix(in srgb, var(--c) 36%, transparent),
+    -2.07em -6.54em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -4.05em -4.84em 0 0.07em #fff,
+    -4.05em -4.84em 1.66em 0.5em color-mix(in srgb, var(--c) 36%, transparent),
+    -5.06em -5.17em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -5.3em -3.29em 0 0.08em color-mix(in srgb, var(--c) 35%, #fff),
+    -5.3em -3.29em 1.65em 0.5em color-mix(in srgb, var(--c) 36%, transparent),
+    -6.96em -4.23em 0 0.02em #fff,
+    -7.47em -3.84em 0 0.08em #fff,
+    -7.47em -3.84em 1.91em 0.59em color-mix(in srgb, var(--c) 36%, transparent),
+    -8.72em -0.41em 0 0.07em #fff,
+    -8.47em 0.69em 0 0.07em #fff,
+    -8.47em 0.69em 1.92em 0.59em color-mix(in srgb, var(--c) 36%, transparent),
+    -9.28em 2.02em 0 0.07em color-mix(in srgb, var(--c) 35%, #fff),
+    -9.76em 5.04em 0 0.04em color-mix(in srgb, var(--c) 35%, #fff),
+    -9.76em 5.04em 2.22em 0.69em color-mix(in srgb, var(--c) 36%, transparent),
+    -8.19em 5.08em 0 0.08em #fff,
+    -8.42em 5.13em 0 0.07em color-mix(in srgb, var(--c) 35%, #fff),
+    -8.42em 5.13em 2.08em 0.64em color-mix(in srgb, var(--c) 36%, transparent),
+    -7.03em 9.57em 0 0.06em #fff,
+    -6.4em 10.49em 0 0.05em color-mix(in srgb, var(--c) 35%, #fff),
+    -6.4em 10.49em 2.37em 0.74em color-mix(in srgb, var(--c) 36%, transparent),
+    0.28em -1.72em 0 0.06em #fff,
+    0.4em -0.2em 0 0.05em #fff,
+    -2.13em 0.76em 0 0.05em #fff,
+    -1.78em 0.73em 0 0.04em #fff,
+    0.39em -1.61em 0 0.03em #fff,
+    -1.01em -2.33em 0 0.03em #fff,
+    0.32em -0.47em 0 0.04em #fff,
+    0.93em -2.36em 0 0.04em #fff,
+    -1.53em -0.38em 0 0.06em #fff,
+    -0.51em -0.11em 0 0.04em #fff,
+    -1.15em 0.65em 0 0.05em #fff,
+    0.07em -2.31em 0 0.06em #fff,
+    -0.13em 0.95em 0 0.05em #fff,
+    -0.86em -0.01em 0 0.03em #fff,
+    -0.27em -0.79em 0 0.05em #fff,
+    -0.62em 0.32em 0 0.04em #fff;
+  animation: bgx-spiral-galaxy-spin 80s linear infinite;
 }
 
-.not-found__cloud--3 {
-  width: 20rem;
-  height: 20rem;
-  top: 40%;
-  left: 55%;
-  background: radial-gradient(circle, rgba(199, 199, 199, 0.8), transparent 70%);
-  animation: not-found-drift-3 100s linear infinite;
+.bgx-spiral-galaxy-disk span:nth-child(3) {
+  width: 7em;
+  height: 7em;
+  margin: -3.5em;
+  background: radial-gradient(closest-side, #fff 6%, color-mix(in srgb, var(--c) 40%, #fff) 22%, color-mix(in srgb, var(--c) 45%, transparent) 50%, transparent);
+  animation: bgx-spiral-galaxy-glow 5s ease-in-out infinite alternate;
 }
 
-@keyframes not-found-twinkle {
+@keyframes bgx-spiral-galaxy-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bgx-spiral-galaxy-glow {
   from {
-    opacity: 0.5;
+    opacity: 0.8;
+    transform: scale(0.94);
   }
   to {
-    opacity: 0.9;
-  }
-}
-
-@keyframes not-found-drift-1 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(4rem, 3rem) rotate(180deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(360deg);
-  }
-}
-
-@keyframes not-found-drift-2 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(-3rem, -4rem) rotate(-180deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(-360deg);
-  }
-}
-
-@keyframes not-found-drift-3 {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-2rem, 2rem) scale(1.15);
-  }
-  100% {
-    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    transform: scale(1.06);
   }
 }
 
@@ -170,8 +306,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .not-found__cloud,
-  .not-found__stars {
+  .bgx-spiral-galaxy-disk span,
+  .bgx-spiral-galaxy-disk span:nth-child(3) {
     animation: none;
   }
 }

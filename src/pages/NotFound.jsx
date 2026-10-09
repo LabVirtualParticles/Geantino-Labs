@@ -12,10 +12,13 @@ export default function NotFound() {
 
       <main className="not-found__main">
         <div className="not-found__nebula" aria-hidden="true">
-          <span className="not-found__stars" />
-          <span className="not-found__cloud not-found__cloud--1" />
-          <span className="not-found__cloud not-found__cloud--2" />
-          <span className="not-found__cloud not-found__cloud--3" />
+          <div className="bgx-spiral-galaxy">
+            <div className="bgx-spiral-galaxy-disk">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
         </div>
 
         <div className="not-found__content">
