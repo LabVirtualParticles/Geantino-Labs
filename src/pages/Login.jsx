@@ -38,13 +38,22 @@ export default function Login() {
         await signIn({ email, password });
         navigate(redirectTo, { replace: true });
       } else {
-        await signUp({ username, email, password });
-        // Se a confirmação por e-mail estiver ativada no projeto
-        // Supabase, o login só funciona depois de confirmar — por isso
-        // não loga automático aqui, só avisa e volta pra tela de entrar.
-        setInfo('Conta criada! Se a confirmação por e-mail estiver ativa no projeto, confira sua caixa de entrada antes de entrar.');
-        setMode('login');
-        setPassword('');
+        const result = await signUp({ username, email, password });
+        if (result?.session) {
+          // Confirmação por e-mail desativada no projeto Supabase (ou
+          // já confirmada automaticamente) — o cadastro já volta com
+          // uma sessão ativa, então loga direto em vez de mandar
+          // confirmar algo que não precisa.
+          navigate(redirectTo, { replace: true });
+        } else {
+          // Confirmação por e-mail ativada — o Supabase não emite
+          // sessão até o e-mail ser confirmado, então não tem como
+          // logar automaticamente aqui; só avisa e volta pra tela de
+          // entrar.
+          setInfo('Conta criada! Confira sua caixa de entrada para confirmar o e-mail antes de entrar.');
+          setMode('login');
+          setPassword('');
+        }
       }
     } catch (err) {
       setError(err.message || 'Algo deu errado. Tente de novo.');
