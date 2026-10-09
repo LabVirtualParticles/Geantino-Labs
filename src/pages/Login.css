@@ -70,6 +70,25 @@
   border-color: var(--color-beam);
 }
 
+.login-form__forgot {
+  align-self: flex-end;
+  margin-top: -0.6rem;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--color-on-void-soft);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease-standard);
+}
+
+.login-form__forgot:hover {
+  color: var(--color-on-void);
+}
+
 .login-form__message {
   font-family: var(--font-body);
   font-size: var(--step--1);

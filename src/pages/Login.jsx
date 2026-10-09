@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 export default function Login() {
-  const [mode, setMode] = useState('login'); // 'login' | 'signup'
+  const [mode, setMode] = useState('login'); // 'login' | 'signup' | 'forgot'
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +14,7 @@ export default function Login() {
   const [info, setInfo] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, resetPasswordForEmail } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   // Se o login foi disparado pelo RequireAuth (tentou rodar uma
@@ -22,7 +22,19 @@ export default function Login() {
   const redirectTo = location.state?.from || '/simulacoes';
 
   function switchMode() {
-    setMode((current) => (current === 'login' ? 'signup' : 'login'));
+    setMode((current) => (current === 'signup' ? 'login' : 'signup'));
+    setError('');
+    setInfo('');
+  }
+
+  function goToForgotPassword() {
+    setMode('forgot');
+    setError('');
+    setInfo('');
+  }
+
+  function backToLogin() {
+    setMode('login');
     setError('');
     setInfo('');
   }
@@ -37,6 +49,11 @@ export default function Login() {
       if (mode === 'login') {
         await signIn({ email, password });
         navigate(redirectTo, { replace: true });
+      } else if (mode === 'forgot') {
+        await resetPasswordForEmail(email);
+        // Mensagem genérica de propósito — não confirma nem nega se o
+        // e-mail existe na base, pra não vazar quais e-mails têm conta.
+        setInfo('Se esse e-mail tiver uma conta, enviamos um link para redefinir a senha.');
       } else {
         const result = await signUp({ username, email, password });
         if (result?.session) {
@@ -69,10 +86,12 @@ export default function Login() {
       <main className="login-page__main">
         <div className="login-card">
           <h1 className="login-card__title">
-            {mode === 'login' ? 'Entrar' : 'Criar conta'}
+            {mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar conta' : 'Esqueci minha senha'}
           </h1>
           <p className="login-card__hint">
-            É preciso estar logado pra rodar as simulações.
+            {mode === 'forgot'
+              ? 'Informe seu e-mail e enviamos um link para redefinir a senha.'
+              : 'É preciso estar logado pra rodar as simulações.'}
           </p>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -100,17 +119,25 @@ export default function Login() {
               />
             </label>
 
-            <label className="login-form__field">
-              <span>Senha</span>
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-                minLength={6}
-                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-              />
-            </label>
+            {mode !== 'forgot' && (
+              <label className="login-form__field">
+                <span>Senha</span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                  minLength={6}
+                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                />
+              </label>
+            )}
+
+            {mode === 'login' && (
+              <button type="button" className="login-form__forgot" onClick={goToForgotPassword}>
+                Esqueci minha senha
+              </button>
+            )}
 
             {error && (
               <p className="login-form__message login-form__message--error" role="alert">
@@ -124,13 +151,25 @@ export default function Login() {
             )}
 
             <button type="submit" className="login-form__submit" disabled={submitting}>
-              {submitting ? 'Aguarde…' : mode === 'login' ? 'Entrar' : 'Criar conta'}
+              {submitting
+                ? 'Aguarde…'
+                : mode === 'login'
+                  ? 'Entrar'
+                  : mode === 'signup'
+                    ? 'Criar conta'
+                    : 'Enviar link'}
             </button>
           </form>
 
-          <button type="button" className="login-card__switch" onClick={switchMode}>
-            {mode === 'login' ? 'Não tem conta? Cadastre-se' : 'Já tem conta? Entrar'}
-          </button>
+          {mode === 'forgot' ? (
+            <button type="button" className="login-card__switch" onClick={backToLogin}>
+              ← Voltar pra tela de entrar
+            </button>
+          ) : (
+            <button type="button" className="login-card__switch" onClick={switchMode}>
+              {mode === 'login' ? 'Não tem conta? Cadastre-se' : 'Já tem conta? Entrar'}
+            </button>
+          )}
 
           <Link to="/simulacoes" className="login-card__back">
             ← Voltar pras simulações

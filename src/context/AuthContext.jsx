@@ -63,6 +63,29 @@ export function AuthProvider({ children }) {
     if (error) throw error;
   }
 
+  // Dispara o e-mail de "esqueci minha senha". O link do e-mail traz o
+  // usuário de volta pro site em /redefinir-senha com um token de
+  // recuperação na URL — o supabase-js lê esse token sozinho e, ao
+  // carregar a página, dispara onAuthStateChange com uma sessão
+  // temporária (evento PASSWORD_RECOVERY), que é o que deixa
+  // updatePassword funcionar logo em seguida.
+  async function resetPasswordForEmail(email) {
+    if (!supabase) throw new Error(NOT_CONFIGURED_MESSAGE);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/redefinir-senha`,
+    });
+    if (error) throw error;
+  }
+
+  // Só funciona dentro da sessão temporária aberta pelo link de
+  // recuperação (ver resetPasswordForEmail acima) — fora desse fluxo,
+  // o Supabase rejeita por falta de sessão válida.
+  async function updatePassword(password) {
+    if (!supabase) throw new Error(NOT_CONFIGURED_MESSAGE);
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw error;
+  }
+
   const value = {
     session,
     user: session?.user ?? null,
@@ -70,6 +93,8 @@ export function AuthProvider({ children }) {
     signUp,
     signIn,
     signOut,
+    resetPasswordForEmail,
+    updatePassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

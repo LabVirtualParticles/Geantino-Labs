@@ -5,6 +5,7 @@ import SimulationsMap from './pages/SimulationsMap'
 import SimulationCatalog from './pages/SimulationCatalog'
 import SimulationExample from './pages/SimulationExample'
 import Login from './pages/Login'
+import ResetPassword from './pages/ResetPassword'
 import RequireAuth from './components/RequireAuth'
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
           antigo funcionando pra quem tiver salvo/compartilhado. */}
       <Route path="/contato" element={<Navigate to="/sobre" replace />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/redefinir-senha" element={<ResetPassword />} />
       <Route path="/simulacoes" element={<SimulationsMap />} />
       <Route path="/simulacoes/categoria/:slug" element={<SimulationCatalog />} />
       {/* Só a execução de fato da simulação exige login — navegar pelo
