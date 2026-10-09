@@ -41,12 +41,6 @@
   gap: var(--space-4);
 }
 
-.navbar__link-group {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
 .navbar__link {
   font-family: var(--font-body);
   font-size: var(--step--1);
@@ -64,4 +58,14 @@
 
 .navbar__link:hover {
   color: var(--color-on-void);
+}
+
+/* Único toque de cor fora da paleta monocromática do site — pedido
+   explícito: o botão "Sair" se destaca em vermelho. */
+.navbar__link--danger {
+  color: #e05252;
+}
+
+.navbar__link--danger:hover {
+  color: #ff6b6b;
 }
