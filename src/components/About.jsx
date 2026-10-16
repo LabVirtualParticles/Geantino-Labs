@@ -1,8 +1,11 @@
+import ProtonCollision from './physics/ProtonCollision';
 import './About.css';
 
 export default function About() {
   return (
     <section className="about">
+      {/* Fundo animado: colisão de prótons atrás de todo o texto da seção */}
+      <ProtonCollision className="about__collision" />
       <div className="about__inner">
         <h2 className="about__title">
           Simulação de física de partículas direto no navegador

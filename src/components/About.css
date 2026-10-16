@@ -1,13 +1,29 @@
 .about {
+  position: relative;
+  overflow: hidden;
   background: var(--color-void);
   color: var(--color-on-void);
   padding: var(--space-6) var(--space-3);
 }
 
 .about__inner {
+  position: relative;
+  z-index: 1;
   max-width: 56rem;
   margin: 0 auto;
   text-align: center;
+}
+
+/* Animação de colisão como fundo da seção inteira, atrás do texto.
+   Opacidade baixa pra não brigar com a leitura — ajuste aqui. */
+.about .about__collision {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .about__title {
