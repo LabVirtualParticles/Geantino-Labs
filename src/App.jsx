@@ -9,6 +9,7 @@ import ResetPassword from './pages/ResetPassword'
 import RequireAuth from './components/RequireAuth'
 import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
+import ShowerTest from './pages/ShowerTest'
 
 export default function App() {
   return (
@@ -42,6 +43,9 @@ export default function App() {
           </RequireAuth>
         )}
       />
+      {/* Página de teste da animação do chuveiro eletromagnético — só
+          existe em `npm run dev`, não vai pro site publicado. */}
+      {import.meta.env.DEV && <Route path="/teste/chuveiro" element={<ShowerTest />} />}
       {/* Rota coringa — tem que ser sempre a última. */}
       <Route path="*" element={<NotFound />} />
     </Routes>

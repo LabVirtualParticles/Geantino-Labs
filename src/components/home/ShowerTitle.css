@@ -1,0 +1,36 @@
+/* Ajuste aqui a troca final canvas -> texto real. */
+:root {
+  --shower-title-settle: 300ms;
+}
+
+.shower-title {
+  position: relative;
+}
+
+.shower-title__canvas {
+  position: absolute;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity var(--shower-title-settle) var(--ease-standard);
+}
+
+/* Enquanto espera a fonte ou anima, o texto real fica invisível (mas
+   ocupando o mesmo espaço, então nada no layout pula). */
+.shower-title[data-phase='pending'] .shower-title__text,
+.shower-title[data-phase='playing'] .shower-title__text {
+  color: transparent;
+}
+
+.shower-title__text {
+  transition: color var(--shower-title-settle) var(--ease-standard);
+}
+
+.shower-title[data-phase='done'] .shower-title__canvas {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shower-title__canvas {
+    display: none;
+  }
+}

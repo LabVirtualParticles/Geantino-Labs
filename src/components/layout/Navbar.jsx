@@ -1,10 +1,13 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ShowerTitle from '../home/ShowerTitle';
+import { NAVBAR_SHOWER_CONFIG } from '../home/emShowerTitle';
 import './Navbar.css';
 
 export default function Navbar() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   async function handleLogout() {
     await signOut();
@@ -14,9 +17,22 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar__inner">
-        <Link to="/" className="navbar__brand">
+        {/* Logo "escrito" por um chuveiro eletromagnético toda vez que uma
+            página carrega. O key={pathname} garante que a animação
+            recomece a cada troca de página, mesmo quando o React
+            reaproveita a Navbar (ex.: de uma categoria do catálogo pra
+            outra, que usam o mesmo componente de página). Pra animar só
+            no primeiro carregamento do site: tirar o key e adicionar
+            playOnceKey="navbar-logo". */}
+        <ShowerTitle
+          key={pathname}
+          as={Link}
+          to="/"
+          className="navbar__brand"
+          config={NAVBAR_SHOWER_CONFIG}
+        >
           Geantino Labs
-        </Link>
+        </ShowerTitle>
 
         {/* Todos os itens são filhos diretos de .navbar__nav (sem
             agrupamento em <span>) pra ficarem com o mesmo espaçamento
