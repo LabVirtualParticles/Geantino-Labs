@@ -6,6 +6,7 @@ import SimulationViewer from '../features/simulation-demo/SimulationViewer';
 import ExplanationPanel from '../features/simulation-demo/ExplanationPanel';
 import { useSimulationRun } from '../features/simulation-demo/useSimulationRun';
 import {
+  beamDirectionFromParams,
   computeScatteringAngles,
   buildHistogram,
   renderHistogramToDataURL,
@@ -44,11 +45,11 @@ export default function SimulationExample() {
     try {
       const screenshotDataUrl = viewerRef.current?.captureScreenshot() ?? null;
 
-      // Direção de incidência padrão do Rutherford (ver default_params em
-      // app.py: dir_x=-1, dir_y=0, dir_z=0) — fixo por ora porque é a
-      // única simulação cadastrada; se o catálogo crescer, isso passa a
-      // vir de `meta.paramsUsed`.
-      const angles = computeScatteringAngles(data.trajectories, [-1, 0, 0]);
+      // Direção do feixe = a que o backend de fato usou (params_used:
+      // dir_x/dir_y/dir_z). Se não vier, cai no padrão do Rutherford (-x).
+      // computeScatteringAngles já conta só as partículas primárias.
+      const beamDir = beamDirectionFromParams(meta?.paramsUsed);
+      const angles = computeScatteringAngles(data.trajectories, beamDir);
       const histogram = buildHistogram(angles);
       const chartDataUrl = renderHistogramToDataURL(histogram);
 

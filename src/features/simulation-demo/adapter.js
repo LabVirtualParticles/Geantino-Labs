@@ -64,8 +64,15 @@ export function adaptSimulationResult(raw) {
     position: (volume.position ?? [0, 0, 0]).map((v) => v * SCENE_SCALE),
   }));
 
+  // event/track/particle/charge não são usados pelo viewer, mas os
+  // gráficos precisam deles (ex.: angularHistogram.js conta só a
+  // partícula primária de cada evento, que é a track 1 no Geant4).
   const sceneTrajectories = trajectories.map((trajectory) => ({
     id: `evt${trajectory.event}-trk${trajectory.track}`,
+    event: trajectory.event,
+    track: trajectory.track,
+    particle: trajectory.particle,
+    charge: trajectory.charge,
     color: colorForCharge(trajectory.charge),
     points: (trajectory.points ?? []).map(scalePoint),
   }));

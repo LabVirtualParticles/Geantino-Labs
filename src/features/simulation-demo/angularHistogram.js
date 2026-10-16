@@ -35,10 +35,35 @@ export function outgoingDirection(points) {
   return null;
 }
 
-export function computeScatteringAngles(trajectories, incidentDir = [-1, 0, 0]) {
-  const [ix, iy, iz] = normalize(incidentDir);
+// Direção do feixe a partir dos parâmetros que o backend devolve em
+// `params_used` (dir_x, dir_y, dir_z — ver default_params em app.py).
+// Se faltar algum campo ou vier tudo zero, usa `fallback`.
+export function beamDirectionFromParams(params, fallback = [-1, 0, 0]) {
+  const raw = [params?.dir_x, params?.dir_y, params?.dir_z];
+  if (raw.some((value) => value === undefined || value === null || value === '')) return fallback;
+  const dir = raw.map(Number);
+  if (dir.some((value) => !Number.isFinite(value))) return fallback;
+  return normalize(dir) ?? fallback;
+}
+
+// Partícula primária = a que o canhão disparou. No Geant4 ela é sempre a
+// track 1 de cada evento; secundárias (elétrons arrancados, gamas...) têm
+// track > 1 e não entram no histograma — o "ângulo de espalhamento" delas
+// em relação ao feixe não tem o mesmo significado. Trajetória sem o campo
+// `track` (ex.: dados de exemplo antigos) é tratada como primária.
+function isPrimary(trajectory) {
+  return trajectory.track === undefined || trajectory.track === null || trajectory.track === 1;
+}
+
+export function computeScatteringAngles(
+  trajectories,
+  incidentDir = [-1, 0, 0],
+  { primariesOnly = true } = {},
+) {
+  const [ix, iy, iz] = normalize(incidentDir) ?? [-1, 0, 0];
 
   return trajectories
+    .filter((trajectory) => !primariesOnly || isPrimary(trajectory))
     .map((trajectory) => {
       const dir = outgoingDirection(trajectory.points);
       if (!dir) return null;
