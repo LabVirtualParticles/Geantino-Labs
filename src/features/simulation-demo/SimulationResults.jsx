@@ -27,6 +27,7 @@ const CHART_VIEWS = [
 export default function SimulationResults({ schema, data, meta }) {
   const hasScattering = (schema.charts ?? []).includes('scattering');
   const [view, setView] = useState('log');
+  const [logScale, setLogScale] = useState(true);
 
   const analysis = useMemo(() => {
     if (!hasScattering) return null;
@@ -70,15 +71,35 @@ export default function SimulationResults({ schema, data, meta }) {
                   </button>
                 ))}
               </div>
+
+              <div className="sim-results__scale" role="group" aria-label="Escala do eixo Y">
+                <span className="sim-results__scale-label">Eixo Y</span>
+                {[
+                  { id: true, label: 'Log' },
+                  { id: false, label: 'Linear' },
+                ].map((option) => (
+                  <button
+                    key={option.label}
+                    type="button"
+                    aria-pressed={logScale === option.id}
+                    className={`sim-results__scale-option${logScale === option.id ? ' is-active' : ''}`}
+                    onClick={() => setLogScale(option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <ScatteringChart analysis={analysis} mode={view} />
+            <ScatteringChart analysis={analysis} mode={view} logScale={logScale} />
 
             <p className="sim-results__note">
               {view === 'log' ? (
                 <>
-                  Cada barra conta quantas partículas desviaram naquela faixa de ângulo. A escala
-                  log deixa visíveis os desvios grandes, que são raros.
+                  Cada barra conta quantas partículas desviaram naquela faixa de ângulo.{' '}
+                  {logScale
+                    ? 'A escala log deixa visíveis os desvios grandes, que são raros.'
+                    : 'Na escala linear os desvios grandes quase somem — troque pra log pra ver a cauda.'}
                 </>
               ) : analysis.theory.ok ? (
                 <>
@@ -161,7 +182,7 @@ function formatShare(part, total) {
 
 // Canvas do gráfico: redesenha ao mudar de dados/visualização, ao
 // redimensionar e ao trocar o tema (lê as cores dos tokens do CSS).
-function ScatteringChart({ analysis, mode }) {
+function ScatteringChart({ analysis, mode, logScale }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -201,8 +222,9 @@ function ScatteringChart({ analysis, mode }) {
       theory: analysis.theory,
       colors: chartColorsFromTheme(),
       highlightBin: hoverBin,
+      logScale,
     });
-  }, [analysis, mode, size, themeKey, hoverBin]);
+  }, [analysis, mode, logScale, size, themeKey, hoverBin]);
 
   const { histogram, theory } = analysis;
 
@@ -231,11 +253,11 @@ function ScatteringChart({ analysis, mode }) {
           ref={canvasRef}
           className="sim-results__canvas"
           role="img"
-          aria-label={
+          aria-label={`${
             mode === 'theory'
               ? 'Distribuição angular das partículas comparada com a curva de Rutherford'
-              : 'Distribuição angular das partículas em escala logarítmica'
-          }
+              : 'Distribuição angular das partículas'
+          }, eixo Y em escala ${logScale ? 'logarítmica' : 'linear'}`}
           onPointerMove={pickBin}
           onPointerDown={pickBin}
           onPointerLeave={(event) => {

@@ -168,7 +168,7 @@ export function binAtX(x, width, histogram) {
  */
 export function drawScatteringChart(
   ctx,
-  { width, height, mode, histogram, theory, colors, highlightBin = -1 },
+  { width, height, mode, histogram, theory, colors, highlightBin = -1, logScale = true },
 ) {
   const plot = chartLayout(width, height);
   const { counts, binSize, range } = histogram;
@@ -178,27 +178,49 @@ export function drawScatteringChart(
   ctx.fillStyle = colors.background;
   ctx.fillRect(0, 0, width, height);
 
-  // Escala log no Y: de 0,5 (pra uma barra com 1 partícula aparecer) até
-  // a próxima potência de 10 acima do maior valor. Com a curva teórica o
-  // eixo desce até 0,05: na cauda a teoria prevê menos de 1 partícula por
-  // faixa, e cortar ali esconderia justamente a parte interessante.
   const maxCount = Math.max(1, ...counts);
-  const yMin = showTheory ? 0.05 : 0.5;
-  const yMax = 10 ** Math.ceil(Math.log10(maxCount * 1.6));
-  const logMin = Math.log10(yMin);
-  const logSpan = Math.log10(yMax) - logMin;
-  const yRaw = (value) =>
-    plot.top + plot.height - ((Math.log10(value) - logMin) / logSpan) * plot.height;
-  const yOf = (value) => yRaw(Math.max(value, yMin));
+  let yRaw;
+  let yOf;
+  let ticks;
+
+  if (logScale) {
+    // Escala log no Y: de 0,5 (pra uma barra com 1 partícula aparecer)
+    // até a próxima potência de 10 acima do maior valor. Com a curva
+    // teórica o eixo desce até 0,05: na cauda a teoria prevê menos de 1
+    // partícula por faixa, e cortar ali esconderia a parte interessante.
+    const yMin = showTheory ? 0.05 : 0.5;
+    const yMax = 10 ** Math.ceil(Math.log10(maxCount * 1.6));
+    const logMin = Math.log10(yMin);
+    const logSpan = Math.log10(yMax) - logMin;
+    yRaw = (value) =>
+      plot.top + plot.height - ((Math.log10(value) - logMin) / logSpan) * plot.height;
+    yOf = (value) => yRaw(Math.max(value, yMin));
+    ticks = [];
+    for (let power = Math.ceil(logMin); 10 ** power <= yMax; power += 1) {
+      ticks.push({ value: 10 ** power, label: formatPower(power) });
+    }
+  } else {
+    // Escala linear: de 0 até um valor "redondo" logo acima do maior. A
+    // curva teórica perto de 0° passa do topo e é recortada (esperado).
+    const step = niceStep(maxCount / 5);
+    const yMax = Math.ceil((maxCount * 1.05) / step) * step;
+    yRaw = (value) => plot.top + plot.height - (value / yMax) * plot.height;
+    yOf = (value) => yRaw(Math.max(0, value));
+    ticks = [];
+    for (let value = 0; value <= yMax + step / 2; value += step) {
+      ticks.push({ value, label: value.toLocaleString('pt-BR') });
+    }
+  }
+
   const xOf = (theta) => plot.left + (theta / range) * plot.width;
 
   ctx.font = `11px ${FONT_FAMILY}`;
   ctx.textBaseline = 'middle';
 
-  // Grade horizontal nas potências de 10 + rótulos do eixo Y
+  // Grade horizontal + rótulos do eixo Y
   ctx.lineWidth = 1;
-  for (let power = Math.ceil(logMin); 10 ** power <= yMax; power += 1) {
-    const y = Math.round(yOf(10 ** power)) + 0.5;
+  for (const tick of ticks) {
+    const y = Math.round(yOf(tick.value)) + 0.5;
     ctx.strokeStyle = colors.grid;
     ctx.beginPath();
     ctx.moveTo(plot.left, y);
@@ -206,7 +228,7 @@ export function drawScatteringChart(
     ctx.stroke();
     ctx.fillStyle = colors.text;
     ctx.textAlign = 'right';
-    ctx.fillText(formatPower(power), plot.left - 8, y);
+    ctx.fillText(tick.label, plot.left - 8, y);
   }
 
   // Faixa sob o mouse
@@ -295,7 +317,7 @@ export function drawScatteringChart(
   ctx.translate(13, plot.top + plot.height / 2);
   ctx.rotate(-Math.PI / 2);
   ctx.textBaseline = 'middle';
-  ctx.fillText('Partículas (escala log)', 0, 0);
+  ctx.fillText(logScale ? 'Partículas (escala log)' : 'Partículas', 0, 0);
   ctx.restore();
 
   // Legenda (só no modo teoria)
@@ -323,6 +345,16 @@ export function drawScatteringChart(
   }
 
   ctx.restore();
+}
+
+// Passo "redondo" (1, 2 ou 5 × 10ⁿ) mais próximo acima de `raw`, pras
+// marcas do eixo linear.
+function niceStep(raw) {
+  const safe = Math.max(raw, 1);
+  const magnitude = 10 ** Math.floor(Math.log10(safe));
+  const fraction = safe / magnitude;
+  const nice = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
+  return nice * magnitude;
 }
 
 function formatPower(power) {
