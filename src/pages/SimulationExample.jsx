@@ -5,12 +5,16 @@ import ParametersPanel from '../features/simulation-demo/ParametersPanel';
 import SimulationViewer from '../features/simulation-demo/SimulationViewer';
 import ExplanationPanel from '../features/simulation-demo/ExplanationPanel';
 import { useSimulationRun } from '../features/simulation-demo/useSimulationRun';
+import SimulationResults from '../features/simulation-demo/SimulationResults';
 import {
   beamDirectionFromParams,
   computeScatteringAngles,
-  buildHistogram,
-  renderHistogramToDataURL,
 } from '../features/simulation-demo/angularHistogram';
+import {
+  buildRutherfordTheory,
+  buildScatteringHistogram,
+  renderScatteringChartToDataURL,
+} from '../features/simulation-demo/scatteringChart';
 import { useAuth } from '../context/AuthContext';
 import { saveReport } from '../lib/reports';
 import schema from '../features/simulation-demo/data/parameters.example.json';
@@ -48,10 +52,16 @@ export default function SimulationExample() {
       // Direção do feixe = a que o backend de fato usou (params_used:
       // dir_x/dir_y/dir_z). Se não vier, cai no padrão do Rutherford (-x).
       // computeScatteringAngles já conta só as partículas primárias.
-      const beamDir = beamDirectionFromParams(meta?.paramsUsed);
-      const angles = computeScatteringAngles(data.trajectories, beamDir);
-      const histogram = buildHistogram(angles);
-      const chartDataUrl = renderHistogramToDataURL(histogram);
+      // O PNG do relatório usa o mesmo desenho do gráfico da seção
+      // "Resultados" (scatteringChart.js), em paleta escura fixa e já com
+      // a curva de Rutherford quando há partículas suficientes acima de 10°.
+      let chartDataUrl = null;
+      if ((schema.charts ?? []).includes('scattering')) {
+        const beamDir = beamDirectionFromParams(meta?.paramsUsed);
+        const angles = computeScatteringAngles(data.trajectories, beamDir);
+        const histogram = buildScatteringHistogram(angles);
+        chartDataUrl = renderScatteringChartToDataURL(histogram, buildRutherfordTheory(histogram));
+      }
 
       await saveReport({
         userId: user.id,
@@ -141,6 +151,10 @@ export default function SimulationExample() {
             )}
           </div>
         </div>
+
+        {/* Resultados (gráfico + resumo + parâmetros) logo depois de
+            simular. Some enquanto uma nova simulação está rodando. */}
+        {status === 'done' && meta && <SimulationResults schema={schema} data={data} meta={meta} />}
 
         <ExplanationPanel
           schema={explanationSchema}
