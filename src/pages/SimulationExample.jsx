@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import ParametersPanel from '../features/simulation-demo/ParametersPanel';
@@ -6,6 +6,8 @@ import SimulationViewer from '../features/simulation-demo/SimulationViewer';
 import ExplanationPanel from '../features/simulation-demo/ExplanationPanel';
 import { useSimulationRun } from '../features/simulation-demo/useSimulationRun';
 import SimulationResults from '../features/simulation-demo/SimulationResults';
+import PlaybackControls from '../features/simulation-demo/PlaybackControls';
+import { groupByEvent, useEventPlayback } from '../features/simulation-demo/eventPlayback';
 import {
   beamDirectionFromParams,
   computeScatteringAngles,
@@ -28,7 +30,21 @@ import '../features/simulation-demo/simulation-demo.css';
 // "Contexto e fundamentos" abre o ExplanationPanel, com o conteúdo
 // pedagógico definido em data/explanations.example.json.
 export default function SimulationExample() {
-  const { values, setField, status, data, meta, error, run, exportData } = useSimulationRun(schema);
+  const { values, setField, status, data, meta, error, run, exportData, runProgress } =
+    useSimulationRun(schema);
+
+  // Playback evento a evento: as trajetórias vão aparecendo em ordem de
+  // evento quando a simulação termina (ver eventPlayback.js). Antes da
+  // primeira simulação (dados de exemplo) mostra tudo, sem controles.
+  const grouped = useMemo(() => groupByEvent(data.trajectories ?? []), [data]);
+  const playback = useEventPlayback(grouped.eventCount, {
+    resetKey: data,
+    enabled: status === 'done',
+  });
+  const showPlayback = status === 'done' && grouped.eventCount > 1;
+  const viewerData = useMemo(() => ({ ...data, trajectories: grouped.trajectories }), [data, grouped]);
+  const visibleCount = showPlayback ? (grouped.endIndex[playback.revealedEvents] ?? 0) : undefined;
+  const recentFrom = showPlayback ? (grouped.endIndex[playback.recentFromEvent] ?? 0) : 0;
   const [isExplanationOpen, setExplanationOpen] = useState(false);
   const { user } = useAuth();
   const viewerRef = useRef(null);
@@ -109,7 +125,15 @@ export default function SimulationExample() {
           <ParametersPanel schema={schema} values={values} onChange={setField} />
 
           <div className="sim-page__stage">
-            <SimulationViewer ref={viewerRef} data={data} status={status} />
+            <SimulationViewer
+              ref={viewerRef}
+              data={viewerData}
+              status={status}
+              visibleCount={visibleCount}
+              recentFrom={recentFrom}
+              runProgress={runProgress}
+            />
+            {showPlayback && <PlaybackControls playback={playback} />}
             <div className="sim-page__actions">
               <button
                 type="button"

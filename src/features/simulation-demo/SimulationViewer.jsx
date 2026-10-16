@@ -1,7 +1,8 @@
-import { Suspense, forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import { Suspense, forwardRef, memo, useImperativeHandle, useMemo, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Line, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
+import RunProgress from './RunProgress';
 
 // Clean edge-only wireframe (via EdgesGeometry) instead of the
 // `wireframe: true` material prop, which draws a diagonal across every
@@ -48,10 +49,28 @@ function MeshVolume({ vertices, indices, position = [0, 0, 0], color = '#9a9a9a'
   );
 }
 
-function Trajectories({ trajectories }) {
-  return trajectories.map((trajectory) => (
-    <Line key={trajectory.id} points={trajectory.points} color={trajectory.color} lineWidth={1.4} />
-  ));
+// Uma linha por trajetória. `memo` + `key` estável: quando o playback
+// revela mais eventos, só as linhas novas são criadas — as que já estavam
+// na tela não são refeitas. `dim` apaga as trajetórias mais antigas
+// enquanto o playback está no meio (as recentes ficam com cor cheia).
+const TrajectoryLine = memo(function TrajectoryLine({ points, color, dim }) {
+  return (
+    <Line points={points} color={color} lineWidth={1.4} transparent opacity={dim ? 0.4 : 1} />
+  );
+});
+
+function Trajectories({ trajectories, visibleCount, recentFrom }) {
+  const count = visibleCount ?? trajectories.length;
+  return trajectories
+    .slice(0, count)
+    .map((trajectory, index) => (
+      <TrajectoryLine
+        key={trajectory.id}
+        points={trajectory.points}
+        color={trajectory.color}
+        dim={index < recentFrom}
+      />
+    ));
 }
 
 /**
@@ -67,7 +86,15 @@ function Trajectories({ trajectories }) {
 // WebGL atual como PNG. `preserveDrawingBuffer: true` no <Canvas> é
 // obrigatório pra isso: sem ele, o WebGL limpa o buffer de desenho logo
 // depois de cada frame e toDataURL() devolve uma imagem em branco.
-const SimulationViewer = forwardRef(function SimulationViewer({ data, status }, ref) {
+//
+// Playback (ver eventPlayback.js): `visibleCount` = quantas trajetórias
+// desenhar (as primeiras da lista, já ordenada por evento) e `recentFrom` =
+// a partir de qual índice ficam com cor cheia. Sem essas props, desenha
+// tudo. `runProgress` alimenta o indicador enquanto a simulação roda.
+const SimulationViewer = forwardRef(function SimulationViewer(
+  { data, status, visibleCount, recentFrom = 0, runProgress },
+  ref,
+) {
   const wrapperRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
@@ -98,16 +125,16 @@ const SimulationViewer = forwardRef(function SimulationViewer({ data, status }, 
                 <TargetVolume key={volume.id} size={volume.size} position={volume.position} />
               )
             )}
-          <Trajectories trajectories={data.trajectories} />
+          <Trajectories
+            trajectories={data.trajectories}
+            visibleCount={visibleCount}
+            recentFrom={recentFrom}
+          />
         </Suspense>
         <OrbitControls enablePan={false} minDistance={120} maxDistance={600} />
       </Canvas>
 
-      {status === 'running' && (
-        <div className="simulation-viewer__overlay" role="status">
-          Processando simulação…
-        </div>
-      )}
+      {status === 'running' && <RunProgress {...runProgress} />}
       {status === 'error' && (
         <div className="simulation-viewer__overlay" role="alert">
           Falha ao rodar a simulação. Veja o console para detalhes.
