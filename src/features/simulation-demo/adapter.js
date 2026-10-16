@@ -33,10 +33,20 @@ function boundingBoxSize(vertices) {
 // campo "charge", escrito pelo TrajectoryRecorder em C++) — não pela
 // espécie de partícula, para funcionar igual para qualquer partícula
 // permitida (allowed_particles em app.py).
+//
+// Mesmo padrão do visualizador do próprio Geant4 (G4TrajectoryDrawByCharge,
+// o modelo padrão do /vis/scene/add/trajectories): positiva = azul,
+// negativa = vermelho, neutra = verde, com as cores puras do G4Colour.
+export const CHARGE_COLORS = {
+  positive: '#0000FF', // G4Colour::Blue()  — ex.: alfa, próton
+  negative: '#FF0000', // G4Colour::Red()   — ex.: elétron
+  neutral: '#00FF00', // G4Colour::Green() — ex.: gama, nêutron
+};
+
 function colorForCharge(charge) {
-  if (charge > 0) return '#E3B23C'; // positiva (ex.: alpha, próton) — dourado
-  if (charge < 0) return '#7FB2FF'; // negativa (ex.: elétron) — azul claro
-  return '#2F5DFF'; // neutra (ex.: gama) — azul do feixe
+  if (charge > 0) return CHARGE_COLORS.positive;
+  if (charge < 0) return CHARGE_COLORS.negative;
+  return CHARGE_COLORS.neutral;
 }
 
 /**

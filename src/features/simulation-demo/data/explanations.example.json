@@ -31,7 +31,7 @@
         },
         {
           "type": "paragraph",
-          "text": "O ângulo de espalhamento depende de três fatores, todos ajustáveis no painel de parâmetros:"
+          "text": "O ângulo de espalhamento depende de três fatores (no painel de parâmetros já dá pra ajustar a energia; material e espessura do alvo chegam em breve):"
         },
         {
           "type": "list",
@@ -62,7 +62,7 @@
       "blocks": [
         {
           "type": "paragraph",
-          "text": "Na visualização 3D, cada linha azul representa a trajetória de uma partícula alfa atravessando a folha de ouro. Observe que a esmagadora maioria das trajetórias passa quase reta, com desvios mínimos — isso já é uma evidência: se o átomo fosse \"cheio\", como no modelo de Thomson, todas as partículas seriam desviadas de forma parecida, e não é isso que se vê."
+          "text": "Na visualização 3D, cada linha azul representa a trajetória de uma partícula alfa (as cores seguem o padrão do Geant4: azul para carga positiva, vermelho para negativa e verde para neutra) atravessando a folha de ouro. Observe que a esmagadora maioria das trajetórias passa quase reta, com desvios mínimos — isso já é uma evidência: se o átomo fosse \"cheio\", como no modelo de Thomson, todas as partículas seriam desviadas de forma parecida, e não é isso que se vê."
         },
         {
           "type": "paragraph",
@@ -70,7 +70,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Experimente aumentar o número de partículas do feixe para tornar os eventos de grande ângulo mais visíveis, ou trocar o material do alvo para comparar o padrão de espalhamento entre elementos com número atômico diferente."
+          "text": "Experimente aumentar o número de partículas do feixe para tornar os eventos de grande ângulo mais visíveis. Depois de simular, a seção Resultados mostra quantas partículas desviaram em cada faixa de ângulo; na opção \"Comparar com Rutherford\", esses dados aparecem junto da previsão teórica 1/sen⁴(θ/2). Acima de uns 10° a simulação acompanha a curva; perto de 0° ela se afasta, porque ali pesam os vários desvios pequenos seguidos (espalhamento múltiplo) e a blindagem do núcleo pelos elétrons do átomo."
         }
       ]
     }

@@ -89,9 +89,12 @@ export default function SimulationExample() {
         <header className="sim-page__header">
           <h1>{schema.title}</h1>
           <p>
-            Página de referência para executar uma simulação: os campos de parâmetros e a
-            renderização já estão prontos, falta apenas ligar <code>useSimulationRun</code> ao
-            backend real do Geant4.
+            Em 1909, Geiger e Marsden dispararam partículas alfa contra uma folha de ouro
+            finíssima e viram algumas voltarem — o resultado que levou Rutherford a descobrir o
+            núcleo atômico. Aqui o mesmo experimento roda de verdade no Geant4: escolha a
+            partícula, a energia e quantas partículas disparar, clique em Simular e veja as
+            trajetórias em 3D e, logo abaixo, a distribuição dos ângulos de desvio comparada com a
+            previsão de Rutherford.
           </p>
           <button
             type="button"
