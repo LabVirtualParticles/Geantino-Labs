@@ -19,6 +19,7 @@ export const COLLISION_CONFIG = {
   trackMs: 1100, // tempo pra um rastro típico chegar ao calorímetro
   depositMs: 260, // barra de energia crescendo no calorímetro
   maxStartDelayMs: 120, // espalhamento no início dos rastros
+  fadeOutMs: 500, // colisão anterior sumindo antes da próxima começar
   jets: 2, // jatos (grupos estreitos de partículas)
   tracksPerJet: 7,
   extraTracks: 10, // partículas espalhadas fora dos jatos
@@ -160,6 +161,7 @@ export function createCollisionScene(canvas, config = {}) {
   let dpr = 1;
   let colors = null;
   let lastT = Infinity;
+  let eventAlpha = 1; // usado pra apagar a colisão anterior antes da próxima
 
   function readColors() {
     colors = {
@@ -250,7 +252,7 @@ export function createCollisionScene(canvas, config = {}) {
       const s = Math.min(track.length, local * speed);
       const neutral = track.kind === 'neutral';
 
-      ctx.globalAlpha = neutral ? 0.7 : 0.9;
+      ctx.globalAlpha = (neutral ? 0.7 : 0.9) * eventAlpha;
       ctx.strokeStyle = neutral ? colors.neutral : colors.track;
       ctx.lineWidth = neutral ? 1 : 1.25;
       ctx.setLineDash(neutral ? [4, 5] : []);
@@ -273,7 +275,7 @@ export function createCollisionScene(canvas, config = {}) {
       ctx.setLineDash([]);
 
       // pontos nas camadas do rastreador
-      ctx.globalAlpha = 1;
+      ctx.globalAlpha = eventAlpha;
       ctx.fillStyle = colors.track;
       for (const hit of track.hits) {
         if (hit.s > s) break;
@@ -291,7 +293,7 @@ export function createCollisionScene(canvas, config = {}) {
         const r1 = r0 + R * cfg.caloDepth * 0.95 * track.deposit.energy * k;
         const a = track.deposit.angle;
         ctx.strokeStyle = neutral ? colors.neutral : colors.track;
-        ctx.globalAlpha = 0.85;
+        ctx.globalAlpha = 0.85 * eventAlpha;
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(cx + Math.cos(a) * r0, cy - Math.sin(a) * r0);
@@ -325,9 +327,8 @@ export function createCollisionScene(canvas, config = {}) {
     return cfg.approachMs + Math.max(longest, cfg.flashMs);
   }
 
-  function play() {
-    cancelAnimationFrame(frameId);
-    readColors();
+  function startNewEvent() {
+    eventAlpha = 1;
     event = generateEvent(cfg);
     startTime = null;
     const total = totalDuration();
@@ -340,9 +341,33 @@ export function createCollisionScene(canvas, config = {}) {
     frameId = requestAnimationFrame(frame);
   }
 
+  // Sorteia e anima uma colisão nova. Se já tem uma colisão desenhada,
+  // ela some suavemente antes (fadeOutMs) pra troca não ser um corte seco.
+  function play() {
+    cancelAnimationFrame(frameId);
+    readColors();
+    const hasVisibleEvent = event && lastT !== Infinity && lastT > cfg.approachMs;
+    if (!hasVisibleEvent) {
+      startNewEvent();
+      return;
+    }
+    const frozenT = lastT;
+    let fadeStart = null;
+    const fade = (now) => {
+      if (fadeStart === null) fadeStart = now;
+      const k = clamp01((now - fadeStart) / cfg.fadeOutMs);
+      eventAlpha = 1 - k;
+      draw(frozenT);
+      if (k < 1) frameId = requestAnimationFrame(fade);
+      else startNewEvent();
+    };
+    frameId = requestAnimationFrame(fade);
+  }
+
   function drawFinal() {
     cancelAnimationFrame(frameId);
     readColors();
+    eventAlpha = 1;
     event = generateEvent(cfg);
     draw(totalDuration());
   }
