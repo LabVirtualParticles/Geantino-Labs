@@ -1,6 +1,7 @@
 {
   "simulationId": "rutherford-scattering",
   "title": "Espalhamento de Rutherford",
+  "charts": ["scattering"],
   "fields": [
     {
       "id": "particleType",

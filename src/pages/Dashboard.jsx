@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { getProfile, uploadAvatar } from '../lib/profile';
 import { listReports, deleteReport } from '../lib/reports';
+import { formatParams, formatSeed } from '../features/simulation-demo/formatParams';
 import './Dashboard.css';
 
 const TABS = [
@@ -339,24 +340,17 @@ function ReportsPanel() {
                       <div>
                         <h3>Parâmetros</h3>
                         <dl className="reports-list__dl">
-                          {Object.entries(report.params ?? {}).map(([key, value]) => (
-                            <div key={key}>
-                              <dt>{key}</dt>
-                              <dd>{String(value)}</dd>
+                          {formatParams(report.params).map((row) => (
+                            <div key={row.key}>
+                              <dt>{row.label}</dt>
+                              <dd>{row.value}</dd>
                             </div>
                           ))}
                         </dl>
 
                         <h3>Seed</h3>
-                        {report.seed ? (
-                          <dl className="reports-list__dl">
-                            {Object.entries(report.seed).map(([key, value]) => (
-                              <div key={key}>
-                                <dt>{key}</dt>
-                                <dd>{String(value)}</dd>
-                              </div>
-                            ))}
-                          </dl>
+                        {formatSeed(report.seed) ? (
+                          <p className="reports-list__seed">{formatSeed(report.seed)}</p>
                         ) : (
                           <p className="dashboard-panel__hint">Não disponível para este relatório.</p>
                         )}
