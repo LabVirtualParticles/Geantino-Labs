@@ -1,234 +1,380 @@
+/* Página /simulacoes — grade 2x2 de áreas (ver SimulationsMap.jsx).
+   Ajustes rápidos:
+   - altura total da grade no desktop: --sim-grid-height
+   - quanto o card aberto cresce: as classes .open-N (colunas 1.5fr/1fr,
+     linhas 3fr/1fr = a linha aberta fica com ~75% da altura) */
+
+.sim-map-page {
+  position: relative;
+  overflow-x: clip;
+}
+
 .sim-map {
+  --sim-grid-height: 702px;
+  --sim-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
   max-width: var(--content-max);
   margin: 0 auto;
   padding: var(--space-5) var(--space-3) var(--space-6);
-}
-
-.sim-map__diagram {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-}
-
-/* Coordinates for these paths are computed in JS (see SimulationsMap.jsx)
-   from the actual on-screen position of each card and the center label,
-   so the lines always touch the cards exactly instead of floating near
-   an approximate spot. No viewBox here on purpose — the SVG's own pixel
-   box is the coordinate space, matching the getBoundingClientRect() math
-   in the component. */
-.sim-map__lines {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.sim-map__lines path {
-  fill: none;
-  stroke: var(--color-line);
-  stroke-width: 1.5;
-  stroke-dasharray: 7 6;
-  animation: sim-map-line-flow 7s linear infinite;
-}
-
-@keyframes sim-map-line-flow {
-  to {
-    stroke-dashoffset: -26;
-  }
-}
-
-.sim-map__center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.8rem;
-  background: var(--color-void);
-  text-align: center;
-  pointer-events: none;
+  gap: var(--space-4);
 }
 
-.sim-map__center-title {
+/* Anéis do detector bem apagados no fundo (decoração). */
+.sim-map__rings {
+  position: absolute;
+  top: 0;
+  right: -260px;
+  width: 900px;
+  height: 900px;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--color-line-soft);
+  stroke-width: 1;
+}
+
+.sim-map__header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 60ch;
+}
+
+.sim-map__title {
   margin: 0;
   font-family: var(--font-subtitle);
   font-weight: 700;
-  font-size: var(--step-1);
+  font-size: var(--step-3);
+  line-height: 1.05;
   color: var(--color-on-void);
-  white-space: nowrap;
 }
 
-.sim-map__center-hint {
+.sim-map__lede {
   margin: 0;
   font-family: var(--font-body);
-  font-size: var(--step--1);
+  font-size: var(--step-0);
+  line-height: 1.6;
   color: var(--color-on-void-soft);
-  max-width: 28ch;
 }
 
-@-webkit-keyframes vibrate-1 {
-  0% {
-    -webkit-transform: translate(0);
-            transform: translate(0);
-  }
-  20% {
-    -webkit-transform: translate(-6px, 6px);
-            transform: translate(-6px, 6px);
-  }
-  40% {
-    -webkit-transform: translate(-6px, -6px);
-            transform: translate(-6px, -6px);
-  }
-  60% {
-    -webkit-transform: translate(6px, 6px);
-            transform: translate(6px, 6px);
-  }
-  80% {
-    -webkit-transform: translate(6px, -6px);
-            transform: translate(6px, -6px);
-  }
-  100% {
-    -webkit-transform: translate(0);
-            transform: translate(0);
-  }
+/* --- Grade (desktop com mouse) ------------------------------------- */
+
+.sim-grid {
+  position: relative;
+  display: grid;
+  gap: var(--space-3);
+  height: var(--sim-grid-height);
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  transition:
+    grid-template-columns 420ms var(--sim-ease),
+    grid-template-rows 420ms var(--sim-ease);
 }
 
-@keyframes vibrate-1 {
-  0% {
-    -webkit-transform: translate(0);
-            transform: translate(0);
-  }
-  20% {
-    -webkit-transform: translate(-6px, 6px);
-            transform: translate(-6px, 6px);
-  }
-  40% {
-    -webkit-transform: translate(-6px, -6px);
-            transform: translate(-6px, -6px);
-  }
-  60% {
-    -webkit-transform: translate(6px, 6px);
-            transform: translate(6px, 6px);
-  }
-  80% {
-    -webkit-transform: translate(6px, -6px);
-            transform: translate(6px, -6px);
-  }
-  100% {
-    -webkit-transform: translate(0);
-            transform: translate(0);
-  }
-}
+.sim-grid.open-0 { grid-template-columns: 1.5fr 1fr; grid-template-rows: 3fr 1fr; }
+.sim-grid.open-1 { grid-template-columns: 1fr 1.5fr; grid-template-rows: 3fr 1fr; }
+.sim-grid.open-2 { grid-template-columns: 1.5fr 1fr; grid-template-rows: 1fr 3fr; }
+.sim-grid.open-3 { grid-template-columns: 1fr 1.5fr; grid-template-rows: 1fr 3fr; }
 
-.sim-map__card {
-  position: absolute;
-  width: 32%;
-  min-width: 11rem;
-  max-width: 16rem;
+.sim-card {
+  min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: var(--space-3);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   background: var(--color-void-soft);
-  text-decoration: none;
+  color: var(--color-on-void);
+  overflow: hidden;
   transition:
-    border-color 0.2s var(--ease-standard),
-    transform 0.25s var(--ease-standard),
-    box-shadow 0.25s var(--ease-standard);
-  -webkit-animation: vibrate-1 6000ms ease-in infinite both;
-          animation: vibrate-1 6000ms ease-in infinite both;
+    border-color 200ms ease,
+    box-shadow 300ms ease,
+    opacity 300ms ease;
 }
 
-/* Hovering ANY card freezes the vibration on every card, not just the
-   one under the pointer — the whole group settles at once. The
-   `:not(:hover)` keeps this from fighting the hovered card's own lift
-   below (higher-specificity rule would otherwise win on all of them). */
-.sim-map__diagram:has(.sim-map__card:hover) .sim-map__card:not(:hover) {
-  -webkit-animation: none;
-          animation: none;
-  -webkit-transform: translate(0);
-          transform: translate(0);
-}
-
-.sim-map__card:hover {
+.sim-card.is-open {
   border-color: var(--color-beam);
-  transform: translateY(-6px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
-  -webkit-animation: none;
-          animation: none;
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.45);
 }
 
-.sim-map__card-rule {
+.sim-card.is-dim {
+  opacity: 0.75;
+}
+
+.sim-card:focus-visible {
+  outline: 2px solid var(--color-trace);
+  outline-offset: 3px;
+}
+
+/* Carrossel */
+.sim-card__media {
+  position: relative;
+  flex: 1;
+  min-height: 60px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-void);
+}
+
+.sim-card__track {
+  display: flex;
+  height: 100%;
+  transition: transform 520ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.sim-card__slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sim-card__slide img {
   display: block;
-  width: 2.5rem;
-  height: 1px;
-  background: var(--color-on-void);
-  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.sim-map__card--0 {
-  top: 8%;
-  left: 5%;
-}
-
-.sim-map__card--1 {
-  top: 8%;
-  right: 5%;
-}
-
-.sim-map__card--2 {
-  bottom: 8%;
-  left: 5%;
-}
-
-.sim-map__card--3 {
-  bottom: 8%;
-  right: 5%;
-}
-
-.sim-map__card-title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--step-0);
+.sim-cover {
+  display: block;
+  width: 78%;
+  max-height: 88%;
+  height: auto;
   color: var(--color-beam);
 }
 
-.sim-map__card-soon {
+.sim-card__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 26px 16px 12px;
+  background: linear-gradient(to top, color-mix(in srgb, var(--color-void) 88%, transparent), transparent);
   font-family: var(--font-body);
+  font-weight: 600;
   font-size: var(--step--1);
-  color: var(--color-on-void-soft);
-  opacity: 0.6;
+  color: var(--color-on-void);
 }
 
-@media (max-width: 720px) {
-  .sim-map__diagram {
-    aspect-ratio: auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+.sim-card__dots {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 2px;
+}
+
+.sim-card__dot {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sim-card__dot::before {
+  content: '';
+  width: 6px;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-on-void) 45%, transparent);
+  transition: width 200ms ease, background 200ms ease;
+}
+
+.sim-card__dot.is-active::before {
+  width: 16px;
+  background: var(--color-beam);
+}
+
+/* Texto do card */
+.sim-card__body {
+  flex-shrink: 0;
+  padding: 14px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sim-card__meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-on-void-soft);
+}
+
+.sim-card__title {
+  margin: 0;
+  font-family: var(--font-subtitle);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--color-on-void);
+}
+
+.sim-card.is-open .sim-card__title {
+  font-size: 30px;
+}
+
+.sim-card__extra {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  animation: sim-card-fade 300ms ease 120ms both;
+}
+
+.sim-card__desc {
+  margin: 0;
+  max-width: 56ch;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-on-void-soft);
+}
+
+.sim-card__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--color-trace);
+  border-radius: var(--radius-sm);
+  color: var(--color-on-void);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: border-color 200ms ease;
+}
+
+.sim-card__cta:hover {
+  border-color: var(--color-beam);
+}
+
+.sim-card__soon {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-on-void-soft);
+}
+
+@keyframes sim-card-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* --- Modo toque (celular/tablet ou tela estreita) ------------------- */
+
+.sim-grid.is-touch {
+  height: auto;
+  grid-template-rows: none;
+  gap: 12px;
+}
+
+.sim-tile {
+  height: 200px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-void-soft);
+  color: var(--color-on-void);
+  overflow: hidden;
+  cursor: pointer;
+  font: inherit;
+}
+
+.sim-tile__media {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-void);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.sim-tile__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+}
+
+.sim-tile__title {
+  font-family: var(--font-subtitle);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+/* Card aberto por cima da grade */
+.sim-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  animation: sim-overlay-pop 280ms var(--sim-ease) both;
+}
+
+.sim-overlay .sim-card__media {
+  flex: none;
+  height: 210px;
+}
+
+.sim-overlay .sim-card__title {
+  font-size: 24px;
+}
+
+.sim-overlay .sim-card__dots {
+  right: auto;
+  left: 8px;
+}
+
+.sim-overlay__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-void) 70%, transparent);
+  color: var(--color-on-void);
+  cursor: pointer;
+}
+
+@keyframes sim-overlay-pop {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-grid,
+  .sim-card,
+  .sim-card__track {
+    transition: none;
   }
 
-  .sim-map__lines {
-    display: none;
-  }
-
-  .sim-map__center {
-    position: static;
-    transform: none;
-    background: none;
-    padding: 0;
-    text-align: center;
-    margin-bottom: var(--space-2);
-  }
-
-  .sim-map__card {
-    position: static;
-    width: 100%;
-    max-width: none;
+  .sim-card__extra,
+  .sim-overlay {
+    animation: none;
   }
 }
