@@ -9,28 +9,16 @@ import './Categories.css';
 // fica em destaque (um pouco maior); os vizinhos aparecem dos lados,
 // menores, escurecidos e desfocados.
 //
-// - Avança sozinho a cada AUTOPLAY_MS; pausa com o mouse em cima, com o
-//   foco do teclado dentro, ou com "reduzir movimento" ligado.
+// - Avança sozinho a cada AUTOPLAY_MS, sempre. Só pausa enquanto alguém
+//   navega pelo teclado dentro do carrossel (foco visível) — clicar numa
+//   seta com o mouse NÃO pausa. Trocar de card na mão reinicia a contagem.
+//   Com "reduzir movimento" ligado continua passando, só que sem animação.
 // - Setas, bolinhas, clique num card do lado, arrastar no celular e as
 //   teclas ← → (com o foco no carrossel) trocam o card.
 // - Os dados vêm de data/simulationCategories.js, igual à /simulacoes.
 
 const AUTOPLAY_MS = 4500;
 const SWIPE_MIN_PX = 40;
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(
-    () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false,
-  );
-  useEffect(() => {
-    const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-    if (!media) return undefined;
-    const update = () => setReduced(media.matches);
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
-  return reduced;
-}
 
 function countLabel(category) {
   const n = category.items.length;
@@ -55,7 +43,6 @@ export default function Categories() {
   // em vez de atravessar o carrossel inteiro.
   const [slide, setSlide] = useState({ active: 0, previous: 0 });
   const [paused, setPaused] = useState(false);
-  const reducedMotion = usePrefersReducedMotion();
   const touchStartX = useRef(null);
   const { active, previous } = slide;
 
@@ -76,10 +63,10 @@ export default function Categories() {
 
   // `active` nas dependências: trocar de card na mão reinicia a contagem.
   useEffect(() => {
-    if (paused || reducedMotion || total < 2) return undefined;
+    if (paused || total < 2) return undefined;
     const id = setInterval(next, AUTOPLAY_MS);
     return () => clearInterval(id);
-  }, [paused, reducedMotion, total, next, active]);
+  }, [paused, total, next, active]);
 
   return (
     <section className="categories" aria-labelledby="categories-title">
@@ -94,9 +81,9 @@ export default function Categories() {
           aria-roledescription="carrossel"
           aria-label="Áreas da física"
           tabIndex={0}
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocus={() => setPaused(true)}
+          onFocus={(event) => {
+            if (event.target.matches(':focus-visible')) setPaused(true);
+          }}
           onBlur={(event) => {
             if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false);
           }}
