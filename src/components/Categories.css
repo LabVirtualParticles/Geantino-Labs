@@ -1,7 +1,14 @@
+/* "Explore por área" da Home — carrossel (ver Categories.jsx).
+   Ajustes rápidos:
+   - tamanho do card quadrado: --cat-card-size
+   - quanto o card do centro cresce: --cat-active-scale
+   - desfoque/escurecimento dos vizinhos: .cat-card.is-side (filter) */
+
 .categories {
   background: var(--color-void);
   color: var(--color-on-void);
   padding: var(--space-6) var(--space-3);
+  overflow-x: clip;
 }
 
 .categories__inner {
@@ -14,56 +21,300 @@
   font-weight: 700;
   font-size: var(--step-2);
   text-align: center;
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-4);
   color: var(--color-on-void);
 }
 
-.categories__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
+/* --- Carrossel ------------------------------------------------------ */
+
+.cat-carousel {
+  --cat-card-size: min(360px, 72vw);
+  --cat-active-scale: 1.08;
+  --cat-side-scale: 0.84;
+  /* distância do centro até o centro de um card vizinho */
+  --cat-step: calc(var(--cat-card-size) * 0.86);
+  --cat-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  outline: none;
 }
 
-@media (max-width: 720px) {
-  .categories__grid {
-    grid-template-columns: 1fr;
-  }
+.cat-carousel:focus-visible .cat-card.is-active {
+  outline: 2px solid var(--color-trace);
+  outline-offset: 4px;
 }
 
-.categories__card {
-  display: block;
-  padding: var(--space-3);
+.cat-carousel__stage {
+  position: relative;
+  /* espaço pro card ativo já ampliado, com folga pra sombra */
+  height: calc(var(--cat-card-size) * var(--cat-active-scale) + var(--space-4));
+  touch-action: pan-y;
+}
+
+.cat-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--cat-card-size);
+  height: var(--cat-card-size);
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   background: var(--color-void-soft);
-  text-decoration: none;
-  transition: border-color 0.2s var(--ease-standard);
+  color: var(--color-on-void);
+  overflow: hidden;
+  transform: translate(-50%, -50%) translateX(calc(var(--offset) * var(--cat-step)))
+    scale(var(--cat-side-scale));
+  transition:
+    transform 0.6s var(--cat-ease),
+    filter 0.6s var(--cat-ease),
+    opacity 0.6s var(--cat-ease),
+    border-color 0.3s ease,
+    box-shadow 0.6s var(--cat-ease);
+  will-change: transform, filter;
 }
 
-.categories__card:hover {
+/* Card em foco: no centro, um pouco maior, por cima dos outros */
+.cat-card.is-active {
+  z-index: 3;
+  transform: translate(-50%, -50%) scale(var(--cat-active-scale));
   border-color: var(--color-beam);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.55);
 }
 
-.categories__card-title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--step-0);
-  margin: 0 0 var(--space-1);
+/* Vizinhos: menores, escurecidos e desfocados, atrás do card ativo */
+.cat-card.is-side {
+  z-index: 2;
+  filter: blur(3px) brightness(0.4);
+  cursor: pointer;
+}
+
+.cat-card.is-side:hover {
+  filter: blur(2px) brightness(0.55);
+}
+
+/* Os demais ficam escondidos atrás do card ativo */
+.cat-card.is-hidden {
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(3px) brightness(0.4);
+  transform: translate(-50%, -50%) translateX(calc(var(--offset) * var(--cat-step) * 0.6))
+    scale(0.7);
+}
+
+/* Card que "deu a volta" troca de lado sem animar (está invisível) */
+.cat-card.no-transition {
+  transition: none;
+}
+
+.cat-card__media {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-void);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.cat-card__cover {
+  display: block;
+  width: 82%;
+  height: auto;
+  max-height: 92%;
   color: var(--color-beam);
 }
 
-.categories__card-text {
-  font-family: var(--font-body);
-  font-size: var(--step--1);
-  color: var(--color-on-void-soft);
-  margin: 0;
+.cat-card__body {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px 18px 18px;
 }
 
-.categories__card-soon {
-  display: inline-block;
-  margin-top: var(--space-2);
+.cat-card__meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-on-void-soft);
+}
+
+.cat-card__title {
+  margin: 0;
+  font-family: var(--font-subtitle);
+  font-weight: 700;
+  font-size: var(--step-1);
+  line-height: 1.15;
+  color: var(--color-on-void);
+}
+
+.cat-card__desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--color-on-void-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cat-card__cta {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--color-trace);
+  border-radius: var(--radius-sm);
+  color: var(--color-on-void);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--step--1);
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+
+.cat-card__cta:hover {
+  border-color: var(--color-beam);
+}
+
+.cat-card__cta:focus-visible {
+  outline: 2px solid var(--color-trace);
+  outline-offset: 2px;
+}
+
+.cat-card__soon {
+  margin-top: 4px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-body);
   font-size: var(--step--1);
   color: var(--color-on-void-soft);
-  opacity: 0.5;
+}
+
+/* --- Controles (setas + bolinhas) ----------------------------------- */
+
+.cat-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.cat-carousel__arrow {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-on-void);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.cat-carousel__arrow:hover {
+  border-color: var(--color-beam);
+  background: var(--color-line-soft);
+}
+
+.cat-carousel__arrow:focus-visible,
+.cat-carousel__dot:focus-visible {
+  outline: 2px solid var(--color-trace);
+  outline-offset: 2px;
+}
+
+.cat-carousel__dots {
+  display: flex;
+  gap: 2px;
+}
+
+.cat-carousel__dot {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.cat-carousel__dot::before {
+  content: '';
+  width: 8px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-line);
+  transition:
+    width 0.3s var(--cat-ease),
+    background 0.3s ease;
+}
+
+.cat-carousel__dot.is-active::before {
+  width: 20px;
+  background: var(--color-beam);
+}
+
+/* Anúncio pra leitor de tela ("Física Nuclear") — invisível na tela */
+.cat-carousel__live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.categories__all {
+  margin: var(--space-4) 0 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+}
+
+.categories__all a {
+  color: var(--color-on-void-soft);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.categories__all a:hover {
+  color: var(--color-on-void);
+}
+
+/* --- Celular: vizinhos mais pra fora, aparecendo só a pontinha ------ */
+
+@media (max-width: 640px) {
+  .cat-carousel {
+    --cat-card-size: min(300px, 74vw);
+    --cat-active-scale: 1.04;
+    --cat-step: calc(var(--cat-card-size) * 0.92);
+  }
+
+  .cat-card__body {
+    padding: 12px 14px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-card {
+    transition: none;
+  }
 }
