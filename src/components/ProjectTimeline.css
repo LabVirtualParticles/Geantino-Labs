@@ -1,0 +1,288 @@
+/* Timeline da página Sobre — sem cartões: uma linha vertical no
+   centro-esquerda e todo o texto à direita dela. A linha "acende"
+   conforme a rolagem (--tl-progress, definido no JSX) e o fundo é um
+   canvas animado (TimelineCanvasFX). Mesma paleta dos tokens. */
+
+.timeline {
+  --tl-axis: 34%; /* posição da linha dentro do conteúdo */
+  --tl-gap: 36px; /* distância entre a linha e o texto */
+  --tl-node: 11px;
+
+  position: relative;
+  /* clip (e não hidden) para não quebrar o position: sticky do canvas */
+  overflow: clip;
+  /* transparente: deixa aparecer o fundo do tema (quadriculado do
+     Blueprint, granulado da Câmara de bolhas etc.) */
+  background: transparent;
+  color: var(--color-on-void);
+  padding: var(--space-6) var(--space-3) calc(var(--space-6) * 1.5);
+}
+
+/* --- Fundo animado -------------------------------------------------- */
+
+.timeline__fx {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.timeline__canvas {
+  position: sticky;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+}
+
+/* escurece de leve o lado do texto para não brigar com a animação */
+.timeline__fx::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent 30%,
+    color-mix(in srgb, var(--color-void) 55%, transparent) 60%
+  );
+}
+
+/* --- Conteúdo -------------------------------------------------------- */
+
+.timeline__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+.timeline__header,
+.timeline__track {
+  padding-left: calc(var(--tl-axis) + var(--tl-gap));
+}
+
+.timeline__header {
+  margin-bottom: var(--space-5);
+}
+
+.timeline__title {
+  font-family: var(--font-subtitle);
+  font-weight: 700;
+  font-size: var(--step-3);
+  line-height: 1.05;
+  margin: 0 0 var(--space-2);
+  color: var(--color-on-void);
+}
+
+.timeline__lede {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  color: var(--color-on-void-soft);
+  margin: 0;
+  max-width: 32rem;
+}
+
+/* --- Linha ----------------------------------------------------------- */
+
+.timeline__track {
+  position: relative;
+}
+
+.timeline__track::before,
+.timeline__track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--tl-axis);
+  width: 1px;
+}
+
+.timeline__track::before {
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--color-line) 0%,
+    var(--color-line) 92%,
+    transparent
+  );
+}
+
+/* parte acesa: cresce com a rolagem, como um rastro de partícula */
+.timeline__track::after {
+  width: 2px;
+  margin-left: -0.5px;
+  height: calc(var(--tl-progress, 0) * 100%);
+  background: linear-gradient(to bottom, transparent, var(--color-beam));
+  box-shadow: 0 0 10px var(--color-line);
+}
+
+/* --- Ano ------------------------------------------------------------- */
+
+.timeline__year + .timeline__year {
+  margin-top: var(--space-6);
+}
+
+.timeline__year-label {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-4);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin: 0 0 var(--space-4);
+  color: var(--color-on-void);
+}
+
+.timeline__year-node {
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * var(--tl-gap) - 9px);
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-beam);
+  background: var(--color-void);
+}
+
+/* --- Marcos ---------------------------------------------------------- */
+
+.timeline__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.timeline__item {
+  position: relative;
+  max-width: 34rem;
+}
+
+.timeline__node {
+  position: absolute;
+  top: 0.45em;
+  left: calc(-1 * var(--tl-gap) - var(--tl-node) / 2);
+  width: var(--tl-node);
+  height: var(--tl-node);
+  border-radius: 50%;
+  background: var(--color-void);
+  border: 1.5px solid var(--color-trace);
+}
+
+.timeline__item--highlight .timeline__node {
+  background: var(--color-beam);
+  border-color: var(--color-beam);
+  box-shadow: 0 0 0 5px var(--color-line-soft), 0 0 16px var(--color-line);
+}
+
+.timeline__item--upcoming .timeline__node {
+  border-style: dashed;
+}
+
+.timeline__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: 0.4rem;
+}
+
+.timeline__date {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-trace);
+}
+
+.timeline__tag {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.08rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-beam);
+  color: var(--color-beam);
+}
+
+.timeline__item-title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--step-1);
+  line-height: 1.25;
+  margin: 0 0 0.4rem;
+  color: var(--color-on-void);
+}
+
+.timeline__text {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  margin: 0;
+  color: var(--color-on-void-soft);
+}
+
+.timeline__item--upcoming .timeline__item-title,
+.timeline__item--upcoming .timeline__text {
+  opacity: 0.75;
+}
+
+/* --- Aparecer ao rolar ---------------------------------------------- */
+
+.timeline__header,
+.timeline__year-label,
+.timeline__meta,
+.timeline__item-title,
+.timeline__text {
+  opacity: 0;
+  transform: translateX(28px);
+  transition:
+    opacity 0.8s var(--ease-standard),
+    transform 0.8s var(--ease-standard);
+}
+
+.timeline__item-title {
+  transition-delay: 0.1s;
+}
+
+.timeline__text {
+  transition-delay: 0.2s;
+}
+
+.timeline__node,
+.timeline__year-node {
+  transform: scale(0);
+  transition: transform 0.5s var(--ease-standard);
+}
+
+.timeline__header.is-visible,
+.timeline__year-label.is-visible,
+.is-visible > .timeline__meta,
+.is-visible > .timeline__item-title,
+.is-visible > .timeline__text {
+  opacity: 1;
+  transform: none;
+}
+
+.is-visible > .timeline__node,
+.is-visible > .timeline__year-node {
+  transform: scale(1);
+}
+
+/* --- Celular: linha encosta na esquerda ----------------------------- */
+
+@media (max-width: 720px) {
+  .timeline {
+    --tl-axis: 8px;
+    --tl-gap: 26px;
+  }
+
+  .timeline__fx::after {
+    background: color-mix(in srgb, var(--color-void) 35%, transparent);
+  }
+}

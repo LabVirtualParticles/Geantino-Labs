@@ -1,5 +1,6 @@
 import Navbar from '../components/layout/Navbar';
 import AboutSection from '../components/About';
+import ProjectTimeline from '../components/ProjectTimeline';
 import Footer from '../components/Footer';
 import './Sobre.css';
 
@@ -41,6 +42,8 @@ export default function Sobre() {
       <Navbar />
 
       <main>
+        <ProjectTimeline />
+
         <AboutSection />
 
         <section className="team">
