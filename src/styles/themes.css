@@ -1,0 +1,139 @@
+/*
+  Temas extras do Geantino Labs (além de Escuro e Claro, que ficam em
+  tokens.css). Cada tema só troca os mesmos tokens de cor (e, no
+  Terminal, as fontes) — todo o resto do site já lê esses tokens, então
+  funciona em qualquer página. Os ajustes extras (vídeo do topo, textura,
+  brilho) ficam junto de cada tema.
+
+  Pra adicionar um tema novo: um bloco :root[data-theme='nome'] aqui +
+  uma entrada em THEMES (context/ThemeContext.jsx).
+*/
+
+/* Navbar e vídeo do hero se adaptam ao fundo de qualquer tema */
+:root[data-theme='bolhas'] .navbar,
+:root[data-theme='fosforo'] .navbar,
+:root[data-theme='blueprint'] .navbar,
+:root[data-theme='sincrotron'] .navbar {
+  background: color-mix(in srgb, var(--color-void) 82%, transparent);
+}
+
+/* ---------- 1. Câmara de bolhas: papel fotográfico envelhecido ---------- */
+:root[data-theme='bolhas'] {
+  color-scheme: light;
+  --color-void: #efe6d1;
+  --color-void-soft: #e5d9bd;
+  --color-beam: #2a1f15;
+  --color-beam-hover: #4b3a28;
+  --color-trace: #8c7a5e;
+  --color-line: rgba(42, 31, 21, 0.2);
+  --color-line-soft: rgba(42, 31, 21, 0.1);
+  --color-on-void: rgba(42, 31, 21, 0.94);
+  --color-on-void-soft: rgba(60, 46, 32, 0.7);
+}
+:root[data-theme='bolhas'] .hero__stage { background: transparent; }
+:root[data-theme='bolhas'] .hero__video {
+  filter: grayscale(1) invert(1) sepia(0.6) contrast(1.15);
+  mix-blend-mode: multiply;
+}
+/* granulado de foto antiga + vinheta */
+:root[data-theme='bolhas'] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(80, 55, 25, 0.22) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .22 0 0 0 0 .12 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- 2. Terminal / fósforo verde ---------- */
+:root[data-theme='fosforo'] {
+  --color-void: #040a05;
+  --color-void-soft: #08150b;
+  --color-beam: #3dff7f;
+  --color-beam-hover: #8dffb6;
+  --color-trace: #1f9a4d;
+  --color-line: rgba(61, 255, 127, 0.22);
+  --color-line-soft: rgba(61, 255, 127, 0.09);
+  --color-on-void: rgba(150, 255, 185, 0.94);
+  --color-on-void-soft: rgba(100, 215, 140, 0.66);
+  --font-subtitle: 'DejaVu Sans Mono', 'Courier New', ui-monospace, monospace;
+  --font-body: 'DejaVu Sans Mono', 'Courier New', ui-monospace, monospace;
+}
+:root[data-theme='fosforo'] :is(h1, h2, h3, .navbar__brand) {
+  text-shadow: 0 0 10px rgba(61, 255, 127, 0.45);
+}
+:root[data-theme='fosforo'] .hero__stage { background: transparent; }
+:root[data-theme='fosforo'] .hero__video {
+  filter: grayscale(1) sepia(1) hue-rotate(75deg) saturate(5) brightness(1.1);
+  mix-blend-mode: screen;
+}
+/* linhas de varredura do monitor */
+:root[data-theme='fosforo'] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* ---------- 3. Blueprint ---------- */
+:root[data-theme='blueprint'] {
+  --color-void: #123c6e;
+  --color-void-soft: #174a84;
+  --color-beam: #eaf3ff;
+  --color-beam-hover: #bcd6f7;
+  --color-trace: #8db4e4;
+  --color-line: rgba(234, 243, 255, 0.28);
+  --color-line-soft: rgba(234, 243, 255, 0.12);
+  --color-on-void: rgba(242, 248, 255, 0.95);
+  --color-on-void-soft: rgba(205, 225, 250, 0.74);
+}
+:root[data-theme='blueprint'] body,
+:root[data-theme='blueprint'] :is(.hero, .about, .categories, .footer) {
+  background-color: var(--color-void);
+  background-image:
+    linear-gradient(rgba(234, 243, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(234, 243, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(rgba(234, 243, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(234, 243, 255, 0.04) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+}
+:root[data-theme='blueprint'] .hero__stage { background: transparent; }
+:root[data-theme='blueprint'] .hero__video {
+  filter: grayscale(1) brightness(1.5) contrast(1.1);
+  mix-blend-mode: screen;
+}
+
+/* ---------- 4. Síncrotron / neon ---------- */
+:root[data-theme='sincrotron'] {
+  --color-void: #0a0517;
+  --color-void-soft: #140b28;
+  --color-beam: #45f3ff;
+  --color-beam-hover: #a3f9ff;
+  --color-trace: #b46cff;
+  --color-line: rgba(180, 108, 255, 0.3);
+  --color-line-soft: rgba(180, 108, 255, 0.13);
+  --color-on-void: rgba(244, 236, 255, 0.95);
+  --color-on-void-soft: rgba(206, 190, 242, 0.7);
+}
+:root[data-theme='sincrotron'] :is(h1, h2, .navbar__brand) {
+  text-shadow: 0 0 18px rgba(69, 243, 255, 0.35), 0 0 42px rgba(180, 108, 255, 0.3);
+}
+:root[data-theme='sincrotron'] .hero {
+  background:
+    radial-gradient(ellipse at 75% 50%, rgba(180, 108, 255, 0.22), transparent 60%),
+    var(--color-void);
+}
+:root[data-theme='sincrotron'] .hero__cta {
+  box-shadow: 0 0 22px rgba(69, 243, 255, 0.45);
+}
+:root[data-theme='sincrotron'] .hero__stage { background: transparent; }
+:root[data-theme='sincrotron'] .hero__video {
+  filter: grayscale(1) sepia(1) hue-rotate(230deg) saturate(4) brightness(1.2);
+  mix-blend-mode: screen;
+}

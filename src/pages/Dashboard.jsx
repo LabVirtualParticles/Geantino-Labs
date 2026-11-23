@@ -239,28 +239,38 @@ function SecurityPanel() {
 // --------------------------------------------------------------------- //
 
 function AppearancePanel() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme, themes } = useTheme();
 
   return (
     <section className="dashboard-panel">
       <h2 className="dashboard-panel__title">Aparência</h2>
       <p className="dashboard-panel__hint">Vale só neste navegador.</p>
 
-      <div className="appearance-panel__options">
-        <button
-          type="button"
-          className={`appearance-panel__option${theme === 'dark' ? ' appearance-panel__option--active' : ''}`}
-          onClick={() => theme !== 'dark' && toggleTheme()}
-        >
-          Escuro
-        </button>
-        <button
-          type="button"
-          className={`appearance-panel__option${theme === 'light' ? ' appearance-panel__option--active' : ''}`}
-          onClick={() => theme !== 'light' && toggleTheme()}
-        >
-          Claro
-        </button>
+      <div className="appearance-panel__options" role="radiogroup" aria-label="Tema do site">
+        {themes.map((option) => {
+          const active = theme === option.id;
+          const [bg, fg, accent] = option.swatch;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              className={`appearance-panel__option${active ? ' appearance-panel__option--active' : ''}`}
+              onClick={() => setTheme(option.id)}
+            >
+              {/* Amostra: mini "página" nas cores do tema */}
+              <span className="appearance-panel__swatch" style={{ background: bg }} aria-hidden="true">
+                <span className="appearance-panel__swatch-title" style={{ background: fg }} />
+                <span className="appearance-panel__swatch-line" style={{ background: fg, opacity: 0.45 }} />
+                <span className="appearance-panel__swatch-line short" style={{ background: fg, opacity: 0.45 }} />
+                <span className="appearance-panel__swatch-dot" style={{ background: accent }} />
+              </span>
+              <span className="appearance-panel__name">{option.label}</span>
+              <span className="appearance-panel__desc">{option.description}</span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );

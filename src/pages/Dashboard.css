@@ -242,27 +242,88 @@
 /* --- Aparência -------------------------------------------------------- */
 
 .appearance-panel__options {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
   gap: var(--space-2);
 }
 
 .appearance-panel__option {
-  padding: 0.6rem 1.2rem;
-  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px 10px 12px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-line);
   background: transparent;
-  color: var(--color-on-void-soft);
+  color: var(--color-on-void);
   font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--step--1);
+  text-align: left;
   cursor: pointer;
-  transition: background 0.2s var(--ease-standard), color 0.2s var(--ease-standard);
+  transition:
+    border-color 0.2s var(--ease-standard),
+    background 0.2s var(--ease-standard);
+}
+
+.appearance-panel__option:hover {
+  border-color: var(--color-trace);
 }
 
 .appearance-panel__option--active {
-  background: var(--color-beam);
   border-color: var(--color-beam);
-  color: var(--color-void);
+  box-shadow: inset 0 0 0 1px var(--color-beam);
+  background: var(--color-line-soft);
+}
+
+.appearance-panel__swatch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+}
+
+.appearance-panel__swatch-title,
+.appearance-panel__swatch-line,
+.appearance-panel__swatch-dot {
+  position: absolute;
+  left: 12%;
+  border-radius: 2px;
+}
+
+.appearance-panel__swatch-title {
+  top: 22%;
+  width: 46%;
+  height: 12%;
+}
+
+.appearance-panel__swatch-line {
+  top: 46%;
+  width: 60%;
+  height: 6%;
+}
+
+.appearance-panel__swatch-line.short {
+  top: 58%;
+  width: 38%;
+}
+
+.appearance-panel__swatch-dot {
+  top: 72%;
+  width: 24%;
+  height: 12%;
+}
+
+.appearance-panel__name {
+  font-weight: 600;
+  font-size: var(--step--1);
+}
+
+.appearance-panel__desc {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--color-on-void-soft);
 }
 
 /* --- Relatórios --------------------------------------------------------- */

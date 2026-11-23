@@ -1,30 +1,46 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { THEMES } from './themes';
 
 const ThemeContext = createContext(null);
 
 const STORAGE_KEY = 'geantino-theme';
 
+const THEME_IDS = new Set(THEMES.map((theme) => theme.id));
+
 function getInitialTheme() {
   if (typeof window === 'undefined') return 'dark';
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  if (stored === 'light' || stored === 'dark') return stored;
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (THEME_IDS.has(stored)) return stored;
+  } catch {
+    // sem localStorage (aba anônima bloqueada etc.) — usa o padrão
+  }
   return 'dark';
 }
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(getInitialTheme);
+  const [theme, setThemeState] = useState(getInitialTheme);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    window.localStorage.setItem(STORAGE_KEY, theme);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+      // sem localStorage — o tema só não fica salvo
+    }
   }, [theme]);
 
+  function setTheme(id) {
+    if (THEME_IDS.has(id)) setThemeState(id);
+  }
+
+  // Mantido pra compatibilidade (alterna só entre escuro e claro).
   function toggleTheme() {
-    setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
+    setThemeState((current) => (current === 'dark' ? 'light' : 'dark'));
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, themes: THEMES }}>
       {children}
     </ThemeContext.Provider>
   );
