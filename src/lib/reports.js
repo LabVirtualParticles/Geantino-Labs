@@ -29,26 +29,45 @@ export async function saveReport({
   trajectoryCount,
   screenshotDataUrl,
   chartDataUrl,
+  results = null,
 }) {
   if (!supabase) throw new Error(NOT_CONFIGURED_MESSAGE);
-  const { data, error } = await supabase
-    .from('simulation_runs')
-    .insert({
-      user_id: userId,
-      simulation_id: simulationId,
-      label,
-      params,
-      seed,
-      duration_seconds: durationSeconds,
-      trajectory_count: trajectoryCount,
-      screenshot_data_url: screenshotDataUrl,
-      chart_data_url: chartDataUrl,
-      report_generated_at: new Date().toISOString(),
-    })
-    .select()
-    .single();
+  const row = {
+    user_id: userId,
+    simulation_id: simulationId,
+    label,
+    params,
+    seed,
+    duration_seconds: durationSeconds,
+    trajectory_count: trajectoryCount,
+    screenshot_data_url: screenshotDataUrl,
+    chart_data_url: chartDataUrl,
+    report_generated_at: new Date().toISOString(),
+  };
+  // `results` (resultados numéricos, ex. coincidências e dose do PET) só
+  // vai quando existe — o Rutherford não tem.
+  if (results) row.results = results;
+
+  let { data, error } = await supabase.from('simulation_runs').insert(row).select().single();
+
+  // Banco ainda sem a coluna `results` (SQL de claude/dashboard-usuario-setup.md
+  // não rodado): salva o resto em vez de perder o relatório inteiro.
+  if (error && row.results && /results/i.test(`${error.message} ${error.details ?? ''}`)) {
+    console.warn('simulation_runs sem a coluna "results" — relatório salvo sem os resultados.', error);
+    delete row.results;
+    ({ data, error } = await supabase.from('simulation_runs').insert(row).select().single());
+  }
   if (error) throw error;
   return data;
+}
+
+// Versão enxuta dos resultados pra guardar no relatório: tira a lista de
+// linhas de resposta (pode ter milhares — a imagem reconstruída já vai
+// como PNG) e guarda só quantas eram. O espectro (110 números) fica.
+export function compactResults(results) {
+  if (!results || typeof results !== 'object') return null;
+  const { lines_of_response: lines, ...rest } = results;
+  return Array.isArray(lines) ? { ...rest, lines_of_response_count: lines.length } : rest;
 }
 
 export async function deleteReport(id) {

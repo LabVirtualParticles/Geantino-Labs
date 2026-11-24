@@ -10,7 +10,14 @@ import {
   formatParams,
   formatSeed,
 } from '../features/simulation-demo/formatParams';
+import { formatResults } from '../features/simulation-demo/formatResults';
 import './Dashboard.css';
+
+// Legenda do gráfico salvo em cada relatório (chart_data_url), por
+// simulação. Sem entrada aqui = "Distribuição angular" (Rutherford).
+const CHART_CAPTIONS = {
+  'pet-b3a': 'Imagem reconstruída (corte x–y)',
+};
 
 const TABS = [
   { id: 'perfil', label: 'Perfil' },
@@ -362,6 +369,20 @@ function ReportsPanel() {
                           ))}
                         </dl>
 
+                        {formatResults(report.results, report.params).length > 0 && (
+                          <>
+                            <h3>Resultados</h3>
+                            <dl className="reports-list__dl">
+                              {formatResults(report.results, report.params).map((row) => (
+                                <div key={row.key}>
+                                  <dt>{row.label}</dt>
+                                  <dd>{row.value}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          </>
+                        )}
+
                         <h3>Seed</h3>
                         {formatSeed(report.seed) ? (
                           <p className="reports-list__seed">{formatSeed(report.seed)}</p>
@@ -385,8 +406,13 @@ function ReportsPanel() {
                         )}
                         {report.chart_data_url && (
                           <figure>
-                            <img src={report.chart_data_url} alt="Distribuição angular" />
-                            <figcaption>Distribuição angular</figcaption>
+                            <img
+                              src={report.chart_data_url}
+                              alt={CHART_CAPTIONS[report.simulation_id] ?? 'Distribuição angular'}
+                            />
+                            <figcaption>
+                              {CHART_CAPTIONS[report.simulation_id] ?? 'Distribuição angular'}
+                            </figcaption>
                           </figure>
                         )}
                       </div>

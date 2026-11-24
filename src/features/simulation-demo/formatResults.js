@@ -53,11 +53,16 @@ export function formatResults(results, paramsUsed) {
     });
   }
 
-  if (Array.isArray(results.lines_of_response)) {
+  // Na página vem a lista inteira; no relatório do painel só a contagem
+  // (ver compactResults em lib/reports.js).
+  const lineCount = Array.isArray(results.lines_of_response)
+    ? results.lines_of_response.length
+    : results.lines_of_response_count;
+  if (lineCount !== undefined) {
     rows.push({
       key: 'lines_of_response',
       label: 'Linhas de resposta desenhadas',
-      value: formatNumber(results.lines_of_response.length, 0),
+      value: formatNumber(lineCount, 0),
     });
   }
 

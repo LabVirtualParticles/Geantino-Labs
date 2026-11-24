@@ -19,7 +19,7 @@ import {
 } from '../features/simulation-demo/scatteringChart';
 import { renderPetImageToDataURL } from '../features/simulation-demo/petImage';
 import { useAuth } from '../context/AuthContext';
-import { saveReport } from '../lib/reports';
+import { compactResults, saveReport } from '../lib/reports';
 import rutherfordSchema from '../features/simulation-demo/data/parameters.example.json';
 import rutherfordExplanation from '../features/simulation-demo/data/explanations.example.json';
 import '../features/simulation-demo/simulation-demo.css';
@@ -111,6 +111,7 @@ export default function SimulationExample({
         trajectoryCount: data.trajectories.filter((trajectory) => trajectory.kind !== 'lor').length,
         screenshotDataUrl,
         chartDataUrl,
+        results: compactResults(meta?.results),
       });
 
       setReportState('done');
@@ -188,7 +189,7 @@ export default function SimulationExample({
                 className="sim-page__button"
                 onClick={handleGenerateReport}
                 disabled={status !== 'done' || reportState === 'saving'}
-                title="Salva seed, parâmetros, um print do detector (no enquadramento atual) e o gráfico da simulação no seu painel"
+                title="Salva seed, parâmetros, um print do detector (no enquadramento atual) o gráfico e os resultados da simulação no seu painel"
               >
                 {reportState === 'saving' ? 'Gerando relatório…' : 'Gerar relatório'}
               </button>
