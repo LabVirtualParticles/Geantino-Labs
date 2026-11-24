@@ -5,6 +5,7 @@
 // Chave desconhecida é ignorada (o JSON completo continua em "Exportar dados").
 
 import { formatNumber } from './formatParams';
+import { examEquivalence } from './petReference';
 
 const DOSE_UNITS = [
   { factor: 1, unit: 'Gy' },
@@ -24,9 +25,19 @@ export function formatDose(gray) {
   return `${formatNumber(value / best.factor, 3)} ${best.unit}`;
 }
 
-export function formatResults(results) {
+// `paramsUsed` (opcional) dá o isótopo, pra regra de 3 com o exame real.
+export function formatResults(results, paramsUsed) {
   if (!results || typeof results !== 'object') return [];
   const rows = [];
+
+  const equivalence = examEquivalence(results.n_events, paramsUsed?.isotope);
+  if (equivalence) {
+    rows.push({
+      key: 'exam_equivalence',
+      label: `${formatNumber(results.n_events, 0)} decaimentos equivalem a`,
+      value: equivalence.text,
+    });
+  }
 
   if (results.good_events !== undefined) {
     const total = Number(results.n_events) || 0;

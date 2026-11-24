@@ -117,6 +117,15 @@
   color: var(--color-trace);
 }
 
+.parameters-panel__warning {
+  margin: 0.2rem 0 0;
+  padding: 0.5rem 0.65rem;
+  border-left: 2px solid var(--color-trace);
+  background: var(--color-line-soft);
+  color: var(--color-on-void);
+  line-height: 1.45;
+}
+
 .parameters-panel__field {
   display: flex;
   flex-direction: column;

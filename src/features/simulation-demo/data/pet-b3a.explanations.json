@@ -74,7 +74,20 @@
         },
         {
           "type": "paragraph",
-          "text": "A dose no paciente sai em picogray porque a simulação tem só algumas centenas de decaimentos. Um exame real usa uma atividade de centenas de megabecquerels — centenas de milhões de decaimentos por segundo, durante horas —, por isso a dose de um exame é muitas ordens de grandeza maior."
+          "text": "Num exame real ninguém escolhe o número de decaimentos: escolhe-se a atividade injetada, em megabecquerel (1 MBq = 1 milhão de decaimentos por segundo), e o tempo de aquisição. Por isso a tabela Resumo faz uma regra de 3: tempo = decaimentos ÷ (atividade × 1 milhão). Com 200 decaimentos de flúor-18 e 370 MBq, isso dá cerca de meio microssegundo de exame. Um exame inteiro tem centenas de bilhões de decaimentos — impossível de simular no navegador, e desnecessário para ver a física: a fração de coincidências, o espectro e o cruzamento das linhas são os mesmos, só ficam mais nítidos com mais decaimentos. Pelo mesmo motivo a dose no paciente sai em picogray, muitas ordens de grandeza abaixo da de um exame."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Atividades de referência usadas na regra de 3",
+              "text": "Flúor-18 (FDG) e carbono-11 (colina): 370 MBq; nitrogênio-13 (amônia) e oxigênio-15 (água): 400 MBq por injeção. São valores típicos para adultos — a atividade real depende do peso do paciente, do tipo de exame e do tomógrafo, e a amônia e a água são usadas sobretudo em exames do coração."
+            },
+            {
+              "label": "Fontes",
+              "text": "FDG: D. Delbeke et al., \"Procedure Guideline for Tumor Imaging with 18F-FDG PET/CT 1.0\", J Nucl Med 47(5):885 (2006) — faixa de 370–740 MBq; a diretriz europeia (R. Boellaard et al., EANM v2.0, Eur J Nucl Med Mol Imaging 42:328 (2015)) calcula pelo peso. Colina-¹¹C: bula da FDA do Choline C 11 Injection (2012) — 370–740 MBq. Amônia-¹³N e água-¹⁵O: EANM, \"Nuclear medicine in the assessment and prevention of cancer therapy-related cardiotoxicity\", Eur J Nucl Med Mol Imaging 50:792–812 (2022) — 2 × 400 MBq (estresse e repouso)."
+            }
+          ]
         },
         {
           "type": "paragraph",

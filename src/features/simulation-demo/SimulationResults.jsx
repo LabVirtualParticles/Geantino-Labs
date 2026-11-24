@@ -55,7 +55,7 @@ export default function SimulationResults({ schema, data, meta }) {
 
   const paramRows = formatParams(meta?.paramsUsed, PARAM_LABELS_BY_SIMULATION[schema.simulationId]);
   const seedText = formatSeed(meta?.seed);
-  const resultRows = formatResults(meta?.results);
+  const resultRows = formatResults(meta?.results, meta?.paramsUsed);
   const stats = analysis?.stats;
 
   return (

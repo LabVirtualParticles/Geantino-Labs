@@ -51,6 +51,7 @@ function FieldLabel({ field, htmlFor, showUnit = true }) {
 
 function SelectField({ field, value, onChange }) {
   const id = useId();
+  const selectedWarning = field.options.find((option) => option.value === value)?.warning;
   return (
     <div
       className="parameters-panel__field"
@@ -70,6 +71,14 @@ function SelectField({ field, value, onChange }) {
           </option>
         ))}
       </select>
+      {/* Aviso opcional da opção escolhida (`warning` na opção, no JSON de
+          parâmetros) — ex. isótopos do PET usados em outro tipo de exame. */}
+      {selectedWarning && (
+        <p className="parameters-panel__warning" role="status">
+          <span aria-hidden="true">⚠ </span>
+          {selectedWarning}
+        </p>
+      )}
     </div>
   );
 }

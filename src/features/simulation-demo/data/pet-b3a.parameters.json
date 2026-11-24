@@ -38,11 +38,13 @@
         },
         {
           "value": "N13",
-          "label": "Nitrogênio-13 (¹³N)"
+          "label": "Nitrogênio-13 (¹³N)",
+          "warning": "A amônia com nitrogênio-13 é usada principalmente em exames do coração, e aqui o paciente é uma cabeça (tecido cerebral). A física do decaimento e da aniquilação vale igual, mas a comparação com um exame real é só de ordem de grandeza."
         },
         {
           "value": "O15",
-          "label": "Oxigênio-15 (¹⁵O)"
+          "label": "Oxigênio-15 (¹⁵O)",
+          "warning": "A água com oxigênio-15 é usada principalmente em exames do coração, e aqui o paciente é uma cabeça (tecido cerebral). A física do decaimento e da aniquilação vale igual, mas a comparação com um exame real é só de ordem de grandeza."
         }
       ],
       "default": "F18"
