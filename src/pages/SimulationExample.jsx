@@ -19,8 +19,8 @@ import {
 } from '../features/simulation-demo/scatteringChart';
 import { useAuth } from '../context/AuthContext';
 import { saveReport } from '../lib/reports';
-import schema from '../features/simulation-demo/data/parameters.example.json';
-import explanationSchema from '../features/simulation-demo/data/explanations.example.json';
+import rutherfordSchema from '../features/simulation-demo/data/parameters.example.json';
+import rutherfordExplanation from '../features/simulation-demo/data/explanations.example.json';
 import '../features/simulation-demo/simulation-demo.css';
 
 // Reference page for running a simulation end to end: parameter fields
@@ -29,7 +29,14 @@ import '../features/simulation-demo/simulation-demo.css';
 // configure a URL em frontend/.env (VITE_API_BASE_URL). O botão de
 // "Contexto e fundamentos" abre o ExplanationPanel, com o conteúdo
 // pedagógico definido em data/explanations.example.json.
-export default function SimulationExample() {
+//
+// A mesma página serve pra qualquer simulação: `schema` (campos, título,
+// texto de abertura, créditos, gráficos) e `explanationSchema` (modal de
+// contexto) vêm por props — ver App.jsx. Sem props, é o Rutherford.
+export default function SimulationExample({
+  schema = rutherfordSchema,
+  explanationSchema = rutherfordExplanation,
+}) {
   const { values, setField, status, data, meta, error, run, exportData, runProgress } =
     useSimulationRun(schema);
 
@@ -46,6 +53,13 @@ export default function SimulationExample() {
   const visibleCount = showPlayback ? (grouped.endIndex[playback.revealedEvents] ?? 0) : undefined;
   const recentFrom = showPlayback ? (grouped.endIndex[playback.recentFromEvent] ?? 0) : 0;
   const [isExplanationOpen, setExplanationOpen] = useState(false);
+  // PET: dá pra esconder as trajetórias e ver só as linhas de resposta
+  // se cruzando na fonte (com centenas de fótons elas somem na cena).
+  const hasLines = useMemo(
+    () => (data.trajectories ?? []).some((trajectory) => trajectory.kind === 'lor'),
+    [data],
+  );
+  const [linesOnly, setLinesOnly] = useState(false);
   const { user } = useAuth();
   const viewerRef = useRef(null);
   // idle | saving | done | error — feedback do botão "Gerar relatório",
@@ -86,7 +100,7 @@ export default function SimulationExample() {
         params: meta?.paramsUsed ?? values,
         seed: meta?.seed ?? null,
         durationSeconds: meta?.durationSeconds ?? null,
-        trajectoryCount: data.trajectories.length,
+        trajectoryCount: data.trajectories.filter((trajectory) => trajectory.kind !== 'lor').length,
         screenshotDataUrl,
         chartDataUrl,
       });
@@ -104,14 +118,12 @@ export default function SimulationExample() {
       <main className="sim-page">
         <header className="sim-page__header">
           <h1>{schema.title}</h1>
-          <p>
-            Em 1909, Geiger e Marsden dispararam partículas alfa contra uma folha de ouro
-            finíssima e viram algumas voltarem — o resultado que levou Rutherford a descobrir o
-            núcleo atômico. Aqui o mesmo experimento roda de verdade no Geant4: escolha a
-            partícula, a energia e quantas partículas disparar, clique em Simular e veja as
-            trajetórias em 3D e, logo abaixo, a distribuição dos ângulos de desvio comparada com a
-            previsão de Rutherford.
-          </p>
+          {(Array.isArray(schema.intro) ? schema.intro : [schema.intro])
+            .filter(Boolean)
+            .map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          {schema.credits && <p className="sim-page__credits">{schema.credits}</p>}
           <button
             type="button"
             className="sim-page__button sim-page__explanation-trigger"
@@ -132,6 +144,7 @@ export default function SimulationExample() {
               visibleCount={visibleCount}
               recentFrom={recentFrom}
               runProgress={runProgress}
+              showParticles={!(hasLines && linesOnly)}
             />
             {showPlayback && <PlaybackControls playback={playback} />}
             <div className="sim-page__actions">
@@ -143,6 +156,17 @@ export default function SimulationExample() {
               >
                 {status === 'running' ? 'Simulando…' : 'Simular'}
               </button>
+              {hasLines && (
+                <button
+                  type="button"
+                  className="sim-page__button"
+                  aria-pressed={linesOnly}
+                  onClick={() => setLinesOnly((value) => !value)}
+                  title="Esconde as trajetórias das partículas e deixa só as linhas de resposta (amarelas)"
+                >
+                  {linesOnly ? 'Mostrar trajetórias' : 'Só linhas de resposta'}
+                </button>
+              )}
               <button
                 type="button"
                 className="sim-page__button"

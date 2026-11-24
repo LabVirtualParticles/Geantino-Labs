@@ -5,7 +5,11 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { getProfile, uploadAvatar } from '../lib/profile';
 import { listReports, deleteReport } from '../lib/reports';
-import { formatParams, formatSeed } from '../features/simulation-demo/formatParams';
+import {
+  PARAM_LABELS_BY_SIMULATION,
+  formatParams,
+  formatSeed,
+} from '../features/simulation-demo/formatParams';
 import './Dashboard.css';
 
 const TABS = [
@@ -350,7 +354,7 @@ function ReportsPanel() {
                       <div>
                         <h3>Parâmetros</h3>
                         <dl className="reports-list__dl">
-                          {formatParams(report.params).map((row) => (
+                          {formatParams(report.params, PARAM_LABELS_BY_SIMULATION[report.simulation_id]).map((row) => (
                             <div key={row.key}>
                               <dt>{row.label}</dt>
                               <dd>{row.value}</dd>

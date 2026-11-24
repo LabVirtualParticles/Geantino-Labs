@@ -8,7 +8,13 @@ import {
   computeScatteringStats,
   drawScatteringChart,
 } from './scatteringChart';
-import { formatNumber, formatParams, formatSeed } from './formatParams';
+import {
+  PARAM_LABELS_BY_SIMULATION,
+  formatNumber,
+  formatParams,
+  formatSeed,
+} from './formatParams';
+import { formatResults } from './formatResults';
 
 // Seção "Resultados" que aparece embaixo do visualizador 3D assim que a
 // simulação termina: gráfico (com seletor de visualização) à esquerda,
@@ -43,8 +49,9 @@ export default function SimulationResults({ schema, data, meta }) {
     };
   }, [hasScattering, data, meta]);
 
-  const paramRows = formatParams(meta?.paramsUsed);
+  const paramRows = formatParams(meta?.paramsUsed, PARAM_LABELS_BY_SIMULATION[schema.simulationId]);
   const seedText = formatSeed(meta?.seed);
+  const resultRows = formatResults(meta?.results);
   const stats = analysis?.stats;
 
   return (
@@ -132,8 +139,17 @@ export default function SimulationResults({ schema, data, meta }) {
                     <Row label="Voltaram (> 90°)" value={formatShare(stats.above90, stats.count)} />
                   </>
                 )}
+                {resultRows.map((row) => (
+                  <Row key={row.key} label={row.label} value={row.value} />
+                ))}
                 {!stats && (
-                  <Row label="Trajetórias" value={formatNumber(data.trajectories?.length ?? 0, 0)} />
+                  <Row
+                    label="Trajetórias"
+                    value={formatNumber(
+                      (data.trajectories ?? []).filter((trajectory) => trajectory.kind !== 'lor').length,
+                      0,
+                    )}
+                  />
                 )}
                 {meta?.durationSeconds != null && (
                   <Row label="Duração" value={`${formatNumber(meta.durationSeconds)} s`} />

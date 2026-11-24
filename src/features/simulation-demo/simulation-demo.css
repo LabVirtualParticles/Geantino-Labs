@@ -21,6 +21,12 @@
   margin: 0 0 var(--space-4);
 }
 
+.sim-page__header .sim-page__credits {
+  font-size: var(--step--1, 0.875rem);
+  border-left: 2px solid var(--color-trace);
+  padding-left: var(--space-2);
+}
+
 .sim-page__header code {
   color: var(--color-trace);
 }

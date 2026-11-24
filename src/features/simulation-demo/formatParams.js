@@ -17,6 +17,13 @@ const PARTICLE_NAMES = {
   'mu-': 'Múon',
 };
 
+const ISOTOPE_NAMES = {
+  F18: 'Flúor-18 (¹⁸F)',
+  C11: 'Carbono-11 (¹¹C)',
+  N13: 'Nitrogênio-13 (¹³N)',
+  O15: 'Oxigênio-15 (¹⁵O)',
+};
+
 const HIDDEN_KEYS = new Set(['seed1', 'seed2']);
 
 export function formatNumber(value, maxDecimals = 2) {
@@ -39,14 +46,22 @@ function hasAll(params, keys) {
   return keys.every((key) => params[key] !== undefined && params[key] !== null);
 }
 
-export function formatParams(params) {
+// Rótulos próprios de cada simulação (pelo simulationId do schema), usados
+// tanto na página da simulação quanto no relatório do painel.
+export const PARAM_LABELS_BY_SIMULATION = {
+  'pet-b3a': { n_events: 'Decaimentos simulados' },
+};
+
+// `labels` (opcional) troca o rótulo de uma linha pela chave — normalmente
+// PARAM_LABELS_BY_SIMULATION[simulationId].
+export function formatParams(params, labels = {}) {
   if (!params || typeof params !== 'object') return [];
   const rows = [];
   const used = new Set(HIDDEN_KEYS);
 
   const take = (key, label, format) => {
     if (params[key] === undefined || params[key] === null || used.has(key)) return;
-    rows.push({ key, label, value: format(params[key]) });
+    rows.push({ key, label: labels[key] ?? label, value: format(params[key]) });
     used.add(key);
   };
 
@@ -58,12 +73,18 @@ export function formatParams(params) {
   take('energy', 'Energia', (value) => `${formatNumber(value)} MeV`);
   take('n_events', 'Partículas simuladas', (value) => formatNumber(value, 0));
   take('beamCount', 'Partículas simuladas', (value) => formatNumber(value, 0));
+  take('isotope', 'Isótopo da fonte', (value) => ISOTOPE_NAMES[value] ?? String(value));
 
   const posKeys = ['pos_x_cm', 'pos_y_cm', 'pos_z_cm'];
   if (hasAll(params, posKeys)) {
-    rows.push({ key: 'pos', label: 'Posição da fonte', value: `${formatVector(params, posKeys)} cm` });
+    rows.push({
+      key: 'pos',
+      label: labels.pos ?? 'Posição da fonte',
+      value: `${formatVector(params, posKeys)} cm`,
+    });
     posKeys.forEach((key) => used.add(key));
   }
+  take('source_size_cm', 'Tamanho da fonte (aresta)', (value) => `${formatNumber(value)} cm`);
 
   const dirKeys = ['dir_x', 'dir_y', 'dir_z'];
   if (hasAll(params, dirKeys)) {

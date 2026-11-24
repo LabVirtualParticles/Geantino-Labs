@@ -43,10 +43,17 @@ function defaultsFromSchema(schema) {
   }, {});
 }
 
+// Cena mostrada antes da primeira simulação: `schema.preview` (ex. só a
+// geometria do PET, já no formato do viewer) ou, sem ela, o exemplo do
+// Rutherford em data/result.example.json.
+function initialResult(schema) {
+  return schema.preview ?? resultShape;
+}
+
 export function useSimulationRun(schema) {
   const [values, setValues] = useState(() => defaultsFromSchema(schema));
   const [status, setStatus] = useState('idle'); // idle | running | done | error
-  const [data, setData] = useState(resultShape);
+  const [data, setData] = useState(() => initialResult(schema));
   // Metadados crus da última resposta do backend — não usados pra desenhar
   // a cena (isso é `data`, via adaptSimulationResult), mas necessários pro
   // relatório do painel: a seed de fato usada pelo Geant4, os parâmetros
@@ -76,9 +83,11 @@ export function useSimulationRun(schema) {
       const wallSeconds = (performance.now() - startedAt) / 1000;
       const ranEvents = Number(raw?.params_used?.n_events) || events;
       if (ranEvents) writeLastRun(wallSeconds, ranEvents);
-      setData(adaptSimulationResult(raw));
+      setData(adaptSimulationResult(raw, schema.viewer));
       setMeta({
         runId: raw?.run_id ?? null,
+        // Resultados numéricos da simulação (B3a: coincidências, dose...)
+        results: raw?.results ?? null,
         seed: raw?.seed_used ?? null,
         paramsUsed: raw?.params_used ?? values,
         durationSeconds: raw?.duration_seconds ?? null,
@@ -88,10 +97,15 @@ export function useSimulationRun(schema) {
       setError(err.message ?? String(err));
       setStatus('error');
     }
-  }, [schema.simulationId, values]);
+  }, [schema.simulationId, schema.viewer, values]);
 
   const exportData = useCallback(() => {
-    const payload = { simulationId: schema.simulationId, parameters: values, result: data };
+    const payload = {
+      simulationId: schema.simulationId,
+      parameters: values,
+      results: meta?.results ?? null,
+      result: data,
+    };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -99,7 +113,7 @@ export function useSimulationRun(schema) {
     link.download = `${schema.simulationId ?? 'simulacao'}-resultado.json`;
     link.click();
     URL.revokeObjectURL(url);
-  }, [schema.simulationId, values, data]);
+  }, [schema.simulationId, values, data, meta]);
 
   return { values, setField, status, data, meta, error, run, exportData, runProgress };
 }

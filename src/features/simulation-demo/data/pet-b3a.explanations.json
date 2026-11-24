@@ -1,0 +1,105 @@
+{
+  "simulationId": "pet-b3a",
+  "buttonLabel": "Contexto e fundamentos",
+  "title": "PET — tomografia por emissão de pósitrons",
+  "sections": [
+    {
+      "id": "historical-context",
+      "heading": "Contexto histórico",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "O pósitron — a antipartícula do elétron, com a mesma massa e carga positiva — foi previsto por Paul Dirac em 1928 e observado por Carl Anderson em 1932, em raios cósmicos. Poucas décadas depois, a mesma partícula virou ferramenta de diagnóstico: quando um pósitron encontra um elétron, os dois se aniquilam e a massa vira dois fótons que saem em sentidos opostos, e isso pode ser detectado de fora do corpo."
+        },
+        {
+          "type": "paragraph",
+          "text": "Na década de 1970, grupos como o de Michel Ter-Pogossian, Michael Phelps e Edward Hoffman, na Universidade Washington em St. Louis, construíram os primeiros tomógrafos PET com anéis de detectores em volta do paciente. Em 1976 foi produzida a fluorodesoxiglicose marcada com flúor-18 (FDG), uma glicose \"radioativa\" que se acumula onde as células consomem mais açúcar, como em muitos tumores. Ela é até hoje o radiofármaco mais usado em PET."
+        }
+      ]
+    },
+    {
+      "id": "physics-foundations",
+      "heading": "Fundamentos físicos",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Isótopos com prótons \"demais\" no núcleo podem decair por emissão β⁺: um próton vira nêutron e o núcleo emite um pósitron e um neutrino. No flúor-18, isso transforma o núcleo em oxigênio-18. O pósitron sai com algumas centenas de keV, perde energia no tecido em cerca de um milímetro e então se aniquila com um elétron. Como os dois estavam quase parados, a energia de repouso de cada um (511 keV) vira um fóton gama, e os dois fótons saem praticamente em linha reta, em sentidos opostos."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Isótopos",
+              "text": "Os quatro do painel são emissores de pósitron usados em PET: flúor-18 (meia-vida de cerca de 110 minutos), carbono-11 (cerca de 20 minutos), nitrogênio-13 (cerca de 10 minutos) e oxigênio-15 (cerca de 2 minutos). Os de meia-vida curta precisam ser produzidos num cíclotron perto do hospital. Eles também diferem na energia do pósitron: o do oxigênio-15 sai mais rápido e anda mais antes de se aniquilar."
+            },
+            {
+              "label": "Detector",
+              "text": "9 anéis de 32 cristais de LSO (oxiortossilicato de lutécio, Lu₂SiO₅, densidade 7,4 g/cm³), um cintilador usado em tomógrafos PET reais. Cada cristal tem 6 × 6 × 3 cm, e o anel tem cerca de 61 cm de diâmetro interno."
+            },
+            {
+              "label": "Paciente",
+              "text": "O cilindro rosa da visualização: 8 cm de raio e 10 cm de comprimento (de z = −5 a z = +5 cm), feito de tecido cerebral (material G4_BRAIN_ICRP do Geant4). A fonte é sorteada dentro de um pequeno cubo, por padrão centrado em (4, 4, 4) cm. Num exame real o radiofármaco está dentro do corpo, então a fonte deve ficar dentro do cilindro; fora dele, o pósitron se aniquila no ar ou nem chega a se aniquilar dentro do tomógrafo, e a simulação deixa de representar um exame."
+            },
+            {
+              "label": "Coincidência",
+              "text": "Um evento conta como \"bom\" quando exatamente dois cristais recebem mais de 500 keV — os dois fótons de 511 keV foram absorvidos quase inteiros. A reta entre esses dois cristais é a linha de resposta (LOR): a aniquilação aconteceu em algum ponto dela. Essa linha é virtual: não é o caminho de nenhuma partícula (os fótons são as trajetórias verdes), e sim a reta que o tomógrafo traça entre os dois cristais que detectaram fótons ao mesmo tempo."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "A física é a do exemplo original: eletromagnetismo padrão do Geant4 (efeito fotoelétrico, espalhamento Compton, ionização, aniquilação) e decaimento radioativo. O neutrino do decaimento é descartado, porque praticamente não interage com nada."
+        }
+      ]
+    },
+    {
+      "id": "results-interpretation",
+      "heading": "Interpretação dos resultados",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Na visualização 3D, os cristais aparecem em azul e o paciente em rosa. As trajetórias seguem as cores do Geant4: azul para carga positiva (o núcleo e o pósitron), vermelho para negativa (elétrons) e verde para neutra (os fótons gama). As linhas amarelas são as linhas de resposta das coincidências. Gire a cena e repare que elas se cruzam perto da fonte; mude a posição da fonte e simule de novo para ver o cruzamento mudar de lugar. Um tomógrafo real junta milhões dessas linhas para montar a imagem."
+        },
+        {
+          "type": "paragraph",
+          "text": "Só uma parte dos decaimentos vira coincidência (no exemplo padrão, cerca de 13%). Muitos fótons saem pelas pontas do anel sem passar por nenhum cristal, outros sofrem espalhamento Compton no paciente e mudam de direção, e outros deixam no cristal menos de 500 keV. Essa fração é uma medida simples da eficiência do tomógrafo."
+        },
+        {
+          "type": "paragraph",
+          "text": "A dose no paciente sai em picogray porque a simulação tem só algumas centenas de decaimentos. Um exame real usa uma atividade de centenas de megabecquerels — centenas de milhões de decaimentos por segundo, durante horas —, por isso a dose de um exame é muitas ordens de grandeza maior."
+        },
+        {
+          "type": "paragraph",
+          "text": "Um detalhe do exemplo original, mantido aqui: na contagem das coincidências, cristais na mesma posição em anéis diferentes são somados como se fossem um só. Isso não muda muito o resultado, mas é bom saber ao comparar com um tomógrafo real."
+        }
+      ]
+    },
+    {
+      "id": "credits",
+      "heading": "Créditos e licença",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Esta simulação usa o exemplo B3 (variante B3a) da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 (geant4.web.cern.ch). A geometria do tomógrafo, os materiais, a lista de física e o critério de coincidência são do exemplo original, distribuído sob a Licença de Software do Geant4 (cern.ch/geant4/license)."
+        },
+        {
+          "type": "paragraph",
+          "text": "O Geantino Labs (IFPR) adaptou o exemplo para rodar no servidor sem interface gráfica: escolha do isótopo e da posição da fonte pelo site, exportação da geometria e das trajetórias para a visualização 3D e o registro das linhas de resposta. Nenhuma dessas mudanças altera a física do exemplo."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Referência principal",
+              "text": "S. Agostinelli et al., \"Geant4 — a simulation toolkit\", Nucl. Instrum. Meth. A 506 (2003) 250–303."
+            },
+            {
+              "label": "Atualizações",
+              "text": "J. Allison et al., \"Geant4 developments and applications\", IEEE Trans. Nucl. Sci. 53 (2006) 270–278; J. Allison et al., \"Recent developments in Geant4\", Nucl. Instrum. Meth. A 835 (2016) 186–225."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

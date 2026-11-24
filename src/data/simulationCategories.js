@@ -44,8 +44,14 @@ export const SIMULATION_CATEGORIES = [
     slug: 'fisica-medica',
     label: 'Física Médica',
     description:
-      'Feixes de partículas usados em diagnóstico e terapia — como a energia é depositada no corpo.',
+      'Partículas usadas em diagnóstico e terapia. Comece pelo PET: um tomógrafo de verdade do Geant4 detectando a aniquilação de pósitrons.',
     cover: 'medica',
-    items: [],
+    items: [
+      {
+        label: 'PET — tomografia por emissão de pósitrons',
+        path: '/simulacoes/pet',
+        image: '/simulations/pet-b3a.jpg',
+      },
+    ],
   },
 ];

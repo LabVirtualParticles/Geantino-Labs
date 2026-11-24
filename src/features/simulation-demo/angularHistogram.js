@@ -51,6 +51,7 @@ export function beamDirectionFromParams(params, fallback = [-1, 0, 0]) {
 // em relação ao feixe não tem o mesmo significado. Trajetória sem o campo
 // `track` (ex.: dados de exemplo antigos) é tratada como primária.
 function isPrimary(trajectory) {
+  if (trajectory.kind === 'lor') return false; // linha de resposta do PET, não é partícula
   return trajectory.track === undefined || trajectory.track === null || trajectory.track === 1;
 }
 

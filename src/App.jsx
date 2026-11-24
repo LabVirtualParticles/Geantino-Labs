@@ -10,6 +10,13 @@ import RequireAuth from './components/RequireAuth'
 import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
 import ShowerTest from './pages/ShowerTest'
+import petSchema from './features/simulation-demo/data/pet-b3a.parameters.json'
+import petExplanation from './features/simulation-demo/data/pet-b3a.explanations.json'
+import petPreview from './features/simulation-demo/data/pet-b3a.preview.json'
+
+// Geometria do tomógrafo (só os volumes, sem trajetórias) pra cena não
+// abrir vazia antes da primeira simulação — gerada de uma run real do B3a.
+const petPageSchema = { ...petSchema, preview: petPreview }
 
 export default function App() {
   return (
@@ -40,6 +47,15 @@ export default function App() {
         element={(
           <RequireAuth>
             <SimulationExample />
+          </RequireAuth>
+        )}
+      />
+      {/* PET — exemplo oficial B3a do Geant4 (backend: id "b3a"). */}
+      <Route
+        path="/simulacoes/pet"
+        element={(
+          <RequireAuth>
+            <SimulationExample schema={petPageSchema} explanationSchema={petExplanation} />
           </RequireAuth>
         )}
       />

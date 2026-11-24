@@ -33,7 +33,7 @@ function TargetVolume({ size, position = [0, 0, 0] }) {
 // planos [x0,y0,z0, x1,y1,z1, ...] + índices de triângulo. Usado para
 // qualquer sólido que não seja uma caixa simples (ex.: o detector, um
 // G4Tubs tesselado em arco).
-function MeshVolume({ vertices, indices, position = [0, 0, 0], color = '#9a9a9a' }) {
+function MeshVolume({ vertices, indices, position = [0, 0, 0], color, edgesOnly = false }) {
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
@@ -41,10 +41,22 @@ function MeshVolume({ vertices, indices, position = [0, 0, 0], color = '#9a9a9a'
     geo.computeVertexNormals();
     return geo;
   }, [vertices, indices]);
+  const edges = useMemo(
+    () => (edgesOnly ? new THREE.EdgesGeometry(geometry) : null),
+    [edgesOnly, geometry],
+  );
+
+  if (edges) {
+    return (
+      <lineSegments geometry={edges} position={position}>
+        <lineBasicMaterial color={color ?? '#9a9a9a'} transparent opacity={0.6} />
+      </lineSegments>
+    );
+  }
 
   return (
     <mesh geometry={geometry} position={position}>
-      <meshBasicMaterial color={color} wireframe />
+      <meshBasicMaterial color={color ?? '#9a9a9a'} wireframe />
     </mesh>
   );
 }
@@ -53,31 +65,36 @@ function MeshVolume({ vertices, indices, position = [0, 0, 0], color = '#9a9a9a'
 // revela mais eventos, só as linhas novas são criadas — as que já estavam
 // na tela não são refeitas. `dim` apaga as trajetórias mais antigas
 // enquanto o playback está no meio (as recentes ficam com cor cheia).
-const TrajectoryLine = memo(function TrajectoryLine({ points, color, dim }) {
+// Linhas de resposta do PET (`kind: 'lor'`) saem mais grossas que as
+// trajetórias, senão somem no meio dos fótons.
+const TrajectoryLine = memo(function TrajectoryLine({ points, color, dim, width = 1.4 }) {
   return (
-    <Line points={points} color={color} lineWidth={1.4} transparent opacity={dim ? 0.4 : 1} />
+    <Line points={points} color={color} lineWidth={width} transparent opacity={dim ? 0.4 : 1} />
   );
 });
 
-function Trajectories({ trajectories, visibleCount, recentFrom }) {
+function Trajectories({ trajectories, visibleCount, recentFrom, showParticles = true }) {
   const count = visibleCount ?? trajectories.length;
-  return trajectories
-    .slice(0, count)
-    .map((trajectory, index) => (
+  return trajectories.slice(0, count).map((trajectory, index) => {
+    const isLor = trajectory.kind === 'lor';
+    if (!showParticles && !isLor) return null;
+    return (
       <TrajectoryLine
         key={trajectory.id}
         points={trajectory.points}
         color={trajectory.color}
         dim={index < recentFrom}
+        width={isLor ? 3 : 1.4}
       />
-    ));
+    );
+  });
 }
 
 /**
  * `data` aceita dois formatos de volume, para funcionar tanto com o mock
  * quanto com a resposta real do backend (já convertida por adapter.js):
  *   - caixa simples: { id, shape: 'box' (ou omitido), size, position, wireframeOnly? }
- *   - malha genérica: { id, shape: 'mesh', vertices, indices, position }
+ *   - malha genérica: { id, shape: 'mesh', vertices, indices, position, color? }
  * Formato geral: { world: { size }, volumes: [...], trajectories: [{ id, color, points }] }
  */
 // `forwardRef` expõe `captureScreenshot()` pro componente pai (ver
@@ -91,8 +108,10 @@ function Trajectories({ trajectories, visibleCount, recentFrom }) {
 // desenhar (as primeiras da lista, já ordenada por evento) e `recentFrom` =
 // a partir de qual índice ficam com cor cheia. Sem essas props, desenha
 // tudo. `runProgress` alimenta o indicador enquanto a simulação roda.
+// `showParticles={false}` esconde as trajetórias e deixa só as linhas de
+// resposta (PET).
 const SimulationViewer = forwardRef(function SimulationViewer(
-  { data, status, visibleCount, recentFrom = 0, runProgress },
+  { data, status, visibleCount, recentFrom = 0, runProgress, showParticles = true },
   ref,
 ) {
   const wrapperRef = useRef(null);
@@ -120,6 +139,8 @@ const SimulationViewer = forwardRef(function SimulationViewer(
                   vertices={volume.vertices}
                   indices={volume.indices}
                   position={volume.position}
+                  color={volume.color}
+                  edgesOnly={volume.edgesOnly}
                 />
               ) : (
                 <TargetVolume key={volume.id} size={volume.size} position={volume.position} />
@@ -129,6 +150,7 @@ const SimulationViewer = forwardRef(function SimulationViewer(
             trajectories={data.trajectories}
             visibleCount={visibleCount}
             recentFrom={recentFrom}
+            showParticles={showParticles}
           />
         </Suspense>
         <OrbitControls enablePan={false} minDistance={120} maxDistance={600} />

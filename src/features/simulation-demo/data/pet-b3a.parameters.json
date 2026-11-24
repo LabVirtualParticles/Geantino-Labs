@@ -1,0 +1,97 @@
+{
+  "simulationId": "pet-b3a",
+  "title": "PET — tomografia por emissão de pósitrons",
+  "intro": [
+    "Um tomógrafo PET enxerga o corpo por dentro sem precisar de um feixe externo: o paciente recebe uma molécula marcada com um isótopo que emite pósitrons, cada pósitron se aniquila com um elétron e gera dois fótons de 511 keV em sentidos opostos, e um anel de cristais detecta os dois ao mesmo tempo. Aqui isso roda de verdade no Geant4, com o exemplo oficial B3a: escolha o isótopo, onde fica a fonte dentro do paciente e quantos decaimentos simular.",
+    "Considere o cilindro rosa como o paciente. Ele fica deitado ao longo do eixo z, com 8 cm de raio e de z = −5 a z = +5 cm. Para simular um exame de verdade, mantenha a fonte dentro dele: x² + y² até 64 cm² e z entre −5 e +5 cm, contando o tamanho do cubo da fonte. Se a fonte ficar fora, o pósitron nasce no ar, anda muito antes de se aniquilar e quase não aparecem coincidências — vale testar e comparar com a fonte dentro.",
+    "Depois de simular, as linhas amarelas ligam os dois cristais de cada coincidência. Elas se cruzam perto da fonte — é assim que o PET descobre de onde veio a radiação."
+  ],
+  "credits": "Simulação baseada no exemplo B3 (B3a) da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 e distribuído sob a Licença de Software do Geant4. Adaptado pelo Geantino Labs para rodar no site.",
+  "charts": [],
+  "viewer": {
+    "sceneSize": 240,
+    "edgesOnly": [
+      "CrystalLV"
+    ],
+    "volumeColors": {
+      "CrystalLV": "#38bdf8",
+      "PatientLV": "#f472b6"
+    },
+    "lorColor": "#FFD400"
+  },
+  "fields": [
+    {
+      "id": "isotope",
+      "label": "Isótopo da fonte",
+      "type": "select",
+      "options": [
+        {
+          "value": "F18",
+          "label": "Flúor-18 (¹⁸F) — o do exemplo"
+        },
+        {
+          "value": "C11",
+          "label": "Carbono-11 (¹¹C)"
+        },
+        {
+          "value": "N13",
+          "label": "Nitrogênio-13 (¹³N)"
+        },
+        {
+          "value": "O15",
+          "label": "Oxigênio-15 (¹⁵O)"
+        }
+      ],
+      "default": "F18"
+    },
+    {
+      "id": "beamCount",
+      "label": "Número de decaimentos",
+      "type": "number",
+      "integer": true,
+      "step": 100,
+      "default": 200,
+      "positive": true
+    },
+    {
+      "id": "sourceX",
+      "label": "Fonte — posição x",
+      "type": "number",
+      "unit": "cm",
+      "step": 1,
+      "min": -30,
+      "max": 30,
+      "default": 4
+    },
+    {
+      "id": "sourceY",
+      "label": "Fonte — posição y",
+      "type": "number",
+      "unit": "cm",
+      "step": 1,
+      "min": -30,
+      "max": 30,
+      "default": 4
+    },
+    {
+      "id": "sourceZ",
+      "label": "Fonte — posição z (eixo do tomógrafo)",
+      "type": "number",
+      "unit": "cm",
+      "step": 1,
+      "min": -30,
+      "max": 30,
+      "default": 4
+    },
+    {
+      "id": "sourceSize",
+      "label": "Tamanho da fonte (aresta do cubo)",
+      "type": "number",
+      "unit": "cm",
+      "step": 0.5,
+      "min": 0,
+      "max": 10,
+      "default": 1
+    }
+  ]
+}
