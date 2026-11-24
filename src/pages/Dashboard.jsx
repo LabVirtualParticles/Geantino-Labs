@@ -17,6 +17,7 @@ import './Dashboard.css';
 // simulação. Sem entrada aqui = "Distribuição angular" (Rutherford).
 const CHART_CAPTIONS = {
   'pet-b3a': 'Imagem reconstruída (corte x–y)',
+  'espectrometro-b5': 'Identificação de partículas',
 };
 
 const TABS = [

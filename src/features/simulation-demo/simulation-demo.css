@@ -621,6 +621,39 @@
   background: var(--color-trace);
 }
 
+/* Identificação de partículas (B5): um painel por partícula */
+.pid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--space-3);
+}
+
+.pid-panel {
+  margin: 0;
+  min-width: 0;
+}
+
+.pid-panel__title {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.25rem;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--color-on-void);
+}
+
+.pid-panel__count {
+  font-weight: 400;
+  color: var(--color-on-void-soft);
+}
+
+.pid-panel__canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 190px;
+}
+
 /* Tabelas ao lado */
 .sim-results__side {
   display: flex;

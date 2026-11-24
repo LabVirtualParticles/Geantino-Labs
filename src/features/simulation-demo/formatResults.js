@@ -25,9 +25,47 @@ export function formatDose(gray) {
   return `${formatNumber(value / best.factor, 3)} ${best.unit}`;
 }
 
+const PARTICLE_SHORT = { 'e+': 'e⁺', 'mu+': 'μ⁺', 'pi+': 'π⁺', 'kaon+': 'K⁺', proton: 'p' };
+
+// Espectrômetro (B5): resultados vêm evento a evento (results.events).
+function formatSpectrometerResults(events) {
+  const total = events.length;
+  const counts = {};
+  let reached = 0;
+  for (const event of events) {
+    counts[event.particle] = (counts[event.particle] ?? 0) + 1;
+    if (typeof event.t2_ns === 'number') reached += 1;
+  }
+  const order = ['e+', 'mu+', 'pi+', 'kaon+', 'proton'];
+  const list = order
+    .filter((particle) => counts[particle])
+    .map((particle) => `${formatNumber(counts[particle], 0)} ${PARTICLE_SHORT[particle]}`)
+    .join(' · ');
+  const percent = total ? (reached / total) * 100 : 0;
+  return [
+    { key: 'particles', label: 'Partículas simuladas', value: list || '—' },
+    {
+      key: 'reached',
+      label: 'Chegaram ao 2º hodoscópio',
+      value: `${formatNumber(reached, 0)} de ${formatNumber(total, 0)} (${formatNumber(percent, 0)}%)`,
+    },
+  ];
+}
+
 // `paramsUsed` (opcional) dá o isótopo, pra regra de 3 com o exame real.
 export function formatResults(results, paramsUsed) {
   if (!results || typeof results !== 'object') return [];
+  if (Array.isArray(results.events)) {
+    const rows = formatSpectrometerResults(results.events);
+    if (results.trajectories_truncated) {
+      rows.push({
+        key: 'trajectories_truncated',
+        label: 'Trajetórias',
+        value: 'Cortadas no limite de 300 mil pontos (a tabela conta todos os eventos)',
+      });
+    }
+    return rows;
+  }
   const rows = [];
 
   const equivalence = examEquivalence(results.n_events, paramsUsed?.isotope);

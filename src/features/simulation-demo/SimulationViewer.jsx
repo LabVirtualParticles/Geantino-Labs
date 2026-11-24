@@ -109,9 +109,11 @@ function Trajectories({ trajectories, visibleCount, recentFrom, showParticles = 
 // a partir de qual índice ficam com cor cheia. Sem essas props, desenha
 // tudo. `runProgress` alimenta o indicador enquanto a simulação roda.
 // `showParticles={false}` esconde as trajetórias e deixa só as linhas de
-// resposta (PET).
+// resposta (PET). `cameraPosition` (de `schema.viewer.camera`) troca o
+// ponto de vista inicial — no espectrômetro o detector é comprido e a vista
+// padrão cortava os calorímetros.
 const SimulationViewer = forwardRef(function SimulationViewer(
-  { data, status, visibleCount, recentFrom = 0, runProgress, showParticles = true },
+  { data, status, visibleCount, recentFrom = 0, runProgress, showParticles = true, cameraPosition },
   ref,
 ) {
   const wrapperRef = useRef(null);
@@ -125,7 +127,10 @@ const SimulationViewer = forwardRef(function SimulationViewer(
 
   return (
     <div className="simulation-viewer" ref={wrapperRef}>
-      <Canvas camera={{ position: [220, 160, 260], fov: 40 }} gl={{ preserveDrawingBuffer: true }}>
+      <Canvas
+        camera={{ position: cameraPosition ?? [220, 160, 260], fov: 40 }}
+        gl={{ preserveDrawingBuffer: true }}
+      >
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.6} />
         <Suspense fallback={null}>

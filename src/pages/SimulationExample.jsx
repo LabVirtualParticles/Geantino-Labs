@@ -18,6 +18,7 @@ import {
   renderScatteringChartToDataURL,
 } from '../features/simulation-demo/scatteringChart';
 import { renderPetImageToDataURL } from '../features/simulation-demo/petImage';
+import { renderPidToDataURL } from '../features/simulation-demo/pidChart';
 import { useAuth } from '../context/AuthContext';
 import { compactResults, saveReport } from '../lib/reports';
 import rutherfordSchema from '../features/simulation-demo/data/parameters.example.json';
@@ -99,6 +100,9 @@ export default function SimulationExample({
           ? [params.pos_x_cm, params.pos_y_cm, params.pos_z_cm]
           : null;
         chartDataUrl = renderPetImageToDataURL(meta?.results?.lines_of_response ?? [], source);
+      } else if ((schema.charts ?? []).includes('b5Pid')) {
+        // Espectrômetro: os cinco painéis de identificação (cal. EM).
+        chartDataUrl = renderPidToDataURL(meta?.results?.events ?? []);
       }
 
       await saveReport({
@@ -154,6 +158,7 @@ export default function SimulationExample({
               recentFrom={recentFrom}
               runProgress={runProgress}
               showParticles={!(hasLines && linesOnly)}
+              cameraPosition={schema.viewer?.camera}
             />
             {showPlayback && <PlaybackControls playback={playback} />}
             <div className="sim-page__actions">
@@ -189,7 +194,7 @@ export default function SimulationExample({
                 className="sim-page__button"
                 onClick={handleGenerateReport}
                 disabled={status !== 'done' || reportState === 'saving'}
-                title="Salva seed, parâmetros, um print do detector (no enquadramento atual) o gráfico e os resultados da simulação no seu painel"
+                title="Salva seed, parâmetros, um print do detector (no enquadramento atual), o gráfico e os resultados da simulação no seu painel"
               >
                 {reportState === 'saving' ? 'Gerando relatório…' : 'Gerar relatório'}
               </button>

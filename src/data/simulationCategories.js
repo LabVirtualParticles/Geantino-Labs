@@ -24,6 +24,11 @@ export const SIMULATION_CATEGORIES = [
         path: '/simulacoes/rutherford',
         image: '/simulations/rutherford-scattering.jpg',
       },
+      {
+        label: 'Espectrômetro de partículas',
+        path: '/simulacoes/espectrometro',
+        image: '/simulations/espectrometro-b5.jpg',
+      },
     ],
   },
   {

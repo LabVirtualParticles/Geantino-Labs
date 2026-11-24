@@ -1,0 +1,110 @@
+{
+  "simulationId": "espectrometro-b5",
+  "title": "Espectrômetro de partículas",
+  "intro": [
+    "Como um detector descobre que partícula passou por ele e com que momento? Este é o exemplo oficial B5 do Geant4: um espectrômetro de dois braços, como uma fatia de um detector de colisor esticada em linha. A partícula atravessa um hodoscópio e uma câmara de deriva, é curvada por um ímã e chega ao segundo braço, com outro hodoscópio, outra câmara e dois calorímetros.",
+    "Escolha a partícula (ou deixe o Geant4 sortear, como no exemplo original), o momento, o campo do ímã e o ângulo do segundo braço. Depois de simular, a seção Resultados mostra como o tempo de voo e a energia nos calorímetros separam pósitrons, múons, píons, káons e prótons.",
+    "Aqui não há colisão: cada evento é uma única partícula disparada contra o detector, como num teste de feixe."
+  ],
+  "credits": "Simulação baseada no exemplo B5 da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 e distribuído sob a Licença de Software do Geant4. Adaptado pelo Geantino Labs para rodar no site.",
+  "charts": [
+    "b5Pid"
+  ],
+  "viewer": {
+    "volumeColors": {
+      "magneticLogical": "#9a9a9a",
+      "hodoscope1Logical": "#38bdf8",
+      "hodoscope2Logical": "#38bdf8",
+      "chamber1Logical": "#a3e635",
+      "chamber2Logical": "#a3e635",
+      "cellLogical": "#f472b6",
+      "HadCalCellLogical": "#fb923c"
+    },
+    "edgesOnly": [
+      "hodoscope1Logical",
+      "hodoscope2Logical",
+      "chamber1Logical",
+      "chamber2Logical",
+      "cellLogical",
+      "HadCalCellLogical",
+      "magneticLogical"
+    ],
+    "camera": [
+      360,
+      240,
+      -60
+    ]
+  },
+  "fields": [
+    {
+      "id": "b5Particle",
+      "label": "Partícula",
+      "type": "select",
+      "options": [
+        {
+          "value": "random",
+          "label": "Sorteada a cada evento (como no exemplo)"
+        },
+        {
+          "value": "e+",
+          "label": "Pósitron (e⁺)"
+        },
+        {
+          "value": "mu+",
+          "label": "Múon (μ⁺)"
+        },
+        {
+          "value": "pi+",
+          "label": "Píon (π⁺)"
+        },
+        {
+          "value": "kaon+",
+          "label": "Káon (K⁺)"
+        },
+        {
+          "value": "proton",
+          "label": "Próton (p)"
+        }
+      ],
+      "default": "random"
+    },
+    {
+      "id": "beamCount",
+      "label": "Número de partículas",
+      "type": "number",
+      "integer": true,
+      "step": 10,
+      "default": 20,
+      "positive": true
+    },
+    {
+      "id": "momentum",
+      "label": "Momento",
+      "type": "number",
+      "unit": "GeV/c",
+      "step": 0.5,
+      "min": 0.05,
+      "default": 1
+    },
+    {
+      "id": "fieldT",
+      "label": "Campo do ímã",
+      "type": "number",
+      "unit": "T",
+      "step": 0.5,
+      "min": -5,
+      "max": 5,
+      "default": 1
+    },
+    {
+      "id": "armAngle",
+      "label": "Ângulo do 2º braço",
+      "type": "number",
+      "unit": "°",
+      "step": 5,
+      "min": 0,
+      "max": 60,
+      "default": 30
+    }
+  ]
+}

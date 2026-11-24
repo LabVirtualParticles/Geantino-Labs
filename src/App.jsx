@@ -13,10 +13,14 @@ import ShowerTest from './pages/ShowerTest'
 import petSchema from './features/simulation-demo/data/pet-b3a.parameters.json'
 import petExplanation from './features/simulation-demo/data/pet-b3a.explanations.json'
 import petPreview from './features/simulation-demo/data/pet-b3a.preview.json'
+import b5Schema from './features/simulation-demo/data/espectrometro-b5.parameters.json'
+import b5Explanation from './features/simulation-demo/data/espectrometro-b5.explanations.json'
+import b5Preview from './features/simulation-demo/data/espectrometro-b5.preview.json'
 
 // Geometria do tomógrafo (só os volumes, sem trajetórias) pra cena não
 // abrir vazia antes da primeira simulação — gerada de uma run real do B3a.
 const petPageSchema = { ...petSchema, preview: petPreview }
+const b5PageSchema = { ...b5Schema, preview: b5Preview }
 
 export default function App() {
   return (
@@ -56,6 +60,15 @@ export default function App() {
         element={(
           <RequireAuth>
             <SimulationExample schema={petPageSchema} explanationSchema={petExplanation} />
+          </RequireAuth>
+        )}
+      />
+      {/* Espectrômetro — exemplo oficial B5 do Geant4 (backend: id "b5"). */}
+      <Route
+        path="/simulacoes/espectrometro"
+        element={(
+          <RequireAuth>
+            <SimulationExample schema={b5PageSchema} explanationSchema={b5Explanation} />
           </RequireAuth>
         )}
       />

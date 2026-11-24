@@ -16,6 +16,7 @@ import {
 } from './formatParams';
 import { formatResults } from './formatResults';
 import { PetImageCard, SpectrumCard } from './PetCharts';
+import { PidCard } from './PidChart';
 
 // Seção "Resultados" que aparece embaixo do visualizador 3D assim que a
 // simulação termina: gráfico (com seletor de visualização) à esquerda,
@@ -71,6 +72,7 @@ export default function SimulationResults({ schema, data, meta }) {
               <PetImageCard results={meta?.results} paramsUsed={meta?.paramsUsed} />
             )}
             {charts.includes('crystalSpectrum') && <SpectrumCard results={meta?.results} />}
+            {charts.includes('b5Pid') && <PidCard results={meta?.results} />}
             {hasScattering && (
               <div className="sim-results__chart-card">
                 <div className="sim-results__chart-head">

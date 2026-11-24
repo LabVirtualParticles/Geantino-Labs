@@ -15,6 +15,10 @@ const PARTICLE_NAMES = {
   gamma: 'Gama (γ)',
   neutron: 'Nêutron',
   'mu-': 'Múon',
+  'mu+': 'Múon (μ⁺)',
+  'pi+': 'Píon (π⁺)',
+  'kaon+': 'Káon (K⁺)',
+  random: 'Sorteada (e⁺, μ⁺, π⁺, K⁺ ou p)',
 };
 
 const ISOTOPE_NAMES = {
@@ -74,6 +78,9 @@ export function formatParams(params, labels = {}) {
   take('n_events', 'Partículas simuladas', (value) => formatNumber(value, 0));
   take('beamCount', 'Partículas simuladas', (value) => formatNumber(value, 0));
   take('isotope', 'Isótopo da fonte', (value) => ISOTOPE_NAMES[value] ?? String(value));
+  take('momentum_GeV', 'Momento', (value) => `${formatNumber(value, 3)} GeV/c`);
+  take('field_T', 'Campo magnético', (value) => `${formatSigned(value)} T`);
+  take('arm_angle_deg', 'Ângulo do 2º braço', (value) => `${formatNumber(value, 1)}°`);
 
   const posKeys = ['pos_x_cm', 'pos_y_cm', 'pos_z_cm'];
   if (hasAll(params, posKeys)) {

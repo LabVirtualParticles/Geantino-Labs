@@ -9,6 +9,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000
 const BACKEND_SIMULATION_ID = {
   'rutherford-scattering': 'rutherford',
   'pet-b3a': 'b3a',
+  'espectrometro-b5': 'b5',
 };
 
 // campo do formulário -> campo esperado por RunSimulationRequest (app.py)
@@ -22,6 +23,11 @@ const FIELD_MAP = {
   sourceY: 'pos_y_cm',
   sourceZ: 'pos_z_cm',
   sourceSize: 'source_size_cm',
+  // B5 (espectrômetro) — ver data/espectrometro-b5.parameters.json
+  b5Particle: 'particle',
+  momentum: 'momentum_GeV',
+  fieldT: 'field_T',
+  armAngle: 'arm_angle_deg',
   // targetMaterial / targetThickness: sem efeito no backend por ora
   // (Detector.cpp tem material/espessura fixos em C++) — não traduzidos
   // de propósito. Ver nota em parameters.example.json.

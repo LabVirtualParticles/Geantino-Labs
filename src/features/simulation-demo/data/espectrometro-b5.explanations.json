@@ -1,0 +1,105 @@
+{
+  "simulationId": "espectrometro-b5",
+  "buttonLabel": "Contexto e fundamentos",
+  "title": "Espectrômetro de partículas",
+  "sections": [
+    {
+      "id": "historical-context",
+      "heading": "Contexto",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Em física de partículas quase nada é visto diretamente: as partículas são identificadas pelo que deixam nos detectores. Os grandes experimentos, como os do LHC, empilham camadas com funções diferentes: detectores de trajetória dentro de um campo magnético, para medir o momento pela curvatura, e calorímetros, que absorvem a partícula e medem sua energia. Antes de serem instalados, módulos de detector costumam ser testados num \"teste de feixe\": um feixe de partículas conhecidas é disparado contra eles."
+        },
+        {
+          "type": "paragraph",
+          "text": "O exemplo B5 do Geant4 é um espectrômetro de dois braços nesse estilo. Não há colisão: cada evento é uma única partícula, com cerca de 1 GeV/c de momento, disparada 8 m antes do ímã em direção ao primeiro braço."
+        }
+      ]
+    },
+    {
+      "id": "physics-foundations",
+      "heading": "Fundamentos físicos",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Uma partícula carregada num campo magnético sofre a força de Lorentz e descreve um arco. O raio da curva depende do momento: r = p / (qB). Partículas mais rápidas (mais momento) curvam menos; um campo mais forte curva mais. O segundo braço fica girado (30° no exemplo) para receber as partículas desviadas; mude o campo ou o ângulo e veja se elas ainda o atingem."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Hodoscópios",
+              "text": "Tiras de cintilador plástico (15 no primeiro braço, 25 no segundo) que marcam o instante em que a partícula passa. A diferença de tempo entre os dois é o tempo de voo: com o mesmo momento, partícula mais pesada é mais lenta e demora mais."
+            },
+            {
+              "label": "Câmaras de deriva",
+              "text": "Cinco camadas de argônio em cada braço, que registram por onde a partícula passou — é com elas que um experimento real reconstrói a trajetória e mede a curvatura."
+            },
+            {
+              "label": "Ímã",
+              "text": "Um cilindro de 1 m de raio com campo uniforme (1 tesla no exemplo), vertical, que curva as partículas para o lado do segundo braço."
+            },
+            {
+              "label": "Calorímetro eletromagnético",
+              "text": "80 células de iodeto de césio (CsI). Pósitrons e elétrons criam ali um chuveiro de fótons e pares e deixam quase toda a energia. Múons e píons em geral só atravessam ionizando o cristal (deixam por volta de 170 MeV). Prótons de 1 GeV/c, mais lentos, ionizam mais e costumam parar dentro do CsI."
+            },
+            {
+              "label": "Calorímetro hadrônico",
+              "text": "20 torres de chumbo com camadas de cintilador. Píons e káons podem iniciar ali um chuveiro hadrônico (colisões com núcleos). Múons atravessam todas as camadas e deixam sempre um pouco de energia. Só a energia que cai no cintilador é medida, por isso os valores são uma fração da energia total."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "A física é a do exemplo original: a lista FTFP_BERT, a mesma usada em experimentos de alta energia, com eletromagnetismo, decaimentos e interações hadrônicas. Káons e píons podem decair no caminho (por exemplo em múons e neutrinos)."
+        }
+      ]
+    },
+    {
+      "id": "results-interpretation",
+      "heading": "Interpretação dos resultados",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Na visualização 3D, o ímã é o cilindro cinza, os hodoscópios aparecem em azul, as câmaras de deriva em verde, o calorímetro eletromagnético em rosa e o hadrônico em laranja. As trajetórias seguem as cores do Geant4: azul para carga positiva, vermelho para negativa e verde para neutra. Para a cena não ficar cheia demais, só aparecem a partícula disparada e as secundárias com mais de 20 MeV (nêutrons e neutrinos ficam de fora)."
+        },
+        {
+          "type": "paragraph",
+          "text": "O gráfico de identificação tem um painel por partícula, todos com os mesmos eixos: tempo de voo no eixo X e energia num calorímetro no eixo Y. No calorímetro eletromagnético os pósitrons ficam no alto; múons e píons ficam juntos embaixo; o próton se separa pelo tempo de voo, porque é bem mais lento, e por deixar mais energia no cristal. No calorímetro hadrônico os múons formam um grupo apertado (atravessam tudo deixando sempre um valor parecido), os píons se espalham conforme começaram ou não um chuveiro, e os prótons quase não aparecem, porque param antes. Juntar várias medidas assim é a ideia da identificação de partículas nos experimentos reais."
+        },
+        {
+          "type": "paragraph",
+          "text": "Experimente: fixe uma partícula e aumente o momento — os tempos de voo de todas se aproximam (todas viajam quase à velocidade da luz) e fica mais difícil separá-las. Zere o campo e as partículas passam retas, sem chegar ao segundo braço girado; coloque o braço em 0° e elas voltam a atingi-lo."
+        }
+      ]
+    },
+    {
+      "id": "credits",
+      "heading": "Créditos e licença",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Esta simulação usa o exemplo B5 da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 (geant4.web.cern.ch). A geometria do espectrômetro, os materiais, os detectores sensíveis, a lista de física (FTFP_BERT) e o gerador de partículas são do exemplo original, distribuído sob a Licença de Software do Geant4 (cern.ch/geant4/license)."
+        },
+        {
+          "type": "paragraph",
+          "text": "O Geantino Labs (IFPR) adaptou o exemplo para rodar no servidor sem interface gráfica: escolha da partícula, do momento, do campo e do ângulo pelo site, exportação da geometria e das trajetórias (filtradas) para a visualização 3D e os resultados de cada evento em JSON no lugar dos arquivos ROOT. O passo máximo dentro do ímã foi reduzido de 1 m para 2 cm só para a curva ter pontos suficientes no desenho."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Referência principal",
+              "text": "S. Agostinelli et al., \"Geant4 — a simulation toolkit\", Nucl. Instrum. Meth. A 506 (2003) 250–303."
+            },
+            {
+              "label": "Atualizações",
+              "text": "J. Allison et al., \"Geant4 developments and applications\", IEEE Trans. Nucl. Sci. 53 (2006) 270–278; J. Allison et al., \"Recent developments in Geant4\", Nucl. Instrum. Meth. A 835 (2016) 186–225."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
