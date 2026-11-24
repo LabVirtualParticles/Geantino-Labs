@@ -111,9 +111,11 @@ function Trajectories({ trajectories, visibleCount, recentFrom, showParticles = 
 // `showParticles={false}` esconde as trajetórias e deixa só as linhas de
 // resposta (PET). `cameraPosition` (de `schema.viewer.camera`) troca o
 // ponto de vista inicial — no espectrômetro o detector é comprido e a vista
-// padrão cortava os calorímetros.
+// padrão cortava os calorímetros. `cameraUp` (de `schema.viewer.up`) troca
+// o "para cima" da câmera — no telescópio de raios gama o eixo do detector é
+// o z do Geant4, e com [0, 0, 1] ele aparece em pé.
 const SimulationViewer = forwardRef(function SimulationViewer(
-  { data, status, visibleCount, recentFrom = 0, runProgress, showParticles = true, cameraPosition },
+  { data, status, visibleCount, recentFrom = 0, runProgress, showParticles = true, cameraPosition, cameraUp },
   ref,
 ) {
   const wrapperRef = useRef(null);
@@ -128,7 +130,7 @@ const SimulationViewer = forwardRef(function SimulationViewer(
   return (
     <div className="simulation-viewer" ref={wrapperRef}>
       <Canvas
-        camera={{ position: cameraPosition ?? [220, 160, 260], fov: 40 }}
+        camera={{ position: cameraPosition ?? [220, 160, 260], fov: 40, ...(cameraUp ? { up: cameraUp } : {}) }}
         gl={{ preserveDrawingBuffer: true }}
       >
         <color attach="background" args={['#000000']} />

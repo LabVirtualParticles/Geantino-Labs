@@ -19,6 +19,7 @@ const CHART_CAPTIONS = {
   'pet-b3a': 'Imagem reconstruída (corte x–y)',
   'espectrometro-b5': 'Identificação de partículas',
   'decaimento-rdecay01': 'Cadeia de decaimento',
+  'telescopio-gammaraytel': 'Erro na direção dos raios gama',
 };
 
 const TABS = [

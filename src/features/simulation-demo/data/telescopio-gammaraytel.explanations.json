@@ -1,0 +1,117 @@
+{
+  "simulationId": "telescopio-gammaraytel",
+  "buttonLabel": "Contexto e fundamentos",
+  "title": "Telescópio de raios gama",
+  "sections": [
+    {
+      "id": "historical-context",
+      "heading": "Contexto",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Raios gama vindos do espaço trazem notícias dos lugares mais violentos do universo: pulsares, restos de supernovas, buracos negros que engolem matéria no centro de galáxias. Mas a atmosfera da Terra os absorve, então os telescópios de raios gama de energia na faixa de MeV a GeV vão para o espaço, em satélites."
+        },
+        {
+          "type": "paragraph",
+          "text": "Esses fótons têm tanta energia que atravessam lentes e espelhos. O jeito de detectá-los é transformá-los em matéria: o raio gama se converte num par elétron–pósitron e o telescópio segue o par. Foi assim no EGRET, do observatório Compton (anos 1990), e é assim no LAT, o instrumento principal do telescópio espacial Fermi, da NASA: folhas de tungstênio para a conversão, detectores de tiras de silício para seguir o par, um calorímetro de iodeto de césio para medir a energia e uma anticoincidência de plástico cintilador para recusar os raios cósmicos."
+        },
+        {
+          "type": "paragraph",
+          "text": "O exemplo gammaray_telescope do Geant4 é um telescópio desse tipo, em escala menor, criado por pesquisadores que trabalharam nesses instrumentos."
+        }
+      ]
+    },
+    {
+      "id": "physics-foundations",
+      "heading": "Fundamentos físicos",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Um fóton com energia acima de 1,022 MeV (duas vezes a massa do elétron, mc²) pode desaparecer perto de um núcleo e dar lugar a um elétron e um pósitron: é a produção de pares. Ela é mais provável em materiais de número atômico alto, por isso o conversor é de tungstênio. Em média um fóton de alta energia se converte depois de 9/7 de um comprimento de radiação (para o tungstênio, uns 3,5 mm)."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Tracker",
+              "text": "15 camadas, cada uma com uma folha de tungstênio de 0,3 mm e dois planos de silício de 0,4 mm, um com tiras na direção x e outro na direção y (tiras de 0,2 mm). Os planos dizem por onde o elétron e o pósitron passaram. No total são uns 1,4 comprimentos de radiação: cerca de dois terços dos raios gama se convertem aqui.",
+              "color": "#38bdf8"
+            },
+            {
+              "label": "Conversores",
+              "text": "As folhas de tungstênio. Folha mais grossa converte mais raios gama, mas espalha mais o par e piora a direção medida — por isso o Fermi usa folhas finas em cima e grossas embaixo.",
+              "color": "#9a9a9a"
+            },
+            {
+              "label": "Calorímetro",
+              "text": "10 camadas de barras de iodeto de césio (CsI) de 1,5 cm, cruzadas. O par vira ali um chuveiro de partículas que deposita a maior parte da energia. São uns 8 comprimentos de radiação: em energias altas uma parte do chuveiro escapa.",
+              "color": "#fb923c"
+            },
+            {
+              "label": "Anticoincidência",
+              "text": "Placas de plástico cintilador de 1 cm em cima e dos lados. Partícula com carga que atravessa deixa uns 2 MeV e acende a placa; o raio gama, sem carga, não.",
+              "color": "#f472b6"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "No espaço os raios cósmicos (prótons, elétrons e núcleos) chegam ao telescópio de mil a cem mil vezes mais que os raios gama, por isso a anticoincidência é tão importante. Mas ela tem um problema: no chuveiro do calorímetro alguns fótons voltam para cima (\"backsplash\") e podem acender a anticoincidência num evento que era um raio gama de verdade. O EGRET tinha uma anticoincidência inteiriça e perdia muitos raios gama de alta energia por causa disso; a do Fermi foi dividida em 89 placas, e só vale o veto da placa por onde a partícula entrou."
+        },
+        {
+          "type": "paragraph",
+          "text": "A física usada é a mesma do exemplo original: eletromagnetismo com os modelos de baixa energia Livermore, interações hadrônicas (QGSP_BIC_HP, com nêutrons de baixa energia) e decaimento radioativo."
+        }
+      ]
+    },
+    {
+      "id": "results-interpretation",
+      "heading": "Interpretação dos resultados",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Na visualização 3D o telescópio está em pé e as partículas vêm de cima. Os planos de silício aparecem em azul, as folhas de tungstênio em cinza, as barras do calorímetro em laranja e a anticoincidência em rosa. As trajetórias seguem as cores do Geant4: verde para partículas neutras (o raio gama), vermelho para carga negativa (elétron) e azul para positiva (pósitron, próton). Para a cena não ficar cheia, só aparecem a partícula disparada e as secundárias com mais de 1% da energia dela (no mínimo 2 MeV)."
+        },
+        {
+          "type": "paragraph",
+          "text": "A direção é reconstruída pelo site com um método simples (o exemplo original só grava os sinais do tracker): nas primeiras camadas com sinal depois da conversão, uma reta pelos pontos de cada vista (x e y). Telescópios de verdade fazem uma reconstrução bem mais cuidadosa, com os dois traços separados e um filtro de Kalman, e chegam a erros menores. Mesmo assim dá para ver as tendências: o erro cai quando a energia sobe, porque o espalhamento múltiplo do par nas folhas diminui."
+        },
+        {
+          "type": "paragraph",
+          "text": "No gráfico da anticoincidência, prótons e elétrons ficam perto de 2 MeV ou acima — eles sempre acendem as placas. Os raios gama ficam quase todos em zero, mas alguns aparecem acima do limiar: é o backsplash. Aumente a energia e veja essa fração crescer."
+        },
+        {
+          "type": "paragraph",
+          "text": "Com o feixe inclinado, parte das partículas sai pelos lados do tracker antes de chegar ao calorímetro: a área útil do telescópio diminui longe do eixo."
+        }
+      ]
+    },
+    {
+      "id": "credits",
+      "heading": "Créditos e licença",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Esta simulação usa o exemplo gammaray_telescope (examples/advanced) da distribuição oficial do Geant4, de F. Longo, R. Giannitrapani e G. Santin, desenvolvido no âmbito da Colaboração Geant4 (geant4.web.cern.ch). A geometria do telescópio, os materiais, os detectores sensíveis e os hits, a lista de física e os geradores de partículas são do exemplo original, distribuído sob a Licença de Software do Geant4 (cern.ch/geant4/license)."
+        },
+        {
+          "type": "paragraph",
+          "text": "O Geantino Labs (IFPR) adaptou o exemplo para rodar no servidor sem interface gráfica: escolha da partícula, da energia e do ângulo pelo site (com o General Particle Source do exemplo, num feixe paralelo do tamanho do tracker), opção de sortear a partícula a cada evento, exportação da geometria e das trajetórias para a visualização 3D, e um resumo de cada evento em JSON (sinais nos três detectores e a direção reconstruída) no lugar dos arquivos ROOT."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Referência principal",
+              "text": "S. Agostinelli et al., \"Geant4 — a simulation toolkit\", Nucl. Instrum. Meth. A 506 (2003) 250–303."
+            },
+            {
+              "label": "Atualizações",
+              "text": "J. Allison et al., \"Geant4 developments and applications\", IEEE Trans. Nucl. Sci. 53 (2006) 270–278; J. Allison et al., \"Recent developments in Geant4\", Nucl. Instrum. Meth. A 835 (2016) 186–225."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

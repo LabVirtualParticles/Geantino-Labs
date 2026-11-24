@@ -48,9 +48,16 @@ export const SIMULATION_CATEGORIES = [
   {
     slug: 'astrofisica',
     label: 'Astrofísica',
-    description: 'Raios cósmicos e partículas que chegam do espaço.',
+    description:
+      'Raios cósmicos e partículas que chegam do espaço. Comece pelo telescópio de raios gama: um detector de satélite separando raios gama dos raios cósmicos.',
     cover: 'astrofisica',
-    items: [],
+    items: [
+      {
+        label: 'Telescópio de raios gama',
+        path: '/simulacoes/telescopio-gama',
+        image: '/simulations/telescopio-gammaraytel.jpg',
+      },
+    ],
   },
   {
     slug: 'fisica-medica',

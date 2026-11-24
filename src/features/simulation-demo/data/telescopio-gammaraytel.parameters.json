@@ -1,0 +1,103 @@
+{
+  "simulationId": "telescopio-gammaraytel",
+  "title": "Telescópio de raios gama",
+  "intro": [
+    "Raios gama não podem ser focalizados por lentes nem espelhos: eles atravessam tudo. Para ver o céu em raios gama, satélites como o Fermi usam outro truque: o raio gama se converte num par elétron–pósitron numa folha de metal, e o par é rastreado camada por camada. Este é o exemplo oficial gammaray_telescope do Geant4, um telescópio desse tipo: um tracker de silício com folhas de tungstênio, um calorímetro de iodeto de césio embaixo e uma anticoincidência de plástico em volta.",
+    "Escolha a partícula, a energia e o ângulo de chegada. Depois de simular, a seção Resultados mostra com que precisão o telescópio acha a direção dos raios gama, como ele separa os raios gama dos raios cósmicos e quanta energia o calorímetro mede.",
+    "Aqui as partículas chegam todas de uma vez de cima, como um feixe paralelo — no espaço elas viriam de todas as direções, e os raios cósmicos seriam muito mais numerosos."
+  ],
+  "credits": "Simulação baseada no exemplo gammaray_telescope (F. Longo, R. Giannitrapani e G. Santin) da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 e distribuído sob a Licença de Software do Geant4. Adaptado pelo Geantino Labs para rodar no site.",
+  "charts": [
+    "telescopePsf",
+    "telescopeVeto",
+    "telescopeCal"
+  ],
+  "viewer": {
+    "up": [
+      0,
+      0,
+      1
+    ],
+    "camera": [
+      330,
+      -430,
+      120
+    ],
+    "volumeColors": {
+      "TKRDetector_X": "#38bdf8",
+      "TKRDetector_Y": "#38bdf8",
+      "Converter": "#9a9a9a",
+      "CALDetectorX": "#fb923c",
+      "CALDetectorY": "#fb923c",
+      "ACT": "#f472b6",
+      "ACL": "#f472b6",
+      "ACL2": "#f472b6"
+    },
+    "edgesOnly": [
+      "TKRDetector_X",
+      "TKRDetector_Y",
+      "Converter",
+      "CALDetectorX",
+      "CALDetectorY",
+      "ACT",
+      "ACL",
+      "ACL2"
+    ]
+  },
+  "fields": [
+    {
+      "id": "telescopeParticle",
+      "label": "Partícula",
+      "type": "select",
+      "default": "gamma",
+      "options": [
+        {
+          "value": "gamma",
+          "label": "Raio gama (γ)"
+        },
+        {
+          "value": "e-",
+          "label": "Elétron (raio cósmico)"
+        },
+        {
+          "value": "proton",
+          "label": "Próton (raio cósmico)"
+        },
+        {
+          "value": "mix",
+          "label": "Sorteada a cada evento: γ, e⁻ ou p"
+        }
+      ]
+    },
+    {
+      "id": "energyGeV",
+      "label": "Energia",
+      "type": "number",
+      "unit": "GeV",
+      "step": 0.5,
+      "min": 0.02,
+      "max": 10,
+      "default": 1
+    },
+    {
+      "id": "thetaDeg",
+      "label": "Ângulo de chegada (do eixo)",
+      "type": "number",
+      "unit": "°",
+      "step": 5,
+      "min": 0,
+      "max": 40,
+      "default": 0
+    },
+    {
+      "id": "beamCount",
+      "label": "Número de partículas",
+      "type": "number",
+      "integer": true,
+      "step": 10,
+      "default": 50,
+      "positive": true,
+      "max": 1000
+    }
+  ]
+}

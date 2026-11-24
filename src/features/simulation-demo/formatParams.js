@@ -19,6 +19,7 @@ const PARTICLE_NAMES = {
   'pi+': 'Píon (π⁺)',
   'kaon+': 'Káon (K⁺)',
   random: 'Sorteada (e⁺, μ⁺, π⁺, K⁺ ou p)',
+  mix: 'Sorteada (γ, e⁻ ou p)',
 };
 
 const ISOTOPE_NAMES = {
@@ -74,6 +75,7 @@ function hasAll(params, keys) {
 export const PARAM_LABELS_BY_SIMULATION = {
   'pet-b3a': { n_events: 'Decaimentos simulados' },
   'decaimento-rdecay01': { n_events: 'Núcleos simulados', beamCount: 'Núcleos simulados' },
+  'telescopio-gammaraytel': { energy_GeV: 'Energia da partícula' },
 };
 
 // `labels` (opcional) troca o rótulo de uma linha pela chave — normalmente
@@ -104,6 +106,8 @@ export function formatParams(params, labels = {}) {
   take('nuclide', 'Núcleo inicial', (value) => NUCLIDE_NAMES[value] ?? String(value));
   take('decay_mode', 'Decaimentos', (value) => DECAY_MODE_NAMES[value] ?? String(value));
   take('decayMode', 'Decaimentos', (value) => DECAY_MODE_NAMES[value] ?? String(value));
+  take('energy_GeV', 'Energia', (value) => `${formatNumber(value, 3)} GeV`);
+  take('theta_deg', 'Ângulo de chegada (do eixo)', (value) => `${formatNumber(value, 1)}°`);
 
   const posKeys = ['pos_x_cm', 'pos_y_cm', 'pos_z_cm'];
   if (hasAll(params, posKeys)) {

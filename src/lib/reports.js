@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { summarizeTelescope } from '../features/simulation-demo/telescope';
 
 const NOT_CONFIGURED_MESSAGE =
   'Supabase ainda não está configurado neste ambiente — veja claude/supabase-auth-setup.md.';
@@ -71,6 +72,12 @@ export function compactResults(results) {
   // Decaimento (rdecay01): sem os decaimentos detalhados e os espectros
   // (centenas de KB) — a cadeia (transitions) e as contagens bastam pro
   // resumo do relatório.
+  // Telescópio: guarda o resumo por partícula no lugar da lista de eventos.
+  if (rest.tkr_layers !== undefined && Array.isArray(rest.events)) {
+    const small = { ...rest, summary: summarizeTelescope(rest) };
+    delete small.events;
+    return small;
+  }
   if (Array.isArray(rest.transitions)) {
     const small = { ...rest };
     delete small.decays;

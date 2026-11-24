@@ -6,6 +6,7 @@
 
 import { formatNumber } from './formatParams';
 import { examEquivalence } from './petReference';
+import { ACD_THRESHOLD_MEV, TELESCOPE_PARTICLES, summarizeTelescope } from './telescope';
 import { MODE_SHORT, buildChain, fullNuclideName, formatHalfLife, parseIonName } from './nuclide';
 
 const DOSE_UNITS = [
@@ -149,10 +150,66 @@ function formatDecayResults(results) {
   return rows;
 }
 
+// Telescópio de raios gama (gammaray_telescope): por partícula.
+function formatTelescopeResults(results) {
+  const summary = summarizeTelescope(results);
+  const present = TELESCOPE_PARTICLES.filter((particle) => summary.byParticle[particle.id]);
+  const rows = [];
+  rows.push({
+    key: 'particles',
+    label: 'Partículas simuladas',
+    value:
+      present
+        .map((particle) => `${formatNumber(summary.byParticle[particle.id].count, 0)} ${particle.short}`)
+        .join(' · ') || '—',
+  });
+  const gamma = summary.byParticle.gamma;
+  if (gamma) {
+    rows.push({
+      key: 'reconstructed',
+      label: 'Raios gama com direção reconstruída',
+      value: `${formatNumber(gamma.reconstructed, 0)} de ${formatNumber(gamma.count, 0)} (${formatNumber((gamma.reconstructed / gamma.count) * 100, 0)}%)`,
+    });
+    if (gamma.psf68 != null) {
+      rows.push({
+        key: 'psf68',
+        label: 'Resolução angular (68% dos raios gama)',
+        value: `${formatNumber(gamma.psf68, 2)}°`,
+      });
+    }
+  }
+  rows.push({
+    key: 'veto',
+    label: `Anticoincidência acesa (> ${formatNumber(ACD_THRESHOLD_MEV, 0)} MeV)`,
+    value: present
+      .map((particle) => {
+        const item = summary.byParticle[particle.id];
+        return `${particle.short} ${formatNumber((item.vetoed / item.count) * 100, 0)}%`;
+      })
+      .join(' · '),
+  });
+  rows.push({
+    key: 'cal',
+    label: 'Energia no calorímetro (média)',
+    value: present
+      .map((particle) => `${particle.short} ${formatNumber(summary.byParticle[particle.id].calFraction * 100, 0)}%`)
+      .join(' · '),
+  });
+  if (results.trajectories_truncated) {
+    rows.push({
+      key: 'trajectories_truncated',
+      label: 'Trajetórias',
+      value: 'Cortadas no limite de 300 mil pontos (os números acima contam todas as partículas)',
+    });
+  }
+  return rows;
+}
+
 // `paramsUsed` (opcional) dá o isótopo, pra regra de 3 com o exame real.
 export function formatResults(results, paramsUsed) {
   if (!results || typeof results !== 'object') return [];
   if (Array.isArray(results.transitions)) return formatDecayResults(results);
+  if (results.tkr_layers !== undefined) return formatTelescopeResults(results);
   if (Array.isArray(results.events)) {
     const rows = formatSpectrometerResults(results.events);
     if (results.trajectories_truncated) {

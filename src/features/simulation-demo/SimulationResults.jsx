@@ -18,6 +18,7 @@ import { formatResults } from './formatResults';
 import { PetImageCard, SpectrumCard } from './PetCharts';
 import { PidCard } from './PidChart';
 import { DecayChainCard, DecaySpectraCard } from './DecayCharts';
+import { TelescopeCalCard, TelescopePsfCard, TelescopeVetoCard } from './TelescopeCharts';
 
 // Seção "Resultados" que aparece embaixo do visualizador 3D assim que a
 // simulação termina: gráfico (com seletor de visualização) à esquerda,
@@ -76,6 +77,9 @@ export default function SimulationResults({ schema, data, meta }) {
             {charts.includes('b5Pid') && <PidCard results={meta?.results} />}
             {charts.includes('decayChain') && <DecayChainCard results={meta?.results} />}
             {charts.includes('decaySpectra') && <DecaySpectraCard results={meta?.results} />}
+            {charts.includes('telescopePsf') && <TelescopePsfCard results={meta?.results} />}
+            {charts.includes('telescopeVeto') && <TelescopeVetoCard results={meta?.results} />}
+            {charts.includes('telescopeCal') && <TelescopeCalCard results={meta?.results} />}
             {hasScattering && (
               <div className="sim-results__chart-card">
                 <div className="sim-results__chart-head">

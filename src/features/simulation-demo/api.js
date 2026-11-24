@@ -11,6 +11,7 @@ const BACKEND_SIMULATION_ID = {
   'pet-b3a': 'b3a',
   'espectrometro-b5': 'b5',
   'decaimento-rdecay01': 'rdecay01',
+  'telescopio-gammaraytel': 'gammaraytel',
 };
 
 // campo do formulário -> campo esperado por RunSimulationRequest (app.py)
@@ -33,6 +34,10 @@ const FIELD_MAP = {
   // showNucleus (ilustração do núcleo) é só do front: não vai pro backend.
   nuclide: 'nuclide',
   decayMode: 'decay_mode',
+  // telescópio de raios gama — ver data/telescopio-gammaraytel.parameters.json
+  telescopeParticle: 'particle',
+  energyGeV: 'energy_GeV',
+  thetaDeg: 'theta_deg',
   // targetMaterial / targetThickness: sem efeito no backend por ora
   // (Detector.cpp tem material/espessura fixos em C++) — não traduzidos
   // de propósito. Ver nota em parameters.example.json.

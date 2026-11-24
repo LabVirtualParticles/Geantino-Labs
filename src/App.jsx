@@ -19,12 +19,16 @@ import b5Preview from './features/simulation-demo/data/espectrometro-b5.preview.
 import decaySchema from './features/simulation-demo/data/decaimento-rdecay01.parameters.json'
 import decayExplanation from './features/simulation-demo/data/decaimento-rdecay01.explanations.json'
 import decayPreview from './features/simulation-demo/data/decaimento-rdecay01.preview.json'
+import telescopeSchema from './features/simulation-demo/data/telescopio-gammaraytel.parameters.json'
+import telescopeExplanation from './features/simulation-demo/data/telescopio-gammaraytel.explanations.json'
+import telescopePreview from './features/simulation-demo/data/telescopio-gammaraytel.preview.json'
 
 // Geometria do tomógrafo (só os volumes, sem trajetórias) pra cena não
 // abrir vazia antes da primeira simulação — gerada de uma run real do B3a.
 const petPageSchema = { ...petSchema, preview: petPreview }
 const b5PageSchema = { ...b5Schema, preview: b5Preview }
 const decayPageSchema = { ...decaySchema, preview: decayPreview }
+const telescopePageSchema = { ...telescopeSchema, preview: telescopePreview }
 
 export default function App() {
   return (
@@ -82,6 +86,15 @@ export default function App() {
         element={(
           <RequireAuth>
             <SimulationExample schema={decayPageSchema} explanationSchema={decayExplanation} />
+          </RequireAuth>
+        )}
+      />
+      {/* Telescópio de raios gama — exemplo oficial gammaray_telescope do Geant4 (backend: id "gammaraytel"). */}
+      <Route
+        path="/simulacoes/telescopio-gama"
+        element={(
+          <RequireAuth>
+            <SimulationExample schema={telescopePageSchema} explanationSchema={telescopeExplanation} />
           </RequireAuth>
         )}
       />

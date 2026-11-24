@@ -23,6 +23,8 @@ import { renderPidToDataURL } from '../features/simulation-demo/pidChart';
 import { renderNuclideChartToDataURL } from '../features/simulation-demo/decayCharts';
 import { buildChain } from '../features/simulation-demo/nuclide';
 import NucleusIllustration from '../features/simulation-demo/NucleusIllustration';
+import { angleRange, histogram, renderHistogramToDataURL } from '../features/simulation-demo/telescopeCharts';
+import { containment } from '../features/simulation-demo/telescope';
 import { useAuth } from '../context/AuthContext';
 import { compactResults, saveReport } from '../lib/reports';
 import rutherfordSchema from '../features/simulation-demo/data/parameters.example.json';
@@ -111,6 +113,20 @@ export default function SimulationExample({
         // Decaimento: a cadeia na carta de nuclídeos.
         const results = meta?.results ?? {};
         chartDataUrl = renderNuclideChartToDataURL(buildChain(results.transitions, results.primary, results.full_chain !== false));
+      } else if ((schema.charts ?? []).includes('telescopePsf')) {
+        // Telescópio: o erro da direção reconstruída dos raios gama.
+        const errors = (meta?.results?.events ?? [])
+          .filter((event) => event.particle === 'gamma' && typeof event.angle_error_deg === 'number')
+          .map((event) => event.angle_error_deg);
+        if (errors.length) {
+          const psf68 = containment(errors, 0.68);
+          chartDataUrl = renderHistogramToDataURL({
+            hist: histogram(errors, 0, angleRange(errors), 40),
+            xLabel: 'Erro na direção reconstruída (graus)',
+            format: (value) => value.toLocaleString('pt-BR', { maximumFractionDigits: 1 }),
+            markers: [{ x: psf68, label: `68%: ${psf68.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}°` }],
+          });
+        }
       }
 
       await saveReport({
@@ -168,6 +184,7 @@ export default function SimulationExample({
               runProgress={runProgress}
               showParticles={!(hasLines && linesOnly)}
               cameraPosition={schema.viewer?.camera}
+              cameraUp={schema.viewer?.up}
             />
             {showPlayback && <PlaybackControls playback={playback} />}
             <div className="sim-page__actions">
