@@ -20,6 +20,9 @@ import {
 } from '../features/simulation-demo/scatteringChart';
 import { renderPetImageToDataURL } from '../features/simulation-demo/petImage';
 import { renderPidToDataURL } from '../features/simulation-demo/pidChart';
+import { renderNuclideChartToDataURL } from '../features/simulation-demo/decayCharts';
+import { buildChain } from '../features/simulation-demo/nuclide';
+import NucleusIllustration from '../features/simulation-demo/NucleusIllustration';
 import { useAuth } from '../context/AuthContext';
 import { compactResults, saveReport } from '../lib/reports';
 import rutherfordSchema from '../features/simulation-demo/data/parameters.example.json';
@@ -104,6 +107,10 @@ export default function SimulationExample({
       } else if ((schema.charts ?? []).includes('b5Pid')) {
         // Espectrômetro: os cinco painéis de identificação (cal. EM).
         chartDataUrl = renderPidToDataURL(meta?.results?.events ?? []);
+      } else if ((schema.charts ?? []).includes('decayChain')) {
+        // Decaimento: a cadeia na carta de nuclídeos.
+        const results = meta?.results ?? {};
+        chartDataUrl = renderNuclideChartToDataURL(buildChain(results.transitions, results.primary, results.full_chain !== false));
       }
 
       await saveReport({
@@ -215,6 +222,15 @@ export default function SimulationExample({
               <p className="sim-page__error" role="alert">
                 Não foi possível salvar o relatório: {reportError}
               </p>
+            )}
+            {/* Decaimento (rdecay01): ilustração do núcleo, só quando a
+                caixa "Mostrar núcleo" do formulário está marcada. */}
+            {values.showNucleus && (
+              <NucleusIllustration
+                nuclide={values.nuclide}
+                results={status === 'running' ? null : meta?.results}
+                runKey={meta?.runId ?? 'sem-simulacao'}
+              />
             )}
           </div>
         </div>

@@ -34,9 +34,16 @@ export const SIMULATION_CATEGORIES = [
   {
     slug: 'fisica-nuclear',
     label: 'Física Nuclear',
-    description: 'Núcleos, decaimentos e reações nucleares.',
+    description:
+      'Núcleos, decaimentos e reações nucleares. Comece pelo decaimento radioativo: escolha um núcleo e acompanhe a cadeia até ele ficar estável.',
     cover: 'nuclear',
-    items: [],
+    items: [
+      {
+        label: 'Decaimento radioativo',
+        path: '/simulacoes/decaimento',
+        image: '/simulations/decaimento-rdecay01.jpg',
+      },
+    ],
   },
   {
     slug: 'astrofisica',

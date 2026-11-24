@@ -19,7 +19,14 @@ export default function ParametersPanel({ schema, values, onChange }) {
       <h2 className="parameters-panel__title">Parâmetros</h2>
 
       {schema.fields.map((field) =>
-        field.type === 'select' ? (
+        field.type === 'checkbox' ? (
+          <CheckboxField
+            key={field.id}
+            field={field}
+            value={Boolean(values[field.id] ?? field.default)}
+            onChange={(value) => onChange(field.id, value)}
+          />
+        ) : field.type === 'select' ? (
           <SelectField
             key={field.id}
             field={field}
@@ -77,6 +84,34 @@ function SelectField({ field, value, onChange }) {
         <p className="parameters-panel__warning" role="status">
           <span aria-hidden="true">⚠ </span>
           {selectedWarning}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Caixa de marcar — opções de visualização que não vão para o Geant4 (ex.:
+// "Mostrar núcleo" do decaimento). `badge` (opcional) mostra uma etiqueta
+// ao lado do rótulo (ex.: "Recomendado") e `hint` uma linha de explicação.
+function CheckboxField({ field, value, onChange }) {
+  const id = useId();
+  const hintId = useId();
+  return (
+    <div className="parameters-panel__field parameters-panel__field--checkbox">
+      <label className="parameters-panel__check" htmlFor={id}>
+        <input
+          id={id}
+          type="checkbox"
+          checked={value}
+          onChange={(event) => onChange(event.target.checked)}
+          aria-describedby={field.hint ? hintId : undefined}
+        />
+        <span>{field.label}</span>
+        {field.badge && <span className="parameters-panel__badge">{field.badge}</span>}
+      </label>
+      {field.hint && (
+        <p className="parameters-panel__hint" id={hintId}>
+          {field.hint}
         </p>
       )}
     </div>

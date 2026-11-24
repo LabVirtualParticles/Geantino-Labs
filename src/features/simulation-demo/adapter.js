@@ -112,7 +112,9 @@ export function adaptSimulationResult(raw, viewer = {}) {
     track: trajectory.track,
     particle: trajectory.particle,
     charge: trajectory.charge,
-    color: colorForCharge(trajectory.charge),
+    // `viewer.particleColors` (opcional) troca a cor de uma partícula pelo
+    // nome — ex. neutrinos em cinza no decaimento, pra não confundir com γ.
+    color: viewer.particleColors?.[trajectory.particle] ?? colorForCharge(trajectory.charge),
     points: (trajectory.points ?? []).map(scalePoint),
   }));
 

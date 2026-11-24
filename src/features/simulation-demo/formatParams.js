@@ -28,7 +28,26 @@ const ISOTOPE_NAMES = {
   O15: 'Oxigênio-15 (¹⁵O)',
 };
 
-const HIDDEN_KEYS = new Set(['seed1', 'seed2']);
+const NUCLIDE_NAMES = {
+  U238: 'Urânio-238',
+  Th232: 'Tório-232',
+  Ra226: 'Rádio-226',
+  Rn222: 'Radônio-222',
+  Am241: 'Amerício-241',
+  Co60: 'Cobalto-60',
+  Cs137: 'Césio-137',
+  K40: 'Potássio-40',
+  Na22: 'Sódio-22',
+  C14: 'Carbono-14',
+  Ne24: 'Neônio-24',
+};
+
+const DECAY_MODE_NAMES = {
+  chain: 'Cadeia inteira (até um núcleo estável)',
+  single: 'Só o primeiro decaimento',
+};
+
+const HIDDEN_KEYS = new Set(['seed1', 'seed2', 'showNucleus']);
 
 export function formatNumber(value, maxDecimals = 2) {
   const number = Number(value);
@@ -54,6 +73,7 @@ function hasAll(params, keys) {
 // tanto na página da simulação quanto no relatório do painel.
 export const PARAM_LABELS_BY_SIMULATION = {
   'pet-b3a': { n_events: 'Decaimentos simulados' },
+  'decaimento-rdecay01': { n_events: 'Núcleos simulados', beamCount: 'Núcleos simulados' },
 };
 
 // `labels` (opcional) troca o rótulo de uma linha pela chave — normalmente
@@ -81,6 +101,9 @@ export function formatParams(params, labels = {}) {
   take('momentum_GeV', 'Momento', (value) => `${formatNumber(value, 3)} GeV/c`);
   take('field_T', 'Campo magnético', (value) => `${formatSigned(value)} T`);
   take('arm_angle_deg', 'Ângulo do 2º braço', (value) => `${formatNumber(value, 1)}°`);
+  take('nuclide', 'Núcleo inicial', (value) => NUCLIDE_NAMES[value] ?? String(value));
+  take('decay_mode', 'Decaimentos', (value) => DECAY_MODE_NAMES[value] ?? String(value));
+  take('decayMode', 'Decaimentos', (value) => DECAY_MODE_NAMES[value] ?? String(value));
 
   const posKeys = ['pos_x_cm', 'pos_y_cm', 'pos_z_cm'];
   if (hasAll(params, posKeys)) {

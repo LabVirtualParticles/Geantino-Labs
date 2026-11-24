@@ -1,0 +1,115 @@
+{
+  "simulationId": "decaimento-rdecay01",
+  "title": "Decaimento radioativo",
+  "intro": [
+    "Um núcleo instável não fica assim para sempre: em algum momento ele se transforma em outro, soltando partículas. Este é o exemplo oficial rdecay01 do Geant4: um núcleo radioativo parado no centro de uma caixinha de ar, e o Geant4 sorteia quando e como ele decai, usando os dados nucleares reais de meias-vidas e modos de decaimento.",
+    "Escolha o núcleo e se quer ver só o primeiro decaimento ou a cadeia inteira até chegar num núcleo estável. O urânio-238, por exemplo, passa por 14 decaimentos até virar chumbo-206. Depois de simular, a seção Resultados mostra a cadeia num mapa de prótons e nêutrons e a energia das partículas emitidas.",
+    "Marque “Mostrar núcleo” para ver, desenhado, um dos núcleos da simulação decaindo passo a passo."
+  ],
+  "credits": "Simulação baseada no exemplo rdecay01 da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 e distribuído sob a Licença de Software do Geant4. Adaptado pelo Geantino Labs para rodar no site.",
+  "charts": [
+    "decayChain",
+    "decaySpectra"
+  ],
+  "viewer": {
+    "particleColors": {
+      "anti_nu_e": "#6b7280",
+      "nu_e": "#6b7280"
+    },
+    "camera": [
+      380,
+      250,
+      400
+    ]
+  },
+  "fields": [
+    {
+      "id": "nuclide",
+      "label": "Núcleo",
+      "type": "select",
+      "default": "U238",
+      "options": [
+        {
+          "value": "U238",
+          "label": "Urânio-238 (cadeia natural do urânio)"
+        },
+        {
+          "value": "Th232",
+          "label": "Tório-232 (cadeia natural do tório)"
+        },
+        {
+          "value": "Ra226",
+          "label": "Rádio-226 (o elemento dos Curie)"
+        },
+        {
+          "value": "Rn222",
+          "label": "Radônio-222 (gás que sai do solo)"
+        },
+        {
+          "value": "Am241",
+          "label": "Amerício-241 (detector de fumaça)",
+          "warning": "No fim da cadeia aparece o bismuto-209. Na natureza ele é praticamente estável (meia-vida de cerca de 2 × 10¹⁹ anos), mas o Geant4 ainda o faz decair, e a cadeia termina no tálio-205."
+        },
+        {
+          "value": "Cs137",
+          "label": "Césio-137 (acidente de Goiânia, 1987)"
+        },
+        {
+          "value": "Co60",
+          "label": "Cobalto-60 (radioterapia)"
+        },
+        {
+          "value": "K40",
+          "label": "Potássio-40 (está na banana e no seu corpo)"
+        },
+        {
+          "value": "C14",
+          "label": "Carbono-14 (datação por carbono)"
+        },
+        {
+          "value": "Na22",
+          "label": "Sódio-22 (emite pósitrons)"
+        },
+        {
+          "value": "Ne24",
+          "label": "Neônio-24 (padrão do exemplo)"
+        }
+      ]
+    },
+    {
+      "id": "decayMode",
+      "label": "Decaimentos",
+      "type": "select",
+      "default": "chain",
+      "options": [
+        {
+          "value": "chain",
+          "label": "Cadeia inteira (até um núcleo estável)"
+        },
+        {
+          "value": "single",
+          "label": "Só o primeiro decaimento",
+          "warning": "O núcleo filho fica como saiu do decaimento. Se ele nasce num estado excitado de longa duração (como o bário-137m do césio-137), o raio gama que viria depois não aparece."
+        }
+      ]
+    },
+    {
+      "id": "beamCount",
+      "label": "Número de núcleos",
+      "type": "number",
+      "integer": true,
+      "step": 10,
+      "default": 100,
+      "positive": true,
+      "max": 10000
+    },
+    {
+      "id": "showNucleus",
+      "label": "Mostrar núcleo (ilustração)",
+      "type": "checkbox",
+      "default": false,
+      "badge": "Recomendado",
+      "hint": "Desenha um dos núcleos da simulação, com prótons e nêutrons, e mostra cada decaimento dele em sequência."
+    }
+  ]
+}

@@ -1001,3 +1001,238 @@
     opacity: 0.5;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Caixa de marcar no formulário (ex.: "Mostrar núcleo" do decaimento) */
+/* ------------------------------------------------------------------ */
+.parameters-panel__check {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  color: var(--color-on-void);
+  cursor: pointer;
+}
+
+.parameters-panel__check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--color-beam);
+  cursor: pointer;
+}
+
+.parameters-panel__badge {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--color-beam);
+  border-radius: 999px;
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-beam);
+}
+
+.parameters-panel__hint {
+  margin: 0;
+  color: var(--color-on-void-soft);
+  line-height: 1.45;
+}
+
+/* ------------------------------------------------------------------ */
+/* Decaimento (rdecay01): legenda da carta de nuclídeos e lista da cadeia */
+/* ------------------------------------------------------------------ */
+.decay-legend {
+  flex: none;
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  border-top: 2px solid var(--color-on-void-soft);
+}
+
+.decay-legend--dashed {
+  border-top-style: dashed;
+}
+
+.decay-legend--dotted {
+  border-top-style: dotted;
+}
+
+.decay-legend--filled {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  background: var(--color-on-void-soft);
+}
+
+.decay-steps {
+  margin: 0;
+  padding-left: 1.4rem;
+  display: grid;
+  gap: 0.15rem;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-on-void);
+  font-variant-numeric: tabular-nums;
+}
+
+.decay-steps__half,
+.decay-steps__mode {
+  color: var(--color-on-void-soft);
+}
+
+/* ------------------------------------------------------------------ */
+/* Ilustração do núcleo                                                */
+/* ------------------------------------------------------------------ */
+.nucleus-illustration {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-void);
+}
+
+.nucleus-illustration__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.nucleus-illustration__title {
+  margin: 0;
+  font-family: var(--font-subtitle);
+  font-size: var(--step-1, 1.25rem);
+  font-weight: 700;
+}
+
+.nucleus-illustration__stable {
+  font-weight: 400;
+  color: var(--color-on-void-soft);
+}
+
+.nucleus-illustration__counts {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-on-void-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.nucleus-illustration__scale {
+  padding: 0.15rem 0.55rem;
+  border: 1px dashed var(--color-line);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-on-void-soft);
+  white-space: nowrap;
+}
+
+.nucleus-illustration__canvas {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #000;
+  touch-action: none;
+}
+
+.nucleus-illustration__caption {
+  margin: 0;
+  min-height: 3em;
+  max-width: 75ch;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--color-on-void);
+}
+
+.nucleus-illustration__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.nucleus-illustration__progress {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-on-void-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.nucleus-illustration__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-on-void);
+}
+
+.nucleus-illustration__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+}
+
+.nucleus-illustration__legend span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--swatch);
+}
+
+.nucleus-illustration__note {
+  margin: 0;
+  max-width: 75ch;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--color-on-void-soft);
+}
+
+/* Rótulo que acompanha cada partícula emitida na cena */
+.nucleus-illustration__tag {
+  display: inline-block;
+  padding: 0 0.3em;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.65);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tag-color, #ffffff);
+  white-space: nowrap;
+  user-select: none;
+}
+
+@media (max-width: 640px) {
+  .nucleus-illustration {
+    padding: var(--space-2);
+  }
+
+  .nucleus-illustration__canvas {
+    height: 300px;
+  }
+
+  .nucleus-illustration__progress {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Carta de nuclídeos: altura pelo formato da cadeia, dentro de limites */
+.sim-results__canvas-wrap.decay-chart__wrap {
+  height: auto;
+  min-height: 220px;
+  max-height: 460px;
+}

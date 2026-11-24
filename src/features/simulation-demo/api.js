@@ -10,6 +10,7 @@ const BACKEND_SIMULATION_ID = {
   'rutherford-scattering': 'rutherford',
   'pet-b3a': 'b3a',
   'espectrometro-b5': 'b5',
+  'decaimento-rdecay01': 'rdecay01',
 };
 
 // campo do formulário -> campo esperado por RunSimulationRequest (app.py)
@@ -28,6 +29,10 @@ const FIELD_MAP = {
   momentum: 'momentum_GeV',
   fieldT: 'field_T',
   armAngle: 'arm_angle_deg',
+  // rdecay01 (decaimento) — ver data/decaimento-rdecay01.parameters.json.
+  // showNucleus (ilustração do núcleo) é só do front: não vai pro backend.
+  nuclide: 'nuclide',
+  decayMode: 'decay_mode',
   // targetMaterial / targetThickness: sem efeito no backend por ora
   // (Detector.cpp tem material/espessura fixos em C++) — não traduzidos
   // de propósito. Ver nota em parameters.example.json.

@@ -67,7 +67,17 @@ export async function saveReport({
 export function compactResults(results) {
   if (!results || typeof results !== 'object') return null;
   const { lines_of_response: lines, ...rest } = results;
-  return Array.isArray(lines) ? { ...rest, lines_of_response_count: lines.length } : rest;
+  if (Array.isArray(lines)) return { ...rest, lines_of_response_count: lines.length };
+  // Decaimento (rdecay01): sem os decaimentos detalhados e os espectros
+  // (centenas de KB) — a cadeia (transitions) e as contagens bastam pro
+  // resumo do relatório.
+  if (Array.isArray(rest.transitions)) {
+    const small = { ...rest };
+    delete small.decays;
+    delete small.spectra;
+    return { ...small, decays_count: Array.isArray(rest.decays) ? rest.decays.length : undefined };
+  }
+  return rest;
 }
 
 export async function deleteReport(id) {

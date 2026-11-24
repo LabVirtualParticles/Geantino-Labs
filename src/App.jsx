@@ -16,11 +16,15 @@ import petPreview from './features/simulation-demo/data/pet-b3a.preview.json'
 import b5Schema from './features/simulation-demo/data/espectrometro-b5.parameters.json'
 import b5Explanation from './features/simulation-demo/data/espectrometro-b5.explanations.json'
 import b5Preview from './features/simulation-demo/data/espectrometro-b5.preview.json'
+import decaySchema from './features/simulation-demo/data/decaimento-rdecay01.parameters.json'
+import decayExplanation from './features/simulation-demo/data/decaimento-rdecay01.explanations.json'
+import decayPreview from './features/simulation-demo/data/decaimento-rdecay01.preview.json'
 
 // Geometria do tomógrafo (só os volumes, sem trajetórias) pra cena não
 // abrir vazia antes da primeira simulação — gerada de uma run real do B3a.
 const petPageSchema = { ...petSchema, preview: petPreview }
 const b5PageSchema = { ...b5Schema, preview: b5Preview }
+const decayPageSchema = { ...decaySchema, preview: decayPreview }
 
 export default function App() {
   return (
@@ -69,6 +73,15 @@ export default function App() {
         element={(
           <RequireAuth>
             <SimulationExample schema={b5PageSchema} explanationSchema={b5Explanation} />
+          </RequireAuth>
+        )}
+      />
+      {/* Decaimento radioativo — exemplo oficial rdecay01 do Geant4 (backend: id "rdecay01"). */}
+      <Route
+        path="/simulacoes/decaimento"
+        element={(
+          <RequireAuth>
+            <SimulationExample schema={decayPageSchema} explanationSchema={decayExplanation} />
           </RequireAuth>
         )}
       />

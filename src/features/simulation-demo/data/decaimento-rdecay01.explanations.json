@@ -1,0 +1,113 @@
+{
+  "simulationId": "decaimento-rdecay01",
+  "buttonLabel": "Contexto e fundamentos",
+  "title": "Decaimento radioativo",
+  "sections": [
+    {
+      "id": "historical-context",
+      "heading": "Contexto",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Em 1896, Henri Becquerel percebeu que sais de urânio escureciam chapas fotográficas guardadas no escuro. Marie e Pierre Curie mostraram que outros elementos faziam o mesmo e descobriram o polônio e o rádio em 1898. Pouco depois, Ernest Rutherford separou a radiação em tipos pela capacidade de atravessar a matéria e os chamou de alfa e beta; o gama veio em seguida."
+        },
+        {
+          "type": "paragraph",
+          "text": "Hoje sabemos que a radiação vem do núcleo: um núcleo com prótons e nêutrons numa combinação instável se transforma em outro, mais estável, e solta o excesso de energia em forma de partículas. O exemplo rdecay01 do Geant4 faz exatamente isso: coloca um núcleo parado no centro e deixa o Geant4 decidir quando e como ele decai."
+        }
+      ]
+    },
+    {
+      "id": "physics-foundations",
+      "heading": "Fundamentos físicos",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Alfa (α)",
+              "text": "O núcleo expulsa um pedaço de 2 prótons e 2 nêutrons, que é um núcleo de hélio-4. O número atômico cai 2 e o de massa cai 4: o urânio-238 vira tório-234. Acontece sobretudo em núcleos pesados. A partícula alfa sai sempre com uma energia bem definida, de alguns MeV."
+            },
+            {
+              "label": "Beta menos (β⁻)",
+              "text": "Um nêutron vira próton. Para a carga se conservar sai um elétron, e junto sai um antineutrino. O número atômico sobe 1 e o de massa não muda: o carbono-14 vira nitrogênio-14."
+            },
+            {
+              "label": "Beta mais (β⁺) e captura eletrônica",
+              "text": "O contrário: um próton vira nêutron. Ou sai um pósitron (a antipartícula do elétron) e um neutrino, ou o núcleo captura um elétron da própria eletrosfera e só sai um neutrino. O número atômico cai 1. O sódio-22 faz os dois; o potássio-40 decai por beta menos em cerca de 89% das vezes e por captura em cerca de 11%."
+            },
+            {
+              "label": "Gama (γ)",
+              "text": "Muitas vezes o núcleo filho nasce com energia sobrando (num estado excitado) e a libera como um fóton, o raio gama, sem mudar de elemento. Às vezes, em vez do fóton, a energia vai para um elétron da eletrosfera, que é arrancado: é o elétron de conversão interna."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Ninguém sabe quando um núcleo vai decair; só a probabilidade. A meia-vida é o tempo em que metade de uma amostra grande decai, e ela vai de microssegundos (polônio-214, 164 µs) a bilhões de anos (urânio-238, 4,47 bilhões). Por isso o Geant4 sorteia o instante de cada decaimento a partir da meia-vida, e cada núcleo da simulação tem tempos diferentes."
+        },
+        {
+          "type": "paragraph",
+          "text": "Um núcleo pesado normalmente não chega a um núcleo estável num passo só: ele passa por uma cadeia. As três cadeias naturais (do urânio-238, do tório-232 e do urânio-235) terminam em isótopos estáveis do chumbo. O rádio e o radônio que aparecem na natureza vêm da cadeia do urânio-238."
+        },
+        {
+          "type": "paragraph",
+          "text": "Os dados vêm das tabelas de decaimento do próprio Geant4 (G4RadioactiveDecay, baseadas na base ENSDF de dados nucleares): meias-vidas, modos de decaimento, ramos e energias. As partículas emitidas são as do decaimento; neste exemplo elas não interagem com o ar, para que se possa olhar só o decaimento."
+        }
+      ]
+    },
+    {
+      "id": "results-interpretation",
+      "heading": "Interpretação dos resultados",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Na visualização 3D, a caixa é o mundo do exemplo (2 cm de lado, com ar) e todos os núcleos estão no centro. Cada linha é uma partícula emitida, nas cores do Geant4: azul para carga positiva (alfa, pósitron), vermelho para negativa (elétron) e verde para neutra (gama); os neutrinos ficam em cinza. As linhas são retas até a borda porque, neste exemplo, as partículas não perdem energia no ar."
+        },
+        {
+          "type": "paragraph",
+          "text": "A cadeia de decaimento é desenhada num pedaço da carta de nuclídeos: cada quadrado é um núcleo, com o número de nêutrons no eixo horizontal e o de prótons no vertical. O alfa desce na diagonal (2 prótons e 2 nêutrons a menos); o beta menos anda uma casa para a esquerda e sobe uma (um nêutron a menos, um próton a mais). O quadrado cheio é o núcleo estável onde a cadeia termina. Quando um núcleo pode decair de dois jeitos, as setas mostram a fração de cada ramo."
+        },
+        {
+          "type": "paragraph",
+          "text": "Nos espectros, repare que alfa e gama formam picos estreitos, enquanto os elétrons do beta saem com qualquer energia de zero até um máximo. A energia do beta é dividida com o antineutrino, que leva o resto. Esse espectro contínuo intrigou os físicos até Wolfgang Pauli propor, em 1930, uma partícula neutra e muito leve; o neutrino só foi detectado em 1956, por Clyde Cowan e Frederick Reines."
+        },
+        {
+          "type": "paragraph",
+          "text": "No modo “só o primeiro decaimento”, o núcleo filho fica exatamente como nasceu. O césio-137, por exemplo, vai em cerca de 95% das vezes para o bário-137m, um estado excitado que dura minutos (meia-vida de 2,55 min); o raio gama de 662 keV, que é o que se detecta de uma fonte de césio, só aparece no modo cadeia inteira."
+        },
+        {
+          "type": "paragraph",
+          "text": "A ilustração do núcleo é só um desenho: um núcleo real não é um cacho de bolinhas paradas e é muito menor do que o átomo. Os números (quantos prótons e nêutrons, qual decaimento, as energias e os tempos) vêm da simulação; as posições das bolinhas e as direções de saída são escolhidas ao acaso para o desenho."
+        }
+      ]
+    },
+    {
+      "id": "credits",
+      "heading": "Créditos e licença",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Esta simulação usa o exemplo rdecay01 (extended/radioactivedecay) da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 (geant4.web.cern.ch). O mundo, a física de decaimento radioativo, o gerador do núcleo em repouso e o controle de cadeia inteira são do exemplo original, distribuído sob a Licença de Software do Geant4 (cern.ch/geant4/license)."
+        },
+        {
+          "type": "paragraph",
+          "text": "O Geantino Labs (IFPR) adaptou o exemplo para rodar no servidor sem interface gráfica: escolha do núcleo e do modo pelo site, exportação da geometria e das trajetórias para a visualização 3D, e um resumo em JSON (cadeia, espectros e os decaimentos dos primeiros núcleos) no lugar dos histogramas ROOT. A física e os dados nucleares não foram alterados."
+        },
+        {
+          "type": "list",
+          "items": [
+            {
+              "label": "Referência principal",
+              "text": "S. Agostinelli et al., \"Geant4 — a simulation toolkit\", Nucl. Instrum. Meth. A 506 (2003) 250–303."
+            },
+            {
+              "label": "Atualizações",
+              "text": "J. Allison et al., \"Geant4 developments and applications\", IEEE Trans. Nucl. Sci. 53 (2006) 270–278; J. Allison et al., \"Recent developments in Geant4\", Nucl. Instrum. Meth. A 835 (2016) 186–225."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
