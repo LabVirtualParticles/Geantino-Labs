@@ -251,7 +251,7 @@ function ScatteringChart({ analysis, mode, logScale }) {
       mode,
       histogram: analysis.histogram,
       theory: analysis.theory,
-      colors: chartColorsFromTheme(),
+      colors: chartColorsFromTheme(canvas),
       highlightBin: hoverBin,
       logScale,
     });

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { Zueira } from '../../context/Zueira';
 import './Hero.css';
 
 export default function Hero() {
@@ -17,13 +18,28 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero__content">
-        <h1 className="hero__title">Geantino Labs</h1>
+        <Zueira>
+          <p className="zueira-tag">Nível de radiação de fundo: de boa</p>
+        </Zueira>
+        <h1 className="hero__title">
+          <Zueira fallback="Geantino Labs">Geantino City</Zueira>
+        </h1>
         <p className="hero__lede">
-          Uma plataforma web que roda simulações reais no Geant4 — o mesmo motor
-          científico usado no CERN — direto do navegador, sem instalação.
+          <Zueira
+            fallback={(
+              <>
+                Uma plataforma web que roda simulações reais no Geant4 — o mesmo motor
+                científico usado no CERN — direto do navegador, sem instalação.
+              </>
+            )}
+          >
+            Onde os elétrons não respeitam semáforo e o geantino atravessa tudo
+            sem pagar pedágio. As simulações continuam reais, no Geant4, direto
+            do navegador.
+          </Zueira>
         </p>
         <Link to="/simulacoes/rutherford" className="hero__cta">
-          Explorar simulações
+          <Zueira fallback="Explorar simulações">Partiu fazer física</Zueira>
         </Link>
       </div>
 

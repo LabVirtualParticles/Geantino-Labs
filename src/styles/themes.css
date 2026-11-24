@@ -6,14 +6,15 @@
   brilho) ficam junto de cada tema.
 
   Pra adicionar um tema novo: um bloco :root[data-theme='nome'] aqui +
-  uma entrada em THEMES (context/ThemeContext.jsx).
+  uma entrada em THEMES (context/themes.js).
 */
 
 /* Navbar e vídeo do hero se adaptam ao fundo de qualquer tema */
 :root[data-theme='bolhas'] .navbar,
 :root[data-theme='fosforo'] .navbar,
 :root[data-theme='blueprint'] .navbar,
-:root[data-theme='sincrotron'] .navbar {
+:root[data-theme='sincrotron'] .navbar,
+:root[data-theme='tropical'] .navbar {
   background: color-mix(in srgb, var(--color-void) 82%, transparent);
 }
 
@@ -136,4 +137,103 @@
 :root[data-theme='sincrotron'] .hero__video {
   filter: grayscale(1) sepia(1) hue-rotate(230deg) saturate(4) brightness(1.2);
   mix-blend-mode: screen;
+}
+
+
+/* ---------- 5. Geantino City (ZUEIRA) ---------- */
+/* Pôr do sol neon, coqueiros e prédios. Tema de zueira: em tudo que é
+   científico (.sim-page e .rigor) os tokens voltam pros do tema Escuro —
+   ver o fim deste bloco e context/Zueira.jsx. */
+:root[data-theme='tropical'] {
+  --color-void: #12062a;
+  --color-void-soft: #22093f;
+  --color-beam: #ff5fa2;
+  --color-beam-hover: #ff9cc6;
+  --color-trace: #3ff0e0;
+  --color-line: rgba(255, 95, 162, 0.32);
+  --color-line-soft: rgba(255, 95, 162, 0.14);
+  --color-on-void: rgba(255, 240, 248, 0.96);
+  --color-on-void-soft: rgba(255, 196, 222, 0.74);
+}
+:root[data-theme='tropical'] :is(h1, h2, h3, .navbar__brand) {
+  font-style: italic;
+  text-shadow: 0 0 14px rgba(255, 95, 162, 0.55), 0 0 36px rgba(63, 240, 224, 0.25);
+}
+:root[data-theme='tropical'] .navbar {
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, #ff8a3d, #ff5fa2, #b046d8, #3ff0e0) 1;
+}
+:root[data-theme='tropical'] .navbar__link:hover { color: #3ff0e0; }
+
+/* Hero: céu de fim de tarde + sol listrado + skyline com coqueiros */
+:root[data-theme='tropical'] .hero {
+  overflow: hidden;
+  background: linear-gradient(to bottom, #12062a 0%, #2a0f4a 38%, #6b1d6e 64%, #c2386f 84%, #ff8a3d 100%);
+}
+:root[data-theme='tropical'] .hero::before {
+  content: '';
+  position: absolute;
+  right: 12%;
+  top: 16%;
+  width: min(36vw, 420px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, #ffe08a 0%, #ffb347 40%, #ff5fa2 100%);
+  box-shadow: 0 0 80px rgba(255, 140, 90, 0.45);
+  -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 52% 56%, #000 56% 65%, transparent 65% 69%, #000 69% 77%, transparent 77% 81%, #000 81% 88%, transparent 88% 92%, #000 92%);
+  mask-image: linear-gradient(to bottom, #000 52%, transparent 52% 56%, #000 56% 65%, transparent 65% 69%, #000 69% 77%, transparent 77% 81%, #000 81% 88%, transparent 88% 92%, #000 92%);
+  pointer-events: none;
+}
+:root[data-theme='tropical'] .hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 160px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='160' viewBox='0 0 1200 160'%3E%3Cg fill='%2312062a'%3E%3Crect x='60' y='72' width='50' height='88'/%3E%3Crect x='116' y='38' width='38' height='122'/%3E%3Crect x='160' y='88' width='62' height='72'/%3E%3Crect x='520' y='56' width='44' height='104'/%3E%3Crect x='570' y='18' width='30' height='142'/%3E%3Crect x='606' y='76' width='58' height='84'/%3E%3Crect x='902' y='62' width='48' height='98'/%3E%3Crect x='956' y='34' width='34' height='126'/%3E%3Crect x='996' y='92' width='72' height='68'/%3E%3Crect x='0' y='150' width='1200' height='10'/%3E%3C/g%3E%3Cg fill='none' stroke='%2312062a' stroke-linecap='round'%3E%3Cpath d='M330 160 Q336 112 354 62' stroke-width='7'/%3E%3Cpath d='M760 160 Q752 118 736 80' stroke-width='6'/%3E%3Cpath d='M1120 160 Q1128 116 1146 70' stroke-width='7'/%3E%3C/g%3E%3Cg fill='%2312062a'%3E%3Cpath d='M354 62 q-44 -8 -70 24 q34 -16 70 -24z M354 62 q44 -10 72 20 q-34 -14 -72 -20z M354 62 q-20 -34 -60 -36 q36 12 60 36z M354 62 q16 -36 56 -42 q-32 16 -56 42z'/%3E%3Cpath d='M736 80 q-40 -6 -62 22 q30 -16 62 -22z M736 80 q40 -8 64 18 q-30 -12 -64 -18z M736 80 q-18 -30 -54 -32 q32 10 54 32z M736 80 q14 -32 50 -38 q-28 14 -50 38z'/%3E%3Cpath d='M1146 70 q-44 -8 -70 24 q34 -16 70 -24z M1146 70 q44 -10 72 20 q-34 -14 -72 -20z M1146 70 q-20 -34 -60 -36 q36 12 60 36z M1146 70 q16 -36 56 -42 q-32 16 -56 42z'/%3E%3C/g%3E%3C/svg%3E") repeat-x bottom left / auto 160px;
+  pointer-events: none;
+  z-index: 1;
+}
+:root[data-theme='tropical'] .hero__content { position: relative; z-index: 2; }
+:root[data-theme='tropical'] .hero__stage { background: transparent; position: relative; z-index: 1; }
+:root[data-theme='tropical'] .hero__video {
+  filter: grayscale(1) sepia(1) hue-rotate(280deg) saturate(4) brightness(1.15);
+  mix-blend-mode: screen;
+}
+:root[data-theme='tropical'] .hero__cta {
+  background: #ff5fa2;
+  color: #2a0f4a;
+  box-shadow: 0 0 24px rgba(255, 95, 162, 0.6);
+}
+:root[data-theme='tropical'] .zueira-tag {
+  display: inline-block;
+  margin: 0 0 var(--space-2);
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3ff0e0;
+  text-shadow: 0 0 10px rgba(63, 240, 224, 0.6);
+}
+
+/* RIGOR: simulações, resultados, explicações e relatórios voltam pro tema
+   Escuro (mesmos valores de tokens.css). Os gráficos leem as cores do
+   próprio canvas, então também saem sóbrios — inclusive no relatório. */
+:root[data-theme='tropical'] :is(.sim-page, .rigor) {
+  --color-void: #000000;
+  --color-void-soft: #0a0a0d;
+  --color-beam: #ffffff;
+  --color-beam-hover: #c7c7c7;
+  --color-trace: #9a9a9a;
+  --color-line: rgba(255, 255, 255, 0.14);
+  --color-line-soft: rgba(255, 255, 255, 0.08);
+  --color-on-void: rgba(255, 255, 255, 0.92);
+  --color-on-void-soft: rgba(255, 255, 255, 0.62);
+  --font-display: 'Ykar', 'Helvetica Neue', Arial, sans-serif;
+  --font-subtitle: 'Fraunces', Georgia, serif;
+  --font-body: 'Fraunces', Georgia, serif;
+  background-color: var(--color-void);
+  color: var(--color-on-void);
+}
+:root[data-theme='tropical'] :is(.sim-page, .rigor) :is(h1, h2, h3, h4, h5, h6) {
+  font-style: normal;
+  text-shadow: none;
 }

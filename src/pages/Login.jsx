@@ -4,6 +4,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
+import { Zueira } from '../context/Zueira';
 
 export default function Login() {
   const [mode, setMode] = useState('login'); // 'login' | 'signup' | 'forgot'
@@ -91,7 +92,9 @@ export default function Login() {
           <p className="login-card__hint">
             {mode === 'forgot'
               ? 'Informe seu e-mail e enviamos um link para redefinir a senha.'
-              : 'É preciso estar logado pra rodar as simulações.'}
+              : <Zueira fallback="É preciso estar logado pra rodar as simulações.">
+                  Sem login não entra na balada das partículas.
+                </Zueira>}
           </p>
 
           <form className="login-form" onSubmit={handleSubmit}>

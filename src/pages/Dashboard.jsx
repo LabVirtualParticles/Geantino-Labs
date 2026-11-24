@@ -327,7 +327,7 @@ function ReportsPanel() {
   }
 
   return (
-    <section className="dashboard-panel">
+    <section className="dashboard-panel rigor">
       <h2 className="dashboard-panel__title">Relatórios</h2>
       <p className="dashboard-panel__hint">
         Gerados pelo botão "Gerar relatório" na página de uma simulação.

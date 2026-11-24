@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import { RigorZone } from '../context/Zueira';
 import ParametersPanel from '../features/simulation-demo/ParametersPanel';
 import SimulationViewer from '../features/simulation-demo/SimulationViewer';
 import ExplanationPanel from '../features/simulation-demo/ExplanationPanel';
@@ -128,7 +129,8 @@ export default function SimulationExample({
   return (
     <>
       <Navbar />
-      <main className="sim-page">
+      {/* RigorZone: nada de tema de zueira aqui dentro (ver context/Zueira.jsx) */}
+      <RigorZone as="main" className="sim-page">
         <header className="sim-page__header">
           <h1>{schema.title}</h1>
           {(Array.isArray(schema.intro) ? schema.intro : [schema.intro])
@@ -226,7 +228,7 @@ export default function SimulationExample({
           isOpen={isExplanationOpen}
           onClose={() => setExplanationOpen(false)}
         />
-      </main>
+      </RigorZone>
     </>
   );
 }

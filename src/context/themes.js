@@ -38,4 +38,13 @@ export const THEMES = [
     description: 'Roxo escuro com ciano neon e brilho suave.',
     swatch: ['#0a0517', '#45f3ff', '#b46cff'],
   },
+  {
+    // Tema de zueira: `playful` faz o <Zueira> (context/Zueira.jsx) mostrar
+    // as piadas. Simulações e relatórios continuam no tema Escuro.
+    id: 'tropical',
+    label: 'Geantino City',
+    description: 'Zueira: pôr do sol neon e coqueiros. Simulações e relatórios ficam sóbrios.',
+    swatch: ['#2a0f4a', '#ff5fa2', '#3ff0e0'],
+    playful: true,
+  },
 ];

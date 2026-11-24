@@ -37,7 +37,7 @@ export function useChartCanvas(draw) {
     canvas.height = Math.round(size.height * ratio);
     const ctx = canvas.getContext('2d');
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    draw(ctx, { width: size.width, height: size.height, colors: chartColorsFromTheme() });
+    draw(ctx, { width: size.width, height: size.height, colors: chartColorsFromTheme(canvas) });
   }, [draw, size, themeKey]);
 
   return { wrapRef, canvasRef, size };

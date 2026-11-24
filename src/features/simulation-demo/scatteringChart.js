@@ -117,7 +117,8 @@ export const REPORT_CHART_COLORS = {
 };
 
 // Lê as cores do tema atual (tokens.css) — chamado de novo a cada troca
-// de tema claro/escuro.
+// de tema. Passe o próprio canvas: dentro de .sim-page/.rigor os tokens
+// voltam pros do tema Escuro no tema de zueira (ver styles/themes.css).
 export function chartColorsFromTheme(element = document.documentElement) {
   const style = getComputedStyle(element);
   const read = (name, fallback) => style.getPropertyValue(name).trim() || fallback;
