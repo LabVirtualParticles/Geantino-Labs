@@ -17,6 +17,7 @@ import {
   buildScatteringHistogram,
   renderScatteringChartToDataURL,
 } from '../features/simulation-demo/scatteringChart';
+import { renderPetImageToDataURL } from '../features/simulation-demo/petImage';
 import { useAuth } from '../context/AuthContext';
 import { saveReport } from '../lib/reports';
 import rutherfordSchema from '../features/simulation-demo/data/parameters.example.json';
@@ -91,6 +92,13 @@ export default function SimulationExample({
         const angles = computeScatteringAngles(data.trajectories, beamDir);
         const histogram = buildScatteringHistogram(angles);
         chartDataUrl = renderScatteringChartToDataURL(histogram, buildRutherfordTheory(histogram));
+      } else if ((schema.charts ?? []).includes('petImage')) {
+        // PET: no relatório vai a imagem reconstruída (corte transversal).
+        const params = meta?.paramsUsed ?? {};
+        const source = ['pos_x_cm', 'pos_y_cm', 'pos_z_cm'].every((key) => typeof params[key] === 'number')
+          ? [params.pos_x_cm, params.pos_y_cm, params.pos_z_cm]
+          : null;
+        chartDataUrl = renderPetImageToDataURL(meta?.results?.lines_of_response ?? [], source);
       }
 
       await saveReport({
@@ -180,7 +188,7 @@ export default function SimulationExample({
                 className="sim-page__button"
                 onClick={handleGenerateReport}
                 disabled={status !== 'done' || reportState === 'saving'}
-                title="Salva seed, parâmetros, um print do detector (no enquadramento atual) e o gráfico de distribuição angular no seu painel"
+                title="Salva seed, parâmetros, um print do detector (no enquadramento atual) e o gráfico da simulação no seu painel"
               >
                 {reportState === 'saving' ? 'Gerando relatório…' : 'Gerar relatório'}
               </button>

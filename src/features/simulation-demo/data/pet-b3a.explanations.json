@@ -62,6 +62,14 @@
         },
         {
           "type": "paragraph",
+          "text": "Na seção Resultados, a \"Imagem reconstruída\" soma todas as linhas de resposta num corte do tomógrafo: onde muitas se cruzam a imagem fica clara, e o ponto mais claro deve cair perto da cruz que marca a fonte. É a ideia da imagem de um PET de verdade, numa versão simples (sem os filtros que um tomógrafo aplica, cada linha deixa um rastro, o \"efeito estrela\"). Com poucos decaimentos a imagem é borrada; aumente o número de decaimentos e veja o ponto ficar mais nítido."
+        },
+        {
+          "type": "paragraph",
+          "text": "O \"Espectro de energia nos cristais\" conta quanta energia cada cristal atingido recebeu. O pico em 511 keV são fótons absorvidos inteiros. A faixa larga abaixo dele vem de fótons que sofreram espalhamento Compton e saíram do cristal levando parte da energia: num único espalhamento, um fóton de 511 keV deixa no máximo cerca de 341 keV (a borda Compton). O limite de 500 keV do exemplo aceita só o pico, descartando fótons espalhados, que dariam linhas de resposta na direção errada."
+        },
+        {
+          "type": "paragraph",
           "text": "Só uma parte dos decaimentos vira coincidência (no exemplo padrão, cerca de 13%). Muitos fótons saem pelas pontas do anel sem passar por nenhum cristal, outros sofrem espalhamento Compton no paciente e mudam de direção, e outros deixam no cristal menos de 500 keV. Essa fração é uma medida simples da eficiência do tomógrafo."
         },
         {

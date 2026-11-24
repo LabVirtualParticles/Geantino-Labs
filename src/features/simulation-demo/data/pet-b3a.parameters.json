@@ -7,7 +7,10 @@
     "Depois de simular, as linhas amarelas ligam os dois cristais de cada coincidência. Elas se cruzam perto da fonte — é assim que o PET descobre de onde veio a radiação."
   ],
   "credits": "Simulação baseada no exemplo B3 (B3a) da distribuição oficial do Geant4, desenvolvido pela Colaboração Geant4 e distribuído sob a Licença de Software do Geant4. Adaptado pelo Geantino Labs para rodar no site.",
-  "charts": [],
+  "charts": [
+    "petImage",
+    "crystalSpectrum"
+  ],
   "viewer": {
     "sceneSize": 240,
     "edgesOnly": [

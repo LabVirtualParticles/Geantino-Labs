@@ -15,6 +15,7 @@ import {
   formatSeed,
 } from './formatParams';
 import { formatResults } from './formatResults';
+import { PetImageCard, SpectrumCard } from './PetCharts';
 
 // Seção "Resultados" que aparece embaixo do visualizador 3D assim que a
 // simulação termina: gráfico (com seletor de visualização) à esquerda,
@@ -22,8 +23,9 @@ import { formatResults } from './formatResults';
 // do painel, menos o print do detector.
 //
 // Quais gráficos aparecem depende da simulação: `schema.charts` no JSON
-// de parâmetros (ex. "charts": ["scattering"] no Rutherford). Simulação
-// sem `charts` mostra só as tabelas.
+// de parâmetros (ex. "charts": ["scattering"] no Rutherford, ["petImage",
+// "crystalSpectrum"] no PET, nessa ordem de cima pra baixo). Simulação sem
+// `charts` mostra só as tabelas.
 
 const CHART_VIEWS = [
   { id: 'log', label: 'Distribuição angular' },
@@ -31,7 +33,9 @@ const CHART_VIEWS = [
 ];
 
 export default function SimulationResults({ schema, data, meta }) {
-  const hasScattering = (schema.charts ?? []).includes('scattering');
+  const charts = schema.charts ?? [];
+  const hasScattering = charts.includes('scattering');
+  const hasCharts = charts.length > 0;
   const [view, setView] = useState('log');
   const [logScale, setLogScale] = useState(true);
 
@@ -60,67 +64,76 @@ export default function SimulationResults({ schema, data, meta }) {
         Resultados
       </h2>
 
-      <div className={`sim-results__grid${hasScattering ? '' : ' sim-results__grid--tables'}`}>
-        {hasScattering && (
-          <div className="sim-results__chart-card">
-            <div className="sim-results__chart-head">
-              <div className="sim-results__views" role="tablist" aria-label="Visualização do gráfico">
-                {CHART_VIEWS.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={view === option.id}
-                    className={`sim-results__view${view === option.id ? ' is-active' : ''}`}
-                    onClick={() => setView(option.id)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
+      <div className={`sim-results__grid${hasCharts ? '' : ' sim-results__grid--tables'}`}>
+        {hasCharts && (
+          <div className="sim-results__charts">
+            {charts.includes('petImage') && (
+              <PetImageCard results={meta?.results} paramsUsed={meta?.paramsUsed} />
+            )}
+            {charts.includes('crystalSpectrum') && <SpectrumCard results={meta?.results} />}
+            {hasScattering && (
+              <div className="sim-results__chart-card">
+                <div className="sim-results__chart-head">
+                  <div className="sim-results__views" role="tablist" aria-label="Visualização do gráfico">
+                    {CHART_VIEWS.map((option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={view === option.id}
+                        className={`sim-results__view${view === option.id ? ' is-active' : ''}`}
+                        onClick={() => setView(option.id)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="sim-results__scale" role="group" aria-label="Escala do eixo Y">
+                    <span className="sim-results__scale-label">Eixo Y</span>
+                    {[
+                      { id: true, label: 'Log' },
+                      { id: false, label: 'Linear' },
+                    ].map((option) => (
+                      <button
+                        key={option.label}
+                        type="button"
+                        aria-pressed={logScale === option.id}
+                        className={`sim-results__scale-option${logScale === option.id ? ' is-active' : ''}`}
+                        onClick={() => setLogScale(option.id)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <ScatteringChart analysis={analysis} mode={view} logScale={logScale} />
+
+                <p className="sim-results__note">
+                  {view === 'log' ? (
+                    <>
+                      Cada barra conta quantas partículas desviaram naquela faixa de ângulo.{' '}
+                      {logScale
+                        ? 'A escala log deixa visíveis os desvios grandes, que são raros.'
+                        : 'Na escala linear os desvios grandes quase somem — troque pra log pra ver a cauda.'}
+                    </>
+                  ) : analysis.theory.ok ? (
+                    <>
+                      A linha é a previsão de Rutherford para um único desvio no núcleo, ajustada às
+                      partículas acima de {analysis.theory.fitFrom}°. Abaixo disso a simulação foge da
+                      curva: perto de 0° fica bem abaixo (os elétrons do átomo blindam o núcleo) e entre
+                      uns 4° e 10° fica acima, porque vários desvios pequenos seguidos se somam
+                      (espalhamento múltiplo).
+                    </>
+                  ) : (
+                    `Poucas partículas acima de ${analysis.theory.fitFrom}° pra comparar com a teoria ` +
+                    `(${analysis.theory.tailCount}). Rode com mais partículas pra ver a curva.`
+                  )}
+                </p>
               </div>
+            )}
 
-              <div className="sim-results__scale" role="group" aria-label="Escala do eixo Y">
-                <span className="sim-results__scale-label">Eixo Y</span>
-                {[
-                  { id: true, label: 'Log' },
-                  { id: false, label: 'Linear' },
-                ].map((option) => (
-                  <button
-                    key={option.label}
-                    type="button"
-                    aria-pressed={logScale === option.id}
-                    className={`sim-results__scale-option${logScale === option.id ? ' is-active' : ''}`}
-                    onClick={() => setLogScale(option.id)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <ScatteringChart analysis={analysis} mode={view} logScale={logScale} />
-
-            <p className="sim-results__note">
-              {view === 'log' ? (
-                <>
-                  Cada barra conta quantas partículas desviaram naquela faixa de ângulo.{' '}
-                  {logScale
-                    ? 'A escala log deixa visíveis os desvios grandes, que são raros.'
-                    : 'Na escala linear os desvios grandes quase somem — troque pra log pra ver a cauda.'}
-                </>
-              ) : analysis.theory.ok ? (
-                <>
-                  A linha é a previsão de Rutherford para um único desvio no núcleo, ajustada às
-                  partículas acima de {analysis.theory.fitFrom}°. Abaixo disso a simulação foge da
-                  curva: perto de 0° fica bem abaixo (os elétrons do átomo blindam o núcleo) e entre
-                  uns 4° e 10° fica acima, porque vários desvios pequenos seguidos se somam
-                  (espalhamento múltiplo).
-                </>
-              ) : (
-                `Poucas partículas acima de ${analysis.theory.fitFrom}° pra comparar com a teoria ` +
-                `(${analysis.theory.tailCount}). Rode com mais partículas pra ver a curva.`
-              )}
-            </p>
           </div>
         )}
 
