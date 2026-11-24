@@ -10,6 +10,7 @@ import RequireAuth from './components/RequireAuth'
 import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
 import ShowerTest from './pages/ShowerTest'
+import Apresentacao from './pages/Apresentacao'
 import petSchema from './features/simulation-demo/data/pet-b3a.parameters.json'
 import petExplanation from './features/simulation-demo/data/pet-b3a.explanations.json'
 import petPreview from './features/simulation-demo/data/pet-b3a.preview.json'
@@ -98,6 +99,10 @@ export default function App() {
           </RequireAuth>
         )}
       />
+      {/* Apresentação em tela cheia pra feiras (FICIÊNCIAS etc.): colisão →
+          subprodutos → logo. De propósito sem link em nenhum lugar do
+          site — só abre digitando/compartilhando /apresentacao. */}
+      <Route path="/apresentacao" element={<Apresentacao />} />
       {/* Página de teste da animação do chuveiro eletromagnético — só
           existe em `npm run dev`, não vai pro site publicado. */}
       {import.meta.env.DEV && <Route path="/teste/chuveiro" element={<ShowerTest />} />}
