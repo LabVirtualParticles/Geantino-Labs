@@ -368,6 +368,48 @@
   gap: 0.5rem;
 }
 
+/* Itens com cor própria (ex.: partes do detector com a cor da cena 3D) */
+.explanation-panel__item--colored {
+  list-style: none;
+  margin-left: -1.2rem;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.explanation-panel__swatch {
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 2px;
+  background: var(--item-color);
+}
+
+/* (seletor mais específico que .explanation-panel__list strong, mais abaixo) */
+.explanation-panel__list .explanation-panel__item--colored strong {
+  color: color-mix(in srgb, var(--item-color) 78%, var(--color-on-void));
+}
+
+.explanation-panel__figure {
+  margin: 0 0 var(--space-3);
+}
+
+.explanation-panel__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--color-line);
+}
+
+.explanation-panel__figure figcaption {
+  margin-top: 0.4rem;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-on-void-soft);
+}
+
 .explanation-panel__list strong {
   color: var(--color-on-void);
 }

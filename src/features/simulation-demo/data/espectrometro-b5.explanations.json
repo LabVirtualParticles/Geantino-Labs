@@ -26,27 +26,38 @@
           "text": "Uma partícula carregada num campo magnético sofre a força de Lorentz e descreve um arco. O raio da curva depende do momento: r = p / (qB). Partículas mais rápidas (mais momento) curvam menos; um campo mais forte curva mais. O segundo braço fica girado (30° no exemplo) para receber as partículas desviadas; mude o campo ou o ângulo e veja se elas ainda o atingem."
         },
         {
+          "type": "image",
+          "src": "/simulations/espectrometro-b5-detector.png",
+          "alt": "Vista de cima do espectrômetro B5: o feixe entra pela esquerda, passa pelo hodoscópio 1 (azul) e pelas câmaras de deriva 1 (verde), é curvado pelo ímã (cinza) e chega ao segundo braço, girado, com as câmaras de deriva 2 (verde), o hodoscópio 2 (azul), o calorímetro eletromagnético (rosa) e o hadrônico (laranja).",
+          "caption": "O detector do exemplo B5 visto de cima, com as mesmas cores da cena 3D. As linhas azuis são múons de 1 GeV/c simulados no Geant4, curvados pelo campo de 1 T."
+        },
+        {
           "type": "list",
           "items": [
             {
               "label": "Hodoscópios",
-              "text": "Tiras de cintilador plástico (15 no primeiro braço, 25 no segundo) que marcam o instante em que a partícula passa. A diferença de tempo entre os dois é o tempo de voo: com o mesmo momento, partícula mais pesada é mais lenta e demora mais."
+              "text": "Tiras de cintilador plástico (15 no primeiro braço, 25 no segundo) que marcam o instante em que a partícula passa. A diferença de tempo entre os dois é o tempo de voo: com o mesmo momento, partícula mais pesada é mais lenta e demora mais.",
+              "color": "#38bdf8"
             },
             {
               "label": "Câmaras de deriva",
-              "text": "Cinco camadas de argônio em cada braço, que registram por onde a partícula passou — é com elas que um experimento real reconstrói a trajetória e mede a curvatura."
+              "text": "Cinco camadas de argônio em cada braço, que registram por onde a partícula passou — é com elas que um experimento real reconstrói a trajetória e mede a curvatura.",
+              "color": "#a3e635"
             },
             {
               "label": "Ímã",
-              "text": "Um cilindro de 1 m de raio com campo uniforme (1 tesla no exemplo), vertical, que curva as partículas para o lado do segundo braço."
+              "text": "Um cilindro de 1 m de raio com campo uniforme (1 tesla no exemplo), vertical, que curva as partículas para o lado do segundo braço.",
+              "color": "#9a9a9a"
             },
             {
               "label": "Calorímetro eletromagnético",
-              "text": "80 células de iodeto de césio (CsI). Pósitrons e elétrons criam ali um chuveiro de fótons e pares e deixam quase toda a energia. Múons e píons em geral só atravessam ionizando o cristal (deixam por volta de 170 MeV). Prótons de 1 GeV/c, mais lentos, ionizam mais e costumam parar dentro do CsI."
+              "text": "80 células de iodeto de césio (CsI). Pósitrons e elétrons criam ali um chuveiro de fótons e pares e deixam quase toda a energia. Múons e píons em geral só atravessam ionizando o cristal (deixam por volta de 170 MeV). Prótons de 1 GeV/c, mais lentos, ionizam mais e costumam parar dentro do CsI.",
+              "color": "#f472b6"
             },
             {
               "label": "Calorímetro hadrônico",
-              "text": "20 torres de chumbo com camadas de cintilador. Píons e káons podem iniciar ali um chuveiro hadrônico (colisões com núcleos). Múons atravessam todas as camadas e deixam sempre um pouco de energia. Só a energia que cai no cintilador é medida, por isso os valores são uma fração da energia total."
+              "text": "20 torres de chumbo com camadas de cintilador. Píons e káons podem iniciar ali um chuveiro hadrônico (colisões com núcleos). Múons atravessam todas as camadas e deixam sempre um pouco de energia. Só a energia que cai no cintilador é medida, por isso os valores são uma fração da energia total.",
+              "color": "#fb923c"
             }
           ]
         },

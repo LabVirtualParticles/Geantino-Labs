@@ -1,15 +1,36 @@
 import { useEffect, useRef } from 'react';
 
+// Tipos de bloco (data/*.explanations.json):
+//  - paragraph: { text }
+//  - list: { items: [{ label, text, color? }] } — `color` pinta o rótulo e
+//    um quadradinho ao lado (ex.: a cor de cada parte do detector na cena
+//    3D). O rótulo mistura a cor com a do texto do tema, pra continuar
+//    legível tanto em fundo escuro quanto claro.
+//  - image: { src, alt, caption? }
 function Block({ block }) {
   if (block.type === 'list') {
     return (
       <ul className="explanation-panel__list">
         {block.items.map((item) => (
-          <li key={item.label}>
+          <li
+            key={item.label}
+            className={item.color ? 'explanation-panel__item--colored' : undefined}
+            style={item.color ? { '--item-color': item.color } : undefined}
+          >
+            {item.color && <span className="explanation-panel__swatch" aria-hidden="true" />}
             <strong>{item.label}:</strong> {item.text}
           </li>
         ))}
       </ul>
+    );
+  }
+
+  if (block.type === 'image') {
+    return (
+      <figure className="explanation-panel__figure">
+        <img src={block.src} alt={block.alt ?? ''} loading="lazy" />
+        {block.caption && <figcaption>{block.caption}</figcaption>}
+      </figure>
     );
   }
 
