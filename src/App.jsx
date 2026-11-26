@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
 import ShowerTest from './pages/ShowerTest'
 import Apresentacao from './pages/Apresentacao'
+import RouteMeta from './components/seo/RouteMeta'
 import petSchema from './features/simulation-demo/data/pet-b3a.parameters.json'
 import petExplanation from './features/simulation-demo/data/pet-b3a.explanations.json'
 import petPreview from './features/simulation-demo/data/pet-b3a.preview.json'
@@ -33,6 +34,9 @@ const telescopePageSchema = { ...telescopeSchema, preview: telescopePreview }
 
 export default function App() {
   return (
+    <>
+    {/* Título, descrição e demais metadados de SEO de cada página. */}
+    <RouteMeta />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/sobre" element={<Sobre />} />
@@ -109,5 +113,6 @@ export default function App() {
       {/* Rota coringa — tem que ser sempre a última. */}
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </>
   )
 }

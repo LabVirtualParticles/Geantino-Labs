@@ -1,0 +1,10 @@
+# Geantino Labs — instruções para buscadores
+User-agent: *
+Allow: /
+# Páginas privadas / sem conteúdo útil nas buscas
+Disallow: /painel
+Disallow: /login
+Disallow: /redefinir-senha
+Disallow: /apresentacao
+
+Sitemap: https://geantino-labs.vercel.app/sitemap.xml
